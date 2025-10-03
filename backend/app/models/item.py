@@ -8,7 +8,7 @@ class ItemType(Enum):
 
 
 class Item(BaseModel):
-    id: int
+    id: str
     type: ItemType
     question: str
     order: int

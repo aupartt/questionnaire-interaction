@@ -1,7 +1,8 @@
-from app.models.common import StatusEnum
 from pydantic import BaseModel
+
+from app.models.common import StatusEnum
 
 
 class User(BaseModel):
-    id: int
+    id: str
     status: StatusEnum
