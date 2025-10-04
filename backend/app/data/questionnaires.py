@@ -1,12 +1,12 @@
 QUESTIONNAIRES = [
     {
-        "id": 1,
+        "id": "1",
         "name": "Information utilisateur",
         "description": "Vos informations.",
         "order": 1,
     },
     {
-        "id": 2,
+        "id": "2",
         "name": "Préférences",
         "description": "Vos attentes professionnelles",
         "order": 2,
@@ -14,23 +14,36 @@ QUESTIONNAIRES = [
 ]
 
 ITEMS = [
-    {"id": 1, "type": "text", "question": "Nom Prénom", "order": 1},
-    {"id": 2, "type": "text", "question": "Address mail", "order": 2},
     {
-        "id": 3,
-        "type": "text",
-        "question": "Pouvoir amenez son chien",
+        "id": "1",
+        "questionnaire_id": "1",
+        "question_type": "text",
+        "question": "Nom Prénom",
+        "item_content": {"type": "text"},
         "order": 1,
     },
     {
-        "id": 4,
-        "type": "text",
+        "id": "2",
+        "questionnaire_id": "1",
+        "question_type": "text",
+        "question": "Address mail",
+        "item_content": {"type": "text"},
+        "order": 2,
+    },
+    {
+        "id": "3",
+        "questionnaire_id": "2",
+        "question_type": "text",
+        "question": "Pouvoir amenez son chien",
+        "item_content": {"type": "text"},
+        "order": 1,
+    },
+    {
+        "id": "4",
+        "questionnaire_id": "2",
+        "question_type": "text",
         "question": "Avoir un distributeur de patisserie artisanal",
+        "item_content": {"type": "text"},
         "order": 2,
     },
 ]
-
-# Permet de liée les sessions entre elles
-USERS = []  # [{ id: .., status: "in_progress/ended" }]
-SESSIONS = []  # [{ id: .., user_id: .., questionnaire_id: .., status: "in_progress/ended"}]
-RESPONSES = []  # [ { id: 1, session_id: .., item_id: .., value: .. } ]
