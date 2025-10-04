@@ -17,9 +17,6 @@ class QuestionnaireResponse(Questionnaire):
     completed: bool = False
     is_next: bool = False
 
-    class model_config:
-        from_attributes = True
-
 
 class ItemContent(BaseModel):
     type: str
