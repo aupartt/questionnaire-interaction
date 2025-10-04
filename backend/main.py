@@ -1,6 +1,7 @@
 import logging
 
 from app.config import settings
+from app.middleware.api_key_middleware import APIKeyMiddleware
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
@@ -21,6 +22,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.add_middleware(APIKeyMiddleware)
 
 
 @app.get("/")
