@@ -1,5 +1,7 @@
+from fastapi import HTTPException
+
 from app.models.common import StatusEnum
-from app.models.schemas import ItemShort, QuestionnaireStatus, Session
+from app.models.schemas import Answer, ItemShort, NextItemResponse, QuestionnaireStatus, Session
 from app.service.protocol.data_adapter_protocol import DataAdapterProtocol
 
 
@@ -78,7 +80,7 @@ class QuestionnaireService:
         # Item dédié à l'affichage front
         items_short = [ItemShort(id=item.id, name=item.name) for item in items]
 
-        # TODO: Definir le prochain item (si c'est une reprise de session afin de ne pas juste renvoyer l'item 1
+        # TODO: Definir le prochain item (si c'est une reprise de session afin de ne pas juste renvoyer l'item 1)
 
         return Session(
             id=session_model.id,
@@ -86,4 +88,34 @@ class QuestionnaireService:
             items=items_short,
             answers=answers,
             current_item=items[0],
+        )
+
+    async def add_answer(self, questionnaire_id: str, session_id: str, answer: Answer) -> NextItemResponse:
+        """Sauvegarde la réponse et retourne le prochain item du questionnaire s'il y en a un
+        Sinon retourne"""
+
+        await self.data_adapter.save_answer(session_id=session_id, answer=answer)
+        items = await self.data_adapter.get_items(questionnaire_id=questionnaire_id)
+
+        # Récupère l'index de l'item (Answer)
+        current_index = next((i for i, item in enumerate(items) if item.id == answer.item_id), None)
+
+        # Cas où l'index de l'Item n'a pas été trouvé
+        if current_index is None:
+            raise HTTPException(
+                status_code=400,
+                detail=f"L'identifiant d'Item {answer.item_id} spécifié dans le corp de la requête n'existe pas pour le questionnaire {questionnaire_id}.",
+            )
+
+        # C'est le dernier item du questionnaire
+        if current_index == len(items) - 1:
+            return NextItemResponse(
+                result_url=f"/questionnaire/{questionnaire_id}/session/{session_id}/results",
+                session_status=StatusEnum.COMPLETED,
+            )
+
+        next_item = items[current_index + 1]
+        return NextItemResponse(
+            next_item=next_item,
+            session_status=StatusEnum.ACTIVE,
         )

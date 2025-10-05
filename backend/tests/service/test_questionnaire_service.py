@@ -2,6 +2,7 @@ from datetime import datetime
 from unittest.mock import AsyncMock, Mock
 
 import pytest
+from fastapi import HTTPException
 
 from app.models.common import QuestionType, StatusEnum
 from app.models.schemas import (
@@ -10,6 +11,7 @@ from app.models.schemas import (
     ItemContent,
     ItemQuestion,
     ItemShort,
+    NextItemResponse,
     QuestionnaireModel,
     QuestionnaireStatus,
     Session,
@@ -196,3 +198,86 @@ async def test_get_session_with_answers(make_mock_adapter):
     assert len(result.answers) == 1
     assert isinstance(result.answers[0], Answer)
     assert result.current_item == mock_items[0]
+
+
+@pytest.mark.asyncio
+async def test_add_answer_success_is_next(make_mock_adapter):
+    mock_items = [
+        Item(
+            id="1",
+            name="SuperName-1",
+            question=ItemQuestion(type=QuestionType.TEXT, value="Who?"),
+            content=ItemContent(type="text"),
+        ),
+        Item(
+            id="2",
+            name="SuperName-2",
+            question=ItemQuestion(type=QuestionType.TEXT, value="What?"),
+            content=ItemContent(type="text"),
+        ),
+    ]
+    mock_adapter = make_mock_adapter(items=mock_items)
+    mock_answer = Answer(item_id="1", value="Foo", status=StatusEnum.COMPLETED)
+
+    service = QuestionnaireService(mock_adapter)
+
+    result = await service.add_answer(questionnaire_id="1", session_id="1337", answer=mock_answer)
+
+    assert isinstance(result, NextItemResponse)
+    assert result.next_item == mock_items[1]
+    assert result.session_status == StatusEnum.ACTIVE
+
+
+@pytest.mark.asyncio
+async def test_add_answer_success_is_last(make_mock_adapter):
+    mock_items = [
+        Item(
+            id="1",
+            name="SuperName-1",
+            question=ItemQuestion(type=QuestionType.TEXT, value="Who?"),
+            content=ItemContent(type="text"),
+        ),
+        Item(
+            id="2",
+            name="SuperName-2",
+            question=ItemQuestion(type=QuestionType.TEXT, value="What?"),
+            content=ItemContent(type="text"),
+        ),
+    ]
+    mock_adapter = make_mock_adapter(items=mock_items)
+    mock_answer = Answer(item_id="2", value="Foo", status=StatusEnum.COMPLETED)
+
+    service = QuestionnaireService(mock_adapter)
+
+    result = await service.add_answer(questionnaire_id="1", session_id="1337", answer=mock_answer)
+
+    assert isinstance(result, NextItemResponse)
+    assert result.result_url == "/questionnaire/1/session/1337/results"
+    assert result.session_status == StatusEnum.COMPLETED
+
+
+@pytest.mark.asyncio
+async def test_add_answer_error(make_mock_adapter):
+    mock_items = [
+        Item(
+            id="1",
+            name="SuperName-1",
+            question=ItemQuestion(type=QuestionType.TEXT, value="Who?"),
+            content=ItemContent(type="text"),
+        ),
+        Item(
+            id="2",
+            name="SuperName-2",
+            question=ItemQuestion(type=QuestionType.TEXT, value="What?"),
+            content=ItemContent(type="text"),
+        ),
+    ]
+    mock_adapter = make_mock_adapter(items=mock_items)
+    mock_answer = Answer(item_id="3", value="Foo", status=StatusEnum.COMPLETED)
+
+    service = QuestionnaireService(mock_adapter)
+
+    with pytest.raises(HTTPException) as excinfo:
+        await service.add_answer(questionnaire_id="1", session_id="1337", answer=mock_answer)
+
+    assert excinfo.value.status_code == 400

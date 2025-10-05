@@ -75,6 +75,12 @@ class Answer(BaseModel):
     status: StatusEnum
 
 
+class NextItemResponse(BaseModel):
+    next_item: Item | None = None
+    result_url: str | None = None
+    session_status: StatusEnum
+
+
 class Session(BaseModel):
     id: str
     questionnaire_id: str
