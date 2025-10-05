@@ -49,6 +49,7 @@ A chaque fin de questionnaire ce endpoint sera appelé pour mettre à jours les 
         "name": "string",
         "description": "string",
         "status": "string", // null, ACTIVE / SKIPPED / COMPLETED
+        "session_id": "string", // ID de la session existante ou null
         "is_next": "boolean"
     }
 ]
@@ -60,7 +61,7 @@ POST `/questionnaire/{id}/session` HEADER `X-API-KEY`
 **Description:**
 Initialise un questionnaire ou retourne une session existante
 
-Du point de vu du front, une fois la liste de questionnaire récupéré, il n'y a plus qu'à appeler ce enpoint avec le questionnaire `is_next == true`
+Du point de vu du front, une fois la liste de questionnaire récupéré, il n'y a plus qu'à récupérer le questionnaire `is_next == true`
 
 
 **Retourne:**
@@ -75,7 +76,7 @@ Du point de vu du front, une fois la liste de questionnaire récupéré, il n'y 
             "status": "string" // ACTIVE / COMPLETED / SKIPPED
         }
     ],
-    "responses": [ // Toutes les réponses 
+    "answers": [ // Toutes les réponses 
         {
             "id": "string",
             "item_id": "string",
