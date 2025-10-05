@@ -9,6 +9,8 @@ class StatusEnum(Enum):
 
 class QuestionType(Enum):
     TEXT = "text"
+    IMG = "image"
+    VIDEO = "video"
 
 
 class ResponseType(Enum):
