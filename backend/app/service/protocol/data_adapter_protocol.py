@@ -24,3 +24,7 @@ class DataAdapterProtocol(Protocol):
     async def get_answers(self, session_id: str) -> list[Answer]:
         """Retourne la liste de réponse pour une session"""
         ...
+
+    async def save_answer(self, session_id: str, answer: Answer) -> bool:
+        """Sauvegarde la réponse dans la base de données"""
+        ...

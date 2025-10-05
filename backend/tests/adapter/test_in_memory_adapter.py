@@ -229,3 +229,17 @@ async def test_get_answers_found(mocker: MockerFixture):
 
     assert isinstance(results[0], Answer)
     assert len(results) == 2
+
+
+@pytest.mark.asyncio
+async def test_save_answer(mocker: MockerFixture):
+    adapter = InMemoryAdapter()
+    adapter.answers = []
+
+    mock_answer = Answer(item_id="1", value="Foo", status=StatusEnum.COMPLETED)
+
+    result = await adapter.save_answer(session_id="1337", answer=mock_answer)
+
+    assert result
+    assert len(adapter.answers) == 1
+    assert adapter.answers[0]["session_id"] == "1337"

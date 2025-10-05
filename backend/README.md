@@ -1,5 +1,9 @@
 # API Backend pour l'application Questionnaire
 
+## TODO
+- Gestion d'erreur (questionnaire qui n'existe pas, ...)
+- Intégrer PostgresAdapter
+
 ## Structure
 
 ### /adapter

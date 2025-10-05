@@ -4,7 +4,7 @@ from datetime import datetime
 
 from app.adapter.data.questionnaires import ITEMS, QUESTIONNAIRES
 from app.models.common import StatusEnum
-from app.models.schemas import Answer, Item, QuestionnaireModel, SessionModel
+from app.models.schemas import Answer, AnswerModel, Item, QuestionnaireModel, SessionModel
 from app.service.protocol.data_adapter_protocol import DataAdapterProtocol
 
 logger = logging.getLogger(__name__)
@@ -53,7 +53,7 @@ class InMemoryAdapter(DataAdapterProtocol):
                 created_at=datetime.now(),
                 updated_at=datetime.now(),
             )
-            self.sessions.append(new_session)
+            self.sessions.append(new_session.model_dump())
             return new_session
 
         return SessionModel(**session_list[0])
@@ -69,3 +69,15 @@ class InMemoryAdapter(DataAdapterProtocol):
         answer_list = list(filter(lambda x: x["session_id"] == session_id, self.answers))
 
         return [Answer(**answer) for answer in answer_list]
+
+    async def save_answer(self, session_id: str, answer: Answer) -> bool:
+        """Sauvegarde la réponse"""
+        new_answer = AnswerModel(
+            id=str(uuid.uuid4()),
+            session_id=session_id,
+            item_id=answer.item_id,
+            value=answer.value,
+            status=answer.status,
+        )
+        self.answers.append(new_answer.model_dump())
+        return True
