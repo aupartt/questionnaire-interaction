@@ -13,6 +13,22 @@ permissions:
   contents: read
 
 jobs:
+  backend-lint:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/ruff-action@v3
+
+      - name: Format
+        run: ruff Format
+        
+      - name: Check fix
+        run: ruff check --fix
+
   backend-tests:
     runs-on: ubuntu-latest
     defaults:
