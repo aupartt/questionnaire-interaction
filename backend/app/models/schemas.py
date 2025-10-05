@@ -20,21 +20,28 @@ class QuestionnaireStatus(Questionnaire):
 
 class ItemContent(BaseModel):
     type: str
+    likert_value: list[str] | None = None
+
+
+class ItemQuestion(BaseModel):
+    type: QuestionType
+    text: str
+    value: str
 
 
 class Item(BaseModel):
     id: str
     questionnaire_id: str
-    question_type: QuestionType  # Permettra de choisir entre text ou media
-    question: str  # Question ou url
-    item_content: ItemContent
+    name: str  # Permet d'afficher du texte même si la question est de type media
+    question: ItemQuestion
+    content: ItemContent
     order: int
 
 
 class Session(BaseModel):
     id: str
     questionnaire_id: str
-    api_key: str
+    api_key: str  # TODO: créer un User ?
     status: StatusEnum
     created_at: datetime
     updated_at: datetime
