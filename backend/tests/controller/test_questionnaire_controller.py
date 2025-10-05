@@ -13,6 +13,7 @@ from app.models.schemas import (
     ItemContent,
     ItemQuestion,
     ItemShort,
+    NextItemResponse,
     QuestionnaireStatus,
     Session,
 )
@@ -95,3 +96,27 @@ async def test_get_session(make_mock_client):
     data = response.json()
     assert Session.model_validate(data)
     mock_service.get_session.assert_awaited_once_with(api_key="foo-api-key", questionnaire_id="42")
+
+
+@pytest.mark.asyncio
+async def test_add_answer(make_mock_client):
+    mock_service = MagicMock()
+
+    mock_service.add_answer = AsyncMock(
+        return_value=NextItemResponse(
+            result_url="/questionnaire/5/session/3/answer", session_status=StatusEnum.COMPLETED
+        )
+    )
+    mock_answer = Answer(item_id="2", value="Ceci va échouer", status=StatusEnum.COMPLETED)
+
+    client = make_mock_client(mock_service=mock_service)
+    response = client.post(
+        "/questionnaire/42/session/3/answer",
+        headers={settings.API_KEY_NAME: "foo-api-key"},
+        json=mock_answer.model_dump(),
+    )
+
+    assert response.status_code == 200
+    data = response.json()
+    assert NextItemResponse.model_validate(data)
+    mock_service.add_answer.assert_awaited_once_with(questionnaire_id="42", session_id="3", answer=mock_answer)
