@@ -11,3 +11,18 @@ class DataAdapterProtocol(Protocol):
     async def get_questionnaires(self) -> list[QuestionnaireModel]:
         """Retourne la liste de questionnaires dans l'ordre de passage."""
         ...
+
+    async def get_session_questionnaire(
+        self, api_key: str, questionnaire_id: str
+    ) -> SessionModel:
+        """Retourne la session pour le questionnaire si elle existe
+        Sinon crée une nouvelle session et la retourne"""
+        ...
+
+    async def get_items(self, questionnaire_id: str) -> list[Item]:
+        """Retourne la liste d'items d'un questionnaire dans l'ordre de passage"""
+        ...
+
+    async def get_answers(self, session_id: str) -> list[Answer]:
+        """Retourne la liste de réponse pour une session"""
+        ...
