@@ -34,15 +34,12 @@ class InMemoryAdapter(DataAdapterProtocol):
             key=lambda x: x.order,
         )
 
-    async def get_session_questionnaire(
-        self, api_key: str, questionnaire_id: str
-    ) -> SessionModel:
+    async def get_session_questionnaire(self, api_key: str, questionnaire_id: str) -> SessionModel:
         """Retourne la session pour le questionnaire si elle existe
         Sinon crée une nouvelle session et la retourne"""
         session_list = list(
             filter(
-                lambda x: x["api_key"] == api_key
-                and x["questionnaire_id"] == questionnaire_id,
+                lambda x: x["api_key"] == api_key and x["questionnaire_id"] == questionnaire_id,
                 self.sessions,
             )
         )
@@ -63,16 +60,12 @@ class InMemoryAdapter(DataAdapterProtocol):
 
     async def get_items(self, questionnaire_id: str) -> list[Item]:
         """Retourne la liste d'item pour un questionnaire dans l'ordre"""
-        item_list = list(
-            filter(lambda x: x["questionnaire_id"] == questionnaire_id, self.items)
-        )
+        item_list = list(filter(lambda x: x["questionnaire_id"] == questionnaire_id, self.items))
 
         return [Item(**item) for item in sorted(item_list, key=lambda x: x["order"])]
 
     async def get_answers(self, session_id: str) -> list[Answer]:
         """Retourne toutes les réponse d'une session"""
-        answer_list = list(
-            filter(lambda x: x["session_id"] == session_id, self.answers)
-        )
+        answer_list = list(filter(lambda x: x["session_id"] == session_id, self.answers))
 
         return [Answer(**answer) for answer in answer_list]

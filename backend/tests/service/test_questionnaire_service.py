@@ -2,6 +2,7 @@ from datetime import datetime
 from unittest.mock import AsyncMock, Mock
 
 import pytest
+
 from app.models.common import QuestionType, StatusEnum
 from app.models.schemas import (
     Answer,
@@ -43,12 +44,8 @@ def make_mock_adapter():
 async def test_get_questionnaires_no_session(make_mock_adapter):
     mock_sessions = []
     mock_questionnaires = [
-        QuestionnaireModel(
-            id="1", name="SuperName-1", description="SuperDesc-1", order=1
-        ),
-        QuestionnaireModel(
-            id="2", name="SuperName-2", description="SuperDesc-2", order=2
-        ),
+        QuestionnaireModel(id="1", name="SuperName-1", description="SuperDesc-1", order=1),
+        QuestionnaireModel(id="2", name="SuperName-2", description="SuperDesc-2", order=2),
     ]
     mock_adapter = make_mock_adapter(mock_sessions, mock_questionnaires)
 
@@ -77,12 +74,8 @@ async def test_get_questionnaires_with_active_session(make_mock_adapter):
         ),
     ]
     mock_questionnaires = [
-        QuestionnaireModel(
-            id="1", name="SuperName-1", description="SuperDesc-1", order=1
-        ),
-        QuestionnaireModel(
-            id="2", name="SuperName-2", description="SuperDesc-2", order=2
-        ),
+        QuestionnaireModel(id="1", name="SuperName-1", description="SuperDesc-1", order=1),
+        QuestionnaireModel(id="2", name="SuperName-2", description="SuperDesc-2", order=2),
     ]
     mock_adapter = make_mock_adapter(mock_sessions, mock_questionnaires)
 
@@ -111,12 +104,8 @@ async def test_get_questionnaires_with_completed_session(make_mock_adapter):
         ),
     ]
     mock_questionnaires = [
-        QuestionnaireModel(
-            id="1", name="SuperName-1", description="SuperDesc-1", order=1
-        ),
-        QuestionnaireModel(
-            id="2", name="SuperName-2", description="SuperDesc-2", order=2
-        ),
+        QuestionnaireModel(id="1", name="SuperName-1", description="SuperDesc-1", order=1),
+        QuestionnaireModel(id="2", name="SuperName-2", description="SuperDesc-2", order=2),
     ]
     mock_adapter = make_mock_adapter(mock_sessions, mock_questionnaires)
 
@@ -157,9 +146,7 @@ async def test_get_session_without_answers(make_mock_adapter):
         ),
     ]
     mock_answers = []
-    mock_adapter = make_mock_adapter(
-        session=mock_session, items=mock_items, answers=mock_answers
-    )
+    mock_adapter = make_mock_adapter(session=mock_session, items=mock_items, answers=mock_answers)
 
     service = QuestionnaireService(mock_adapter)
 
@@ -196,12 +183,8 @@ async def test_get_session_with_answers(make_mock_adapter):
             content=ItemContent(type="text"),
         ),
     ]
-    mock_answers = [
-        Answer(id="1", item_id="1", value="Foo", status=StatusEnum.COMPLETED)
-    ]
-    mock_adapter = make_mock_adapter(
-        session=mock_session, items=mock_items, answers=mock_answers
-    )
+    mock_answers = [Answer(id="1", item_id="1", value="Foo", status=StatusEnum.COMPLETED)]
+    mock_adapter = make_mock_adapter(session=mock_session, items=mock_items, answers=mock_answers)
 
     service = QuestionnaireService(mock_adapter)
 

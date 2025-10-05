@@ -1,9 +1,10 @@
 import logging
 
-from app.config import settings
-from app.middleware.api_key_middleware import APIKeyMiddleware
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
+
+from app.config import settings
+from app.middleware.api_key_middleware import APIKeyMiddleware
 
 logger = logging.getLogger(__name__)
 

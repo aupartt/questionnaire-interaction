@@ -15,9 +15,7 @@ def get_questionnaire_service(
 
 
 @router.get("/questionnaires", response_model=list[QuestionnaireStatus])
-async def get_questionnaires(
-    request: Request, service: QuestionnaireService = Depends(get_questionnaire_service)
-):
+async def get_questionnaires(request: Request, service: QuestionnaireService = Depends(get_questionnaire_service)):
     api_key = request.state.api_key
     return await service.get_questionnaires(api_key=api_key)
 

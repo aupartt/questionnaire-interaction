@@ -1,10 +1,11 @@
 from datetime import datetime
 
 import pytest
+from pytest_mock import MockerFixture
+
 from app.adapter.in_memory_data import InMemoryAdapter
 from app.models.common import StatusEnum
 from app.models.schemas import Answer, Item, QuestionnaireModel, SessionModel
-from pytest_mock import MockerFixture
 
 
 @pytest.mark.asyncio
@@ -93,9 +94,7 @@ async def test_get_session_questionnaire_no_session(mocker: MockerFixture):
         },
     ]
 
-    result = await adapter.get_session_questionnaire(
-        api_key="foo", questionnaire_id="2"
-    )
+    result = await adapter.get_session_questionnaire(api_key="foo", questionnaire_id="2")
 
     assert isinstance(result, SessionModel)
     assert result.api_key == "foo"
@@ -131,9 +130,7 @@ async def test_get_session_questionnaire_session_found(mocker: MockerFixture):
         },
     ]
 
-    result = await adapter.get_session_questionnaire(
-        api_key="foo", questionnaire_id="2"
-    )
+    result = await adapter.get_session_questionnaire(api_key="foo", questionnaire_id="2")
 
     assert isinstance(result, SessionModel)
     assert result.api_key == "foo"
