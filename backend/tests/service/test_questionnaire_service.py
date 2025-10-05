@@ -2,8 +2,18 @@ from datetime import datetime
 from unittest.mock import AsyncMock, Mock
 
 import pytest
-from app.models.common import StatusEnum
-from app.models.schemas import QuestionnaireModel, QuestionnaireStatus, SessionModel
+from app.models.common import QuestionType, StatusEnum
+from app.models.schemas import (
+    Answer,
+    Item,
+    ItemContent,
+    ItemQuestion,
+    ItemShort,
+    QuestionnaireModel,
+    QuestionnaireStatus,
+    Session,
+    SessionModel,
+)
 from app.service.protocol.data_adapter_protocol import DataAdapterProtocol
 from app.service.questionnaire_service import QuestionnaireService
 
@@ -11,11 +21,19 @@ from app.service.questionnaire_service import QuestionnaireService
 @pytest.fixture()
 def make_mock_adapter():
     def make(
-        sessions: list[SessionModel] = [], questionnaires: list[QuestionnaireModel] = []
+        sessions: list[SessionModel] = [],
+        questionnaires: list[QuestionnaireModel] = [],
+        session: Session | None = None,
+        items: list[Item] = [],
+        answers: list[Answer] = [],
     ):
         mock_adapter = Mock(DataAdapterProtocol)
         mock_adapter.get_sessions = AsyncMock(return_value=sessions)
         mock_adapter.get_questionnaires = AsyncMock(return_value=questionnaires)
+        mock_adapter.get_session_questionnaire = AsyncMock(return_value=session)
+        mock_adapter.get_items = AsyncMock(return_value=items)
+        mock_adapter.get_answers = AsyncMock(return_value=answers)
+
         return mock_adapter
 
     return make
@@ -112,3 +130,86 @@ async def test_get_questionnaires_with_completed_session(make_mock_adapter):
     assert not results[0].is_next
     assert results[1].status is None
     assert results[1].is_next
+
+
+@pytest.mark.asyncio
+async def test_get_session_without_answers(make_mock_adapter):
+    mock_session = SessionModel(
+        id="1",
+        questionnaire_id="1",
+        api_key="foo",
+        status=StatusEnum.COMPLETED,
+        created_at=datetime.now(),
+        updated_at=datetime.now(),
+    )
+    mock_items = [
+        Item(
+            id="1",
+            name="SuperName-1",
+            question=ItemQuestion(type=QuestionType.TEXT, value="Who?"),
+            content=ItemContent(type="text"),
+        ),
+        Item(
+            id="2",
+            name="SuperName-2",
+            question=ItemQuestion(type=QuestionType.TEXT, value="What?"),
+            content=ItemContent(type="text"),
+        ),
+    ]
+    mock_answers = []
+    mock_adapter = make_mock_adapter(
+        session=mock_session, items=mock_items, answers=mock_answers
+    )
+
+    service = QuestionnaireService(mock_adapter)
+
+    result = await service.get_session(api_key="foo", questionnaire_id="1")
+
+    assert isinstance(result, Session)
+    assert len(result.items) == 2
+    assert isinstance(result.items[0], ItemShort)
+    assert len(result.answers) == 0
+    assert result.current_item == mock_items[0]
+
+
+@pytest.mark.asyncio
+async def test_get_session_with_answers(make_mock_adapter):
+    mock_session = SessionModel(
+        id="1",
+        questionnaire_id="1",
+        api_key="foo",
+        status=StatusEnum.COMPLETED,
+        created_at=datetime.now(),
+        updated_at=datetime.now(),
+    )
+    mock_items = [
+        Item(
+            id="1",
+            name="SuperName-1",
+            question=ItemQuestion(type=QuestionType.TEXT, value="Who?"),
+            content=ItemContent(type="text"),
+        ),
+        Item(
+            id="2",
+            name="SuperName-2",
+            question=ItemQuestion(type=QuestionType.TEXT, value="What?"),
+            content=ItemContent(type="text"),
+        ),
+    ]
+    mock_answers = [
+        Answer(id="1", item_id="1", value="Foo", status=StatusEnum.COMPLETED)
+    ]
+    mock_adapter = make_mock_adapter(
+        session=mock_session, items=mock_items, answers=mock_answers
+    )
+
+    service = QuestionnaireService(mock_adapter)
+
+    result = await service.get_session(api_key="foo", questionnaire_id="1")
+
+    assert isinstance(result, Session)
+    assert len(result.items) == 2
+    assert isinstance(result.items[0], ItemShort)
+    assert len(result.answers) == 1
+    assert isinstance(result.answers[0], Answer)
+    assert result.current_item == mock_items[0]

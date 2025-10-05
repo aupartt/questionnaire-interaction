@@ -1,5 +1,5 @@
 from app.models.common import StatusEnum
-from app.models.schemas import QuestionnaireStatus
+from app.models.schemas import ItemShort, QuestionnaireStatus, Session
 from app.service.protocol.data_adapter_protocol import DataAdapterProtocol
 
 
@@ -8,7 +8,14 @@ class QuestionnaireService:
         self.data_adapter = data_adapter
 
     async def get_questionnaires(self, api_key: str) -> list[QuestionnaireStatus]:
-        """Retourne la listes des questionnaires avec l'état des sessions"""
+        """Retourne la listes des questionnaires avec l'état des sessions
+
+        Args
+            - api_key (str): La clée API de l'utilisateur
+
+        Returns
+            list[QuestionnaireStatus]: La liste des questionnaires avec leur status
+        """
         user_sessions = await self.data_adapter.get_sessions(api_key)
         _questionnaires = await self.data_adapter.get_questionnaires()
 
@@ -49,3 +56,34 @@ class QuestionnaireService:
             questionnaires[0].is_next = True
 
         return questionnaires
+
+    async def get_session(self, api_key: str, questionnaire_id: str) -> Session:
+        """Vérifie si une session existe déjà pour le questionnaire, sinon crée une nouvelle session.
+
+        Args
+            - api_key (str): La clée API de l'utilisateur
+            - questionnaire_id: L'id du questionnaire à récupérer
+
+        Returns:
+            Session: La session pour le questionnaire
+        """
+
+        session_model = await self.data_adapter.get_session_questionnaire(
+            api_key=api_key, questionnaire_id=questionnaire_id
+        )
+
+        items = await self.data_adapter.get_items(questionnaire_id=questionnaire_id)
+        answers = await self.data_adapter.get_answers(session_id=session_model.id)
+
+        # Item dédié à l'affichage front
+        items_short = [ItemShort(id=item.id, name=item.name) for item in items]
+
+        # TODO: Definir le prochain item (si c'est une reprise de session afin de ne pas juste renvoyer l'item 1
+
+        return Session(
+            id=session_model.id,
+            questionnaire_id=questionnaire_id,
+            items=items_short,
+            answers=answers,
+            current_item=items[0],
+        )
