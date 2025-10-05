@@ -3,7 +3,16 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 from app.config import settings
 from app.controller.questionnaire_controller import router
-from app.models.schemas import QuestionnaireStatus
+from app.models.common import QuestionType, StatusEnum
+from app.models.schemas import (
+    Answer,
+    Item,
+    ItemContent,
+    ItemQuestion,
+    ItemShort,
+    QuestionnaireStatus,
+    Session,
+)
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
@@ -31,8 +40,6 @@ def make_mock_client():
 
 @pytest.mark.asyncio
 async def test_get_questionnaires(make_mock_client):
-    """Test simple du endpoint /questionnaires avec mock d'adapter"""
-
     mock_service = MagicMock()
     mock_service.get_questionnaires = AsyncMock(
         return_value=[
@@ -57,4 +64,41 @@ async def test_get_questionnaires(make_mock_client):
     assert isinstance(data, list)
     assert len(data) == 1
     assert data[0]["id"] == "1"
-    mock_service.get_questionnaires.assert_awaited_once_with("foo-api-key")
+    mock_service.get_questionnaires.assert_awaited_once_with(api_key="foo-api-key")
+
+
+@pytest.mark.asyncio
+async def test_get_session(make_mock_client):
+    mock_service = MagicMock()
+
+    mock_items = [ItemShort(id="1", name="Who?"), ItemShort(id="2", name="Where?")]
+    mock_answers = [
+        Answer(id="1", item_id="1", value="Me!", status=StatusEnum.COMPLETED)
+    ]
+    mock_item = Item(
+        id="2",
+        name="Where?",
+        question=ItemQuestion(type=QuestionType.TEXT, value="Where?"),
+        content=ItemContent(type="text"),
+    )
+    mock_service.get_session = AsyncMock(
+        return_value=Session(
+            id="1",
+            questionnaire_id="1",
+            items=mock_items,
+            answers=mock_answers,
+            current_item=mock_item,
+        )
+    )
+
+    client = make_mock_client(mock_service=mock_service)
+    response = client.post(
+        "/questionnaire/42/session", headers={settings.API_KEY_NAME: "foo-api-key"}
+    )
+
+    assert response.status_code == 200
+    data = response.json()
+    assert Session.model_validate(data)
+    mock_service.get_session.assert_awaited_once_with(
+        api_key="foo-api-key", questionnaire_id="42"
+    )

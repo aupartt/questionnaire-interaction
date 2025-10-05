@@ -19,4 +19,14 @@ async def get_questionnaires(
     request: Request, service: QuestionnaireService = Depends(get_questionnaire_service)
 ):
     api_key = request.state.api_key
-    return await service.get_questionnaires(api_key)
+    return await service.get_questionnaires(api_key=api_key)
+
+
+@router.post("/questionnaire/{questionnaire_id}/session")
+async def get_session(
+    questionnaire_id: str,
+    request: Request,
+    service: QuestionnaireService = Depends(get_questionnaire_service),
+):
+    api_key = request.state.api_key
+    return await service.get_session(api_key=api_key, questionnaire_id=questionnaire_id)
