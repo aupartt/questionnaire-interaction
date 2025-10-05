@@ -33,7 +33,6 @@ class QuestionnaireService:
                     id=q.id,
                     name=q.name,
                     description=q.description,
-                    order=q.order,
                     session_id=session.id if session else None,
                     status=session.status if session else None,
                     is_next=is_active,

@@ -3,7 +3,7 @@ from datetime import datetime
 import pytest
 from app.adapter.in_memory_data import InMemoryAdapter
 from app.models.common import StatusEnum
-from app.models.schemas import Questionnaire, Session
+from app.models.schemas import QuestionnaireModel, SessionModel
 from pytest_mock import MockerFixture
 
 
@@ -47,7 +47,7 @@ async def test_get_session_with_results(mocker: MockerFixture):
 
     results = await adapter.get_sessions("foo")
     assert len(results) == 2
-    assert isinstance(results[0], Session)
+    assert isinstance(results[0], SessionModel)
 
 
 @pytest.mark.asyncio
@@ -70,5 +70,5 @@ async def test_get_questionnaires(mocker: MockerFixture):
 
     results = await adapter.get_questionnaires()
     assert len(results) == 2
-    assert isinstance(results[0], Questionnaire)
+    assert isinstance(results[0], QuestionnaireModel)
     assert results[0].order == 1

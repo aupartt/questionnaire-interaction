@@ -5,14 +5,17 @@ from pydantic import BaseModel
 from app.models.common import QuestionType, StatusEnum
 
 
-class Questionnaire(BaseModel):
+class QuestionnaireModel(BaseModel):
     id: str
     name: str
     description: str
     order: int
 
 
-class QuestionnaireStatus(Questionnaire):
+class QuestionnaireStatus(BaseModel):
+    id: str
+    name: str
+    description: str
     session_id: str | None = None
     status: StatusEnum | None = None
     is_next: bool = False
@@ -25,11 +28,10 @@ class ItemContent(BaseModel):
 
 class ItemQuestion(BaseModel):
     type: QuestionType
-    text: str
     value: str
 
 
-class Item(BaseModel):
+class ItemModel(BaseModel):
     id: str
     questionnaire_id: str
     name: str  # Permet d'afficher du texte même si la question est de type media
@@ -38,7 +40,19 @@ class Item(BaseModel):
     order: int
 
 
-class Session(BaseModel):
+class Item(BaseModel):
+    id: str
+    name: str
+    question: ItemQuestion
+    content: ItemContent
+
+
+class ItemShort(BaseModel):
+    id: str
+    name: str
+
+
+class SessionModel(BaseModel):
     id: str
     questionnaire_id: str
     api_key: str  # TODO: créer un User ?
@@ -47,8 +61,24 @@ class Session(BaseModel):
     updated_at: datetime
 
 
-class Response(BaseModel):
+class AnswerModel(BaseModel):
     id: str
     session_id: str
     item_id: str
     value: str | dict
+    status: StatusEnum
+
+
+class Answer(BaseModel):
+    id: str
+    item_id: str
+    value: str | dict
+    status: StatusEnum
+
+
+class Session(BaseModel):
+    id: str
+    questionnaire_id: str
+    items: list[ItemShort]
+    answers: list[Answer]
+    current_item: Item

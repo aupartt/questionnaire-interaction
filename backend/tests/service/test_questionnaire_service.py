@@ -3,14 +3,16 @@ from unittest.mock import AsyncMock, Mock
 
 import pytest
 from app.models.common import StatusEnum
-from app.models.schemas import Questionnaire, QuestionnaireStatus, Session
+from app.models.schemas import QuestionnaireModel, QuestionnaireStatus, SessionModel
 from app.service.protocol.data_adapter_protocol import DataAdapterProtocol
 from app.service.questionnaire_service import QuestionnaireService
 
 
 @pytest.fixture()
 def make_mock_adapter():
-    def make(sessions: list[Session] = [], questionnaires: list[Questionnaire] = []):
+    def make(
+        sessions: list[SessionModel] = [], questionnaires: list[QuestionnaireModel] = []
+    ):
         mock_adapter = Mock(DataAdapterProtocol)
         mock_adapter.get_sessions = AsyncMock(return_value=sessions)
         mock_adapter.get_questionnaires = AsyncMock(return_value=questionnaires)
@@ -23,8 +25,12 @@ def make_mock_adapter():
 async def test_get_questionnaires_no_session(make_mock_adapter):
     mock_sessions = []
     mock_questionnaires = [
-        Questionnaire(id="1", name="SuperName-1", description="SuperDesc-1", order=1),
-        Questionnaire(id="2", name="SuperName-2", description="SuperDesc-2", order=2),
+        QuestionnaireModel(
+            id="1", name="SuperName-1", description="SuperDesc-1", order=1
+        ),
+        QuestionnaireModel(
+            id="2", name="SuperName-2", description="SuperDesc-2", order=2
+        ),
     ]
     mock_adapter = make_mock_adapter(mock_sessions, mock_questionnaires)
 
@@ -43,7 +49,7 @@ async def test_get_questionnaires_no_session(make_mock_adapter):
 @pytest.mark.asyncio
 async def test_get_questionnaires_with_active_session(make_mock_adapter):
     mock_sessions = [
-        Session(
+        SessionModel(
             id="1",
             questionnaire_id="1",
             api_key="foo",
@@ -53,8 +59,12 @@ async def test_get_questionnaires_with_active_session(make_mock_adapter):
         ),
     ]
     mock_questionnaires = [
-        Questionnaire(id="1", name="SuperName-1", description="SuperDesc-1", order=1),
-        Questionnaire(id="2", name="SuperName-2", description="SuperDesc-2", order=2),
+        QuestionnaireModel(
+            id="1", name="SuperName-1", description="SuperDesc-1", order=1
+        ),
+        QuestionnaireModel(
+            id="2", name="SuperName-2", description="SuperDesc-2", order=2
+        ),
     ]
     mock_adapter = make_mock_adapter(mock_sessions, mock_questionnaires)
 
@@ -73,7 +83,7 @@ async def test_get_questionnaires_with_active_session(make_mock_adapter):
 @pytest.mark.asyncio
 async def test_get_questionnaires_with_completed_session(make_mock_adapter):
     mock_sessions = [
-        Session(
+        SessionModel(
             id="1",
             questionnaire_id="1",
             api_key="foo",
@@ -83,8 +93,12 @@ async def test_get_questionnaires_with_completed_session(make_mock_adapter):
         ),
     ]
     mock_questionnaires = [
-        Questionnaire(id="1", name="SuperName-1", description="SuperDesc-1", order=1),
-        Questionnaire(id="2", name="SuperName-2", description="SuperDesc-2", order=2),
+        QuestionnaireModel(
+            id="1", name="SuperName-1", description="SuperDesc-1", order=1
+        ),
+        QuestionnaireModel(
+            id="2", name="SuperName-2", description="SuperDesc-2", order=2
+        ),
     ]
     mock_adapter = make_mock_adapter(mock_sessions, mock_questionnaires)
 

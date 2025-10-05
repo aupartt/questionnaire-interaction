@@ -40,7 +40,6 @@ async def test_get_questionnaires(make_mock_client):
                 id="1",
                 name="SuperName",
                 description="SuperDesc",
-                order=1,
                 session_id=None,
                 status=None,
                 is_next=True,

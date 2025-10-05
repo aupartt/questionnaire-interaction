@@ -1,7 +1,6 @@
 import logging
 
-from app.adapter.data.questionnaires import QUESTIONNAIRES
-from app.models.schemas import Questionnaire, Session
+from app.models.schemas import Answer, Item, QuestionnaireModel, SessionModel
 from app.service.protocol.data_adapter_protocol import DataAdapterProtocol
 
 logger = logging.getLogger(__name__)
@@ -18,13 +17,14 @@ class InMemoryAdapter(DataAdapterProtocol):
         self.reponses = []
         self.questionnaires = QUESTIONNAIRES
 
-    async def get_sessions(self, api_key: str) -> list[Session]:
+    async def get_sessions(self, api_key: str) -> list[SessionModel]:
         """Retourne la liste de sessions liées à la clé api"""
         user_sessions = list(filter(lambda x: x["api_key"] == api_key, self.sessions))
-        return [Session(**s) for s in user_sessions]
+        return [SessionModel(**s) for s in user_sessions]
 
-    async def get_questionnaires(self) -> list[Questionnaire]:
+    async def get_questionnaires(self) -> list[QuestionnaireModel]:
         """Retourne la liste de questionnaires dans l'ordre de passage."""
         return sorted(
-            [Questionnaire(**q) for q in self.questionnaires], key=lambda x: x.order
+            [QuestionnaireModel(**q) for q in self.questionnaires],
+            key=lambda x: x.order,
         )
