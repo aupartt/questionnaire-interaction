@@ -71,7 +71,7 @@ async def test_get_session(make_mock_client):
     mock_service = MagicMock()
 
     mock_items = [ItemShort(id="1", name="Who?"), ItemShort(id="2", name="Where?")]
-    mock_answers = [Answer(id="1", item_id="1", value="Me!", status=StatusEnum.COMPLETED)]
+    mock_answers = [Answer(item_id="1", value="Me!", status=StatusEnum.COMPLETED)]
     mock_item = Item(
         id="2",
         name="Where?",

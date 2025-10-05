@@ -70,7 +70,6 @@ class AnswerModel(BaseModel):
 
 
 class Answer(BaseModel):
-    id: str
     item_id: str
     value: str | dict | None
     status: StatusEnum

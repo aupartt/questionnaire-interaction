@@ -183,7 +183,7 @@ async def test_get_session_with_answers(make_mock_adapter):
             content=ItemContent(type="text"),
         ),
     ]
-    mock_answers = [Answer(id="1", item_id="1", value="Foo", status=StatusEnum.COMPLETED)]
+    mock_answers = [Answer(item_id="1", value="Foo", status=StatusEnum.COMPLETED)]
     mock_adapter = make_mock_adapter(session=mock_session, items=mock_items, answers=mock_answers)
 
     service = QuestionnaireService(mock_adapter)
