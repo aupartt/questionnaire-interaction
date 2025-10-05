@@ -1,6 +1,6 @@
 import logging
 
-from app.data.questionnaires import QUESTIONNAIRES
+from app.adapter.data.questionnaires import QUESTIONNAIRES
 from app.models.schemas import Questionnaire, Session
 from app.service.protocol.data_adapter_protocol import DataAdapterProtocol
 
