@@ -2,8 +2,9 @@ from enum import Enum
 
 
 class StatusEnum(Enum):
-    IN_PROGRESS = "in_progress"
-    ENDED = "ended"
+    ACTIVE = "active"
+    COMPLETED = "completed"
+    SKIPPED = "skipped"
 
 
 class QuestionType(Enum):

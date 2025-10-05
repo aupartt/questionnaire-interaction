@@ -12,9 +12,9 @@ class Questionnaire(BaseModel):
     order: int
 
 
-class QuestionnaireResponse(Questionnaire):
+class QuestionnaireStatus(Questionnaire):
     session_id: str | None = None
-    completed: bool = False
+    status: StatusEnum | None = None
     is_next: bool = False
 
 
