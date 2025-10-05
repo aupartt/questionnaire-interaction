@@ -65,14 +65,14 @@ class AnswerModel(BaseModel):
     id: str
     session_id: str
     item_id: str
-    value: str | dict
+    value: str | dict | None
     status: StatusEnum
 
 
 class Answer(BaseModel):
     id: str
     item_id: str
-    value: str | dict
+    value: str | dict | None
     status: StatusEnum
 
 
