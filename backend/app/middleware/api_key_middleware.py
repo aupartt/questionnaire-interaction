@@ -16,6 +16,10 @@ class APIKeyMiddleware(BaseHTTPMiddleware):
         ]
 
     async def dispatch(self, request: Request, call_next):
+        if request.method == "OPTIONS":
+            response = await call_next(request)
+            return response
+
         if request.url.path in self.excluded_paths:
             response = await call_next(request)
             return response
