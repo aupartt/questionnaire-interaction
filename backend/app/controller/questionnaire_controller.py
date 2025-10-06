@@ -29,6 +29,7 @@ async def add_answer(
     questionnaire_id: str,
     session_id: str,
     answer: Answer,
+    _: str = Depends(verify_api_key),
     service: QuestionnaireService = Depends(questionnaire_service),
 ):
     return await service.add_answer(questionnaire_id=questionnaire_id, session_id=session_id, answer=answer)
