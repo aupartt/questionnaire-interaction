@@ -1,5 +1,6 @@
 from fastapi import HTTPException, Request
 from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.responses import JSONResponse
 
 from app.config import settings
 
@@ -19,10 +20,13 @@ class APIKeyMiddleware(BaseHTTPMiddleware):
             response = await call_next(request)
             return response
 
-        api_key = request.headers.get(settings.API_KEY_NAME)
-        if not api_key or api_key not in self.valid_keys:
-            raise HTTPException(status_code=401, detail="Invalid API Key")
+        try:
+            api_key = request.headers.get("X-API-Key")
+            if not api_key or api_key not in self.valid_keys:
+                raise HTTPException(status_code=401, detail="Invalid API Key")
 
-        request.state.api_key = api_key
-        response = await call_next(request)
-        return response
+            request.state.api_key = api_key
+            response = await call_next(request)
+            return response
+        except HTTPException as exc:
+            return JSONResponse(status_code=exc.status_code, content={"detail": exc.detail})
