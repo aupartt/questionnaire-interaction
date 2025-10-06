@@ -5,7 +5,6 @@ from starlette.middleware.cors import CORSMiddleware
 
 from app.config import settings
 from app.controller import questionnaire_controller
-from app.middleware.api_key_middleware import APIKeyMiddleware
 
 logger = logging.getLogger(__name__)
 
@@ -24,8 +23,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-app.add_middleware(APIKeyMiddleware)
 
 app.include_router(questionnaire_controller.router, prefix=settings.API_BASE_PATH)
 
