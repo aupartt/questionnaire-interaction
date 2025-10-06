@@ -2,7 +2,7 @@ from datetime import datetime
 
 from pydantic import BaseModel
 
-from app.models.common import QuestionType, StatusEnum
+from app.models.common import QuestionType, ResultStatus, StatusEnum
 
 
 class QuestionnaireModel(BaseModel):
@@ -87,3 +87,8 @@ class Session(BaseModel):
     items: list[ItemShort]
     answers: list[Answer]
     current_item: Item
+
+
+class Result(BaseModel):
+    status: ResultStatus
+    message: str

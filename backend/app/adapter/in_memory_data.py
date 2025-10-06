@@ -3,8 +3,8 @@ import uuid
 from datetime import datetime
 
 from app.adapter.data.questionnaires import ITEMS, QUESTIONNAIRES
-from app.models.common import StatusEnum
-from app.models.schemas import Answer, AnswerModel, Item, QuestionnaireModel, SessionModel
+from app.models.common import ResultStatus, StatusEnum
+from app.models.schemas import Answer, AnswerModel, Item, QuestionnaireModel, Result, SessionModel
 from app.service.protocol.data_adapter_protocol import DataAdapterProtocol
 
 logger = logging.getLogger(__name__)
@@ -70,8 +70,14 @@ class InMemoryAdapter(DataAdapterProtocol):
 
         return [Answer(**answer) for answer in answer_list]
 
-    async def save_answer(self, session_id: str, answer: Answer) -> bool:
-        """Sauvegarde la réponse"""
+    async def save_answer(self, session_id: str, answer: Answer, session_status: StatusEnum | None) -> Result:
+        """Sauvegarde la réponse et update le status de la session"""
+        # Vérifie que la session existe
+        session_idx = next((i for i, session in enumerate(self.sessions) if session["id"] == session_id), None)
+        if session_idx is None:
+            return Result(status=ResultStatus.ERROR, message="ID de session introuvable")
+
+        # Sauvegarde la réponse
         new_answer = AnswerModel(
             id=str(uuid.uuid4()),
             session_id=session_id,
@@ -80,4 +86,10 @@ class InMemoryAdapter(DataAdapterProtocol):
             status=answer.status,
         )
         self.answers.append(new_answer.model_dump())
-        return True
+
+        # Update le status de la session si nécéssaire
+        if session_status is not None:
+            self.sessions[session_idx]["status"] = session_status
+            self.sessions[session_idx]["updated_at"] = datetime.now().isoformat()
+
+        return Result(status=ResultStatus.SUCCESS, message="Réponse sauvegardé")

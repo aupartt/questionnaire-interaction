@@ -94,7 +94,6 @@ class QuestionnaireService:
         """Sauvegarde la réponse et retourne le prochain item du questionnaire s'il y en a un
         Sinon retourne"""
 
-        await self.data_adapter.save_answer(session_id=session_id, answer=answer)
         items = await self.data_adapter.get_items(questionnaire_id=questionnaire_id)
 
         # Récupère l'index de l'item (Answer)
@@ -108,14 +107,18 @@ class QuestionnaireService:
             )
 
         # C'est le dernier item du questionnaire
-        if current_index == len(items) - 1:
-            return NextItemResponse(
-                result_url=f"/questionnaire/{questionnaire_id}/session/{session_id}/results",
-                session_status=StatusEnum.COMPLETED,
-            )
+        next_item = None
+        session_status = StatusEnum.COMPLETED
+        result_url = f"/questionnaire/{questionnaire_id}/session/{session_id}/results"
 
-        next_item = items[current_index + 1]
-        return NextItemResponse(
-            next_item=next_item,
-            session_status=StatusEnum.ACTIVE,
-        )
+        if current_index < len(items) - 1:
+            next_item = items[current_index + 1]
+            session_status = StatusEnum.ACTIVE
+            result_url = None
+
+        # Sauvegarde la réponse et update le status de la session
+        res = await self.data_adapter.save_answer(session_id=session_id, answer=answer, session_status=session_status)
+        if res.status == "error":
+            raise HTTPException(status_code=400, detail=res.message)
+
+        return NextItemResponse(next_item=next_item, session_status=session_status, result_url=result_url)

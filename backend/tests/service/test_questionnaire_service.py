@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock, Mock
 import pytest
 from fastapi import HTTPException
 
-from app.models.common import QuestionType, StatusEnum
+from app.models.common import QuestionType, ResultStatus, StatusEnum
 from app.models.schemas import (
     Answer,
     Item,
@@ -14,6 +14,7 @@ from app.models.schemas import (
     NextItemResponse,
     QuestionnaireModel,
     QuestionnaireStatus,
+    Result,
     Session,
     SessionModel,
 )
@@ -29,6 +30,7 @@ def make_mock_adapter():
         session: Session | None = None,
         items: list[Item] = [],
         answers: list[Answer] = [],
+        result: Result = Result(status=ResultStatus.SUCCESS, message="Nice !"),
     ):
         mock_adapter = Mock(DataAdapterProtocol)
         mock_adapter.get_sessions = AsyncMock(return_value=sessions)
@@ -36,6 +38,7 @@ def make_mock_adapter():
         mock_adapter.get_session_questionnaire = AsyncMock(return_value=session)
         mock_adapter.get_items = AsyncMock(return_value=items)
         mock_adapter.get_answers = AsyncMock(return_value=answers)
+        mock_adapter.save_answer = AsyncMock(return_value=result)
 
         return mock_adapter
 
@@ -257,7 +260,7 @@ async def test_add_answer_success_is_last(make_mock_adapter):
 
 
 @pytest.mark.asyncio
-async def test_add_answer_error(make_mock_adapter):
+async def test_add_answer_error_item_id(make_mock_adapter):
     mock_items = [
         Item(
             id="1",
@@ -281,3 +284,33 @@ async def test_add_answer_error(make_mock_adapter):
         await service.add_answer(questionnaire_id="1", session_id="1337", answer=mock_answer)
 
     assert excinfo.value.status_code == 400
+
+
+@pytest.mark.asyncio
+async def test_add_answer_error_session_id(make_mock_adapter):
+    mock_items = [
+        Item(
+            id="1",
+            name="SuperName-1",
+            question=ItemQuestion(type=QuestionType.TEXT, value="Who?"),
+            content=ItemContent(type="text"),
+        ),
+        Item(
+            id="2",
+            name="SuperName-2",
+            question=ItemQuestion(type=QuestionType.TEXT, value="What?"),
+            content=ItemContent(type="text"),
+        ),
+    ]
+    mock_message = "ID de session introuvable"
+    mock_result = Result(status=ResultStatus.ERROR, message=mock_message)
+    mock_adapter = make_mock_adapter(items=mock_items, result=mock_result)
+    mock_answer = Answer(item_id="2", value="Foo", status=StatusEnum.COMPLETED)
+
+    service = QuestionnaireService(mock_adapter)
+
+    with pytest.raises(HTTPException) as excinfo:
+        await service.add_answer(questionnaire_id="1", session_id="1337", answer=mock_answer)
+
+    assert excinfo.value.status_code == 400
+    assert excinfo.value.detail == mock_message

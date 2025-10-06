@@ -1,6 +1,7 @@
 from typing import Protocol
 
-from app.models.schemas import Answer, Item, QuestionnaireModel, SessionModel
+from app.models.common import StatusEnum
+from app.models.schemas import Answer, Item, QuestionnaireModel, Result, SessionModel
 
 
 class DataAdapterProtocol(Protocol):
@@ -25,6 +26,6 @@ class DataAdapterProtocol(Protocol):
         """Retourne la liste de réponse pour une session"""
         ...
 
-    async def save_answer(self, session_id: str, answer: Answer) -> bool:
-        """Sauvegarde la réponse dans la base de données"""
+    async def save_answer(self, session_id: str, answer: Answer, session_status: StatusEnum) -> Result:
+        """Sauvegarde la réponse dans la base de données et update la session"""
         ...

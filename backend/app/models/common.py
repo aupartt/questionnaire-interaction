@@ -16,3 +16,8 @@ class QuestionType(str, Enum):
 class ResponseType(str, Enum):
     TEXT = "text"
     LIKERT5 = "likert_5"
+
+
+class ResultStatus(str, Enum):
+    SUCCESS = "success"
+    ERROR = "error"

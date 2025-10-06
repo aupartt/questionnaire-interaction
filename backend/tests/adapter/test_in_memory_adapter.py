@@ -1,11 +1,12 @@
+import asyncio
 from datetime import datetime
 
 import pytest
 from pytest_mock import MockerFixture
 
 from app.adapter.in_memory_data import InMemoryAdapter
-from app.models.common import StatusEnum
-from app.models.schemas import Answer, Item, QuestionnaireModel, SessionModel
+from app.models.common import ResultStatus, StatusEnum
+from app.models.schemas import Answer, Item, QuestionnaireModel, Result, SessionModel
 
 
 @pytest.mark.asyncio
@@ -232,14 +233,85 @@ async def test_get_answers_found(mocker: MockerFixture):
 
 
 @pytest.mark.asyncio
-async def test_save_answer(mocker: MockerFixture):
+async def test_save_answer_no_update_session(mocker: MockerFixture):
     adapter = InMemoryAdapter()
     adapter.answers = []
+    mock_datetime = datetime.now()
+    adapter.sessions = [
+        {
+            "id": "1337",
+            "questionnaire_id": "2",
+            "api_key": "foo",
+            "status": StatusEnum.ACTIVE,
+            "created_at": mock_datetime,
+            "updated_at": mock_datetime,
+        }
+    ]
+
+    mock_answer = Answer(item_id="1", value="Foo", status=StatusEnum.ACTIVE)
+
+    result = await adapter.save_answer(session_id="1337", answer=mock_answer, session_status=None)
+
+    assert isinstance(result, Result)
+    assert result.status == ResultStatus.SUCCESS
+    assert len(adapter.answers) == 1
+    assert adapter.answers[0]["session_id"] == "1337"
+    assert adapter.sessions[0]["updated_at"] == mock_datetime
+    assert adapter.sessions[0]["status"] == StatusEnum.ACTIVE
+
+
+@pytest.mark.asyncio
+async def test_save_answer_update_session(mocker: MockerFixture):
+    adapter = InMemoryAdapter()
+    adapter.answers = []
+    mock_datetime = "2025-10-06T11:58:30.549081"
+    adapter.sessions = [
+        {
+            "id": "1337",
+            "questionnaire_id": "2",
+            "api_key": "foo",
+            "status": StatusEnum.ACTIVE,
+            "created_at": mock_datetime,
+            "updated_at": mock_datetime,
+        }
+    ]
 
     mock_answer = Answer(item_id="1", value="Foo", status=StatusEnum.COMPLETED)
 
-    result = await adapter.save_answer(session_id="1337", answer=mock_answer)
+    await asyncio.sleep(0.1)  # To avait getting the same
 
-    assert result
+    result = await adapter.save_answer(session_id="1337", answer=mock_answer, session_status=StatusEnum.COMPLETED)
+
+    assert isinstance(result, Result)
+    assert result.status == ResultStatus.SUCCESS
     assert len(adapter.answers) == 1
     assert adapter.answers[0]["session_id"] == "1337"
+    assert adapter.sessions[0]["updated_at"] != mock_datetime
+    assert adapter.sessions[0]["status"] == StatusEnum.COMPLETED
+
+
+@pytest.mark.asyncio
+async def test_save_answer_not_session(mocker: MockerFixture):
+    adapter = InMemoryAdapter()
+    adapter.answers = []
+    mock_datetime = "2025-10-06T11:58:30.549081"
+    adapter.sessions = [
+        {
+            "id": "1337",
+            "questionnaire_id": "2",
+            "api_key": "foo",
+            "status": StatusEnum.ACTIVE,
+            "created_at": mock_datetime,
+            "updated_at": mock_datetime,
+        }
+    ]
+
+    mock_answer = Answer(item_id="1", value="Foo", status=StatusEnum.COMPLETED)
+
+    await asyncio.sleep(0.1)  # To avait getting the same
+
+    result = await adapter.save_answer(session_id="42", answer=mock_answer, session_status=StatusEnum.COMPLETED)
+
+    assert isinstance(result, Result)
+    assert result.status == ResultStatus.ERROR
+    assert len(adapter.answers) == 0
