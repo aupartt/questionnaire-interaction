@@ -32,7 +32,7 @@ export default function QuestionnairesPage() {
                     <NextQuestionnaireDetails name={next.name} description={next.description} />
                     <Button
                         className='rounded-full bg-green-600 hover:bg-green-700 cursor-pointer transition-colors'
-                        onClick={() => router.push(`/${params.api_key}/questionnaires/${next.id}`)}
+                        onClick={() => router.push(`/${params.api_key}/questionnaire/${next.id}`)}
                     >
                         Continuer
                     </Button>
