@@ -4,7 +4,6 @@ import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from app.config import settings
 from app.controller.questionnaire_controller import router
 from app.models.common import QuestionType, StatusEnum
 from app.models.schemas import (
@@ -21,19 +20,21 @@ from app.models.schemas import (
 
 @pytest.fixture()
 def make_mock_client():
-    def make(mock_service=AsyncMock()):
+    def make(mock_service=AsyncMock(), api_key=""):
         app = FastAPI()
         app.include_router(router)
 
         @app.middleware("http")
         async def add_api_key(request, call_next):
             """Simule le middleware pour ajouter la clé api dans les state"""
-            request.state.api_key = request.headers.get(settings.API_KEY_NAME)
+            request.state.api_key = request.headers.get("X-API-Key")
             return await call_next(request)
 
-        from app.controller.questionnaire_controller import get_questionnaire_service
+        from app.controller.dependencies.security import verify_api_key
+        from app.controller.dependencies.services import questionnaire_service
 
-        app.dependency_overrides[get_questionnaire_service] = lambda: mock_service
+        app.dependency_overrides[questionnaire_service] = lambda: mock_service
+        app.dependency_overrides[verify_api_key] = lambda: api_key
 
         return TestClient(app)
 
@@ -55,9 +56,8 @@ async def test_get_questionnaires(make_mock_client):
             )
         ]
     )
-
-    client = make_mock_client(mock_service=mock_service)
-    response = client.get("/questionnaires", headers={settings.API_KEY_NAME: "foo-api-key"})
+    client = make_mock_client(mock_service=mock_service, api_key="foo-api-key")
+    response = client.get("/questionnaires", headers={"X-API-Key": "foo-api-key"})
 
     assert response.status_code == 200
     data = response.json()
@@ -89,8 +89,8 @@ async def test_get_session(make_mock_client):
         )
     )
 
-    client = make_mock_client(mock_service=mock_service)
-    response = client.post("/questionnaire/42/session", headers={settings.API_KEY_NAME: "foo-api-key"})
+    client = make_mock_client(mock_service=mock_service, api_key="foo-api-key")
+    response = client.post("/questionnaire/42/session", headers={"X-API-Key": "foo-api-key"})
 
     assert response.status_code == 200
     data = response.json()
@@ -109,10 +109,10 @@ async def test_add_answer(make_mock_client):
     )
     mock_answer = Answer(item_id="2", value="Ceci va échouer", status=StatusEnum.COMPLETED)
 
-    client = make_mock_client(mock_service=mock_service)
+    client = make_mock_client(mock_service=mock_service, api_key="foo-api-key")
     response = client.post(
         "/questionnaire/42/session/3/answer",
-        headers={settings.API_KEY_NAME: "foo-api-key"},
+        headers={"X-API-Key": "foo-api-key"},
         json=mock_answer.model_dump(),
     )
 
