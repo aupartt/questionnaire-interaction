@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
 from app.config import settings
+from app.controller import questionnaire_controller
 from app.middleware.api_key_middleware import APIKeyMiddleware
 
 logger = logging.getLogger(__name__)
@@ -26,10 +27,7 @@ app.add_middleware(
 
 app.add_middleware(APIKeyMiddleware)
 
-
-@app.get("/")
-def hello():
-    return "Hello world !"
+app.include_router(questionnaire_controller.router, prefix=settings.api_base_path)
 
 
 if __name__ == "__main__":
