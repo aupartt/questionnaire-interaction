@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Request
 
 from app.adapter.in_memory_data import InMemoryAdapter
-from app.models.schemas import Answer, QuestionnaireStatus, Session
+from app.models.schemas import Answer, NextItemResponse, QuestionnaireStatus, Session
 from app.service.protocol.data_adapter_protocol import DataAdapterProtocol
 from app.service.questionnaire_service import QuestionnaireService
 
@@ -30,7 +30,7 @@ async def get_session(
     return await service.get_session(api_key=api_key, questionnaire_id=questionnaire_id)
 
 
-@router.post("/questionnaire/{questionnaire_id}/session/{session_id}/answer")
+@router.post("/questionnaire/{questionnaire_id}/session/{session_id}/answer", response_model=NextItemResponse)
 async def add_answer(
     questionnaire_id: str,
     session_id: str,
