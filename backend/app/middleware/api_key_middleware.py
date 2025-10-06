@@ -2,15 +2,19 @@ from fastapi import HTTPException, Request
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import JSONResponse
 
-from app.config import settings
+from app.config import EnvironmentType, settings
 
 
 class APIKeyMiddleware(BaseHTTPMiddleware):
     def __init__(self, app):
         super().__init__(app)
-        self.valid_keys = [settings.MOCK_API_KEY]
+        self.valid_keys = []
+
+        if settings.ENVIRONMENT == EnvironmentType.DEV:
+            self.valid_keys.append(settings.API_KEY_MOCK)
+
         self.excluded_paths = [
-            f"{settings.api_base_path}/docs",
+            f"{settings.API_BASE_PATH}/docs",
             "/redoc",
             "/openapi.json",
         ]

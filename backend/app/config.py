@@ -1,17 +1,25 @@
+from enum import Enum
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+class EnvironmentType(str, Enum):
+    DEV = "dev"
+    PROD = "prod"
 
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
     # Const
-    API_KEY_NAME: str = "QUESTIONNAIRE_API_KEY"
-    MOCK_API_KEY: str = "bestapikey123"
+    ENVIRONMENT: EnvironmentType = EnvironmentType.DEV
+    API_KEY_MOCK: str = "foo"
 
     # Base app settings
-    api_base_path: str = "/api/v1"
-    api_path_version: str = "v1"
-    api_port: int = 8090
+    API_BASE_PATH: str = "/api/v1"
+    API_BASE_VERSION: str = "v1"
+    API_PORT: int = 8090
+    FRONT_URL: str = "*"
 
 
 settings = Settings()
