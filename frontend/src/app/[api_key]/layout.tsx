@@ -5,13 +5,14 @@ export default async function ApiKeyLayout({
     params,
     children,
 }: {
-    params: { api_key: string }
+    params: Promise<{ api_key: string }>
     children: React.ReactNode;
 }) {
     const verifyApiKey = getVerifyApiKeyUseCase()
+    const { api_key } = await params
 
     try {
-        const apiStatus = await verifyApiKey.execute(params.api_key)
+        const apiStatus = await verifyApiKey.execute(api_key)
 
         if (apiStatus?.isValid) {
             return <div>{children}</div>
