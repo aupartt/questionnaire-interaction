@@ -1,18 +1,20 @@
 import { IQuestionnaireRepository } from '@/core/ports/IQuestionnaireRepository';
 import { Questionnaire } from '@/core/entities/Questionnaire';
+import { Session } from '@/core/entities/Session';
+import { ApiNotReachableError } from './errors'
 
 export class QuestionnaireApiRepository implements IQuestionnaireRepository {
-    private apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/questionnaires`;
+    private apiUrl = `${process.env.NEXT_PUBLIC_API_URL}`;
 
     async getAll(apiKey: string): Promise<Questionnaire[]> {
-        const response = await fetch(this.apiUrl, {
+        const response = await fetch(`${this.apiUrl}/questionnaires`, {
             headers: {
                 'X-API-Key': apiKey,
             },
         });
 
         if (!response.ok) {
-            throw new Error('Erreur lors de la récupération des questionnaires');
+            throw new ApiNotReachableError();
         }
 
         const data = await response.json();
