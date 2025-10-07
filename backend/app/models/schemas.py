@@ -23,7 +23,7 @@ class QuestionnaireStatus(BaseModel):
 
 class ItemContent(BaseModel):
     type: str
-    likert_value: list[str] | None = None
+    value: str | list[str] | None = None
 
 
 class ItemQuestion(BaseModel):
