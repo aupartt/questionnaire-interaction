@@ -2,7 +2,7 @@ import { Questionnaire } from '../entities/Questionnaire';
 import { IQuestionnaireRepository } from '../ports/IQuestionnaireRepository';
 
 
-export class GetSession {
+export class GetAllQuestionnaire {
     constructor(
         private readonly repo: IQuestionnaireRepository
     ) { }

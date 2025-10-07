@@ -10,6 +10,6 @@ export interface Answer {
 
 export type AnswerResponse = {
     next_item: Item;
-    result_url: string | null;
-    session_status: string;
+    resultUrl: string | null;
+    sessionStatus: string;
 }
