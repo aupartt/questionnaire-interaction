@@ -1,6 +1,5 @@
 import { IQuestionnaireRepository } from '@/core/ports/IQuestionnaireRepository';
 import { Questionnaire } from '@/core/entities/Questionnaire';
-import { Session } from '@/core/entities/Session';
 import { ApiNotReachableError } from './errors';
 
 export class QuestionnaireApiRepository implements IQuestionnaireRepository {
@@ -28,29 +27,5 @@ export class QuestionnaireApiRepository implements IQuestionnaireRepository {
             status: item.status,
             isNext: item.is_next
         }));
-    }
-
-    async getSession(apiKey: string, questionnaireId: string): Promise<Session> {
-        const response = await fetch(`${this.apiUrl}/questionnaire/${questionnaireId}/session`, {
-            method: 'POST',
-            headers: {
-                'X-API-Key': apiKey,
-            },
-        });
-
-        if (!response.ok) {
-            throw new ApiNotReachableError()
-        }
-
-        const data = await response.json();
-
-        // Transformation snake_case → camelCase
-        return new Session(
-            data.id,
-            data.questionnaire_id,
-            data.items,
-            data.answers,
-            data.current_item
-        )
     }
 }
