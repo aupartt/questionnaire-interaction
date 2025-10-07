@@ -1,27 +1,20 @@
-type AnswerStatus = 'completed' | 'skipped'
+import { Answer, AnswerStatus } from './Answer'
 
-type ItemShort = {
+export type ItemShort = {
     id: string;
     name: string;
 }
-
-type Answer = {
-    itemId: string;
-    value: string;
-    status: AnswerStatus;
-}
-
-type Question = {
+export type Question = {
     type: string;
     value: string;
 }
 
-type Content = {
+export type Content = {
     type: string;
     likertValue: string;
 }
 
-type Item = {
+export type Item = {
     id: string;
     name: string;
     question: Question;
