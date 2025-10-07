@@ -2,14 +2,16 @@
 
 import { useParams } from 'next/navigation';
 
-import { useSession } from '@/ui/hooks/useSession';
-import { QuestionnaireApiRepository } from '@/adapters/api/QuestionnaireApiRepository';
-
-const questionnaireRepository = new QuestionnaireApiRepository()
+import { useEffect } from 'react';
+import { useSessionContext } from '@/ui/contexts/SessionContext'
 
 export default function QuestionnairePage() {
     const params = useParams<{ api_key: string, questionnaireId: string }>()
-    const { session, loading, error } = useSession(params.api_key, params.questionnaireId, questionnaireRepository)
+    const { session, loading, error, initSession } = useSessionContext()
+
+    useEffect(() => {
+        initSession(params.api_key, params.questionnaireId)
+    }, [])
 
     return (
         <main className="container mx-auto p-4">
