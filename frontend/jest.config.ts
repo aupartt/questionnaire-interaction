@@ -22,7 +22,7 @@ const config: Config = {
   testEnvironment: "jsdom",
 
   // Add more setup options before each test is run
-  // setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
 
   // All imported modules in your tests should be mocked automatically
   // automock: false,
