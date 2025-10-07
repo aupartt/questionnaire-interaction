@@ -12,7 +12,7 @@ import { NextQuestionnaireDetails } from '@/ui/components/NextQuestionnaireDetai
 
 const questionnaireRepository = new QuestionnaireApiRepository()
 
-export default function QuestionnairesPage() {
+export default function OnboardingPage() {
     const router = useRouter()
     const params = useParams<{ api_key: string }>()
     const { questionnaires, loading, error } = useQuestionnaires(params.api_key, questionnaireRepository)
