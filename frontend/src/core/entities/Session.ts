@@ -28,12 +28,12 @@ export class Session {
         public items: ItemShort[],
         public answers: Answer[],
         public currentItem: Item,
-    ) {}
+    ) { }
 
     addAnswer(answer: Answer): void {
         // Regarde si la réponse existe
         const exist_idx = this.answers.findIndex(
-            (x) => x.itemId == answer.itemId,
+            (x) => x.itemId === answer.itemId,
         );
 
         // Update la réponse
@@ -48,7 +48,7 @@ export class Session {
     }
 
     getItemStatus(itemId: string): AnswerStatus | null {
-        const item = this.answers.find((x) => x.itemId == itemId);
+        const item = this.answers.find((x) => x.itemId === itemId);
 
         if (item) {
             return item.status;

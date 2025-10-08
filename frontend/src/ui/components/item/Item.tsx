@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-import type { Item } from "@/core/entities/Session";
 import { useSessionContext } from "@/ui/contexts/SessionContext";
 import { StyledButton } from "../StyledButton";
 import { ItemContent } from "./ItemContent";
@@ -9,7 +8,7 @@ import { ProgressStepper } from "./ProgressStepper";
 
 export function Item() {
     const [answerValue, setAnswerValue] = useState<string | null>(null);
-    const { session, error, loadingAnswer, addAnswer } = useSessionContext();
+    const { session, addAnswer } = useSessionContext();
 
     const handleChange = (newValue: string) => {
         setAnswerValue(newValue);
@@ -30,7 +29,6 @@ export function Item() {
             <ProgressStepper />
             <ItemQuestion question={session!.currentItem.question} />
             <ItemContent
-                name={session!.currentItem.name}
                 content={session!.currentItem.content}
                 handleChange={handleChange}
             />

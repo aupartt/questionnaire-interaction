@@ -12,7 +12,7 @@ export default function QuestionnairePage() {
 
     useEffect(() => {
         initSession(params.questionnaireId);
-    }, [params]);
+    }, [params, initSession]);
 
     return (
         <main className="container mx-auto p-4">
