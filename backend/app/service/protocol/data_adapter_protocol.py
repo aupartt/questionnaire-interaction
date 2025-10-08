@@ -13,6 +13,10 @@ class DataAdapterProtocol(Protocol):
         """Retourne la liste de questionnaires dans l'ordre de passage."""
         ...
 
+    async def get_questionnaire_by_id(self, questionnaire_id: str) -> QuestionnaireModel | None:
+        """Cherche un questionnaire par son id, retourne None si aucun ne correspond."""
+        ...
+
     async def get_session_questionnaire(self, api_key: str, questionnaire_id: str) -> SessionModel:
         """Retourne la session pour le questionnaire si elle existe
         Sinon crée une nouvelle session et la retourne"""

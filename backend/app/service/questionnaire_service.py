@@ -1,4 +1,4 @@
-from fastapi import HTTPException
+from fastapi import HTTPException, status
 
 from app.models.common import StatusEnum
 from app.models.schemas import Answer, ItemShort, NextItemResponse, QuestionnaireStatus, Session
@@ -13,7 +13,7 @@ class QuestionnaireService:
         """Retourne la listes des questionnaires avec l'état des sessions
 
         Args
-            - api_key (str): La clée API de l'utilisateur
+            - api_key (str): La clé API de l'utilisateur
 
         Returns
             list[QuestionnaireStatus]: La liste des questionnaires avec leur status
@@ -63,12 +63,20 @@ class QuestionnaireService:
         """Vérifie si une session existe déjà pour le questionnaire, sinon crée une nouvelle session.
 
         Args
-            - api_key (str): La clée API de l'utilisateur
+            - api_key (str): La clé API de l'utilisateur
             - questionnaire_id: L'id du questionnaire à récupérer
 
         Returns:
             Session: La session pour le questionnaire
         """
+
+        questionnaire = await self.data_adapter.get_questionnaire_by_id(questionnaire_id=questionnaire_id)
+
+        if questionnaire is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Aucun Questionnaire ne correspond à l'identifiant {questionnaire_id}.",
+            )
 
         session_model = await self.data_adapter.get_session_questionnaire(
             api_key=api_key, questionnaire_id=questionnaire_id
@@ -80,7 +88,7 @@ class QuestionnaireService:
         # Item dédié à l'affichage front
         items_short = [ItemShort(id=item.id, name=item.name) for item in items]
 
-        # TODO: Definir le prochain item (si c'est une reprise de session afin de ne pas juste renvoyer l'item 1)
+        # TODO: Définir le prochain item (si c'est une reprise de session afin de ne pas juste renvoyer l'item 1)
 
         return Session(
             id=session_model.id,
@@ -102,7 +110,7 @@ class QuestionnaireService:
         # Cas où l'index de l'Item n'a pas été trouvé
         if current_index is None:
             raise HTTPException(
-                status_code=400,
+                status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"L'identifiant d'Item {answer.item_id} spécifié dans le corp de la requête n'existe pas pour le questionnaire {questionnaire_id}.",
             )
 
@@ -119,6 +127,6 @@ class QuestionnaireService:
         # Sauvegarde la réponse et update le status de la session
         res = await self.data_adapter.save_answer(session_id=session_id, answer=answer, session_status=session_status)
         if res.status == "error":
-            raise HTTPException(status_code=400, detail=res.message)
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=res.message)
 
         return NextItemResponse(next_item=next_item, session_status=session_status, result_url=result_url)
