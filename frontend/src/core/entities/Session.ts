@@ -1,7 +1,7 @@
 import type { Answer, AnswerStatus } from "./Answer";
 
 export type ItemShort = {
-    id: string;
+    id: number;
     name: string;
 };
 export type Question = {
@@ -15,7 +15,7 @@ export type Content = {
 };
 
 export type Item = {
-    id: string;
+    id: number;
     name: string;
     question: Question;
     content: Content;
@@ -23,12 +23,12 @@ export type Item = {
 
 export class Session {
     constructor(
-        public readonly id: string,
-        public readonly questionnaireId: string,
+        public readonly id: number,
+        public readonly questionnaireId: number,
         public items: ItemShort[],
         public answers: Answer[],
         public currentItem: Item,
-    ) {}
+    ) { }
 
     addAnswer(answer: Answer): void {
         // Regarde si la réponse existe
@@ -47,7 +47,7 @@ export class Session {
         }
     }
 
-    getItemStatus(itemId: string): AnswerStatus | null {
+    getItemStatus(itemId: number): AnswerStatus | null {
         const item = this.answers.find((x) => x.itemId === itemId);
 
         if (item) {

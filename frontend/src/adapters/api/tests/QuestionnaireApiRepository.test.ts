@@ -2,15 +2,15 @@ import { QuestionnaireApiRepository } from "../QuestionnaireApiRepository";
 
 const mockApiResponse = [
     {
-        id: "1",
+        id: 1,
         name: "Foo",
         description: "FooDesc",
-        session_id: "1",
+        session_id: 1,
         status: "completed",
         is_next: false,
     },
     {
-        id: "2",
+        id: 2,
         name: "Bar",
         description: "BarDesc",
         session_id: null,
@@ -21,15 +21,15 @@ const mockApiResponse = [
 
 const mockRepositoryResponse = [
     {
-        id: "1",
+        id: 1,
         name: "Foo",
         description: "FooDesc",
-        sessionId: "1",
+        sessionId: 1,
         status: "completed",
         isNext: false,
     },
     {
-        id: "2",
+        id: 2,
         name: "Bar",
         description: "BarDesc",
         sessionId: null,

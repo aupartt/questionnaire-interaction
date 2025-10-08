@@ -28,7 +28,7 @@ type SessionContextType = {
     error: string | null;
     clearSession: () => void;
     addAnswer: (answer: Answer) => void;
-    initSession: (questionnaireId: string) => void;
+    initSession: (questionnaireId: number) => void;
 };
 
 const SessionContext = createContext<SessionContextType | undefined>(undefined);
@@ -108,7 +108,7 @@ export function SessionProvider({
     }, [apiKey]);
 
     const initSession = useCallback(
-        async (questionnaireId: string) => {
+        async (questionnaireId: number) => {
             setLoadingSession(true);
             setError(null);
 

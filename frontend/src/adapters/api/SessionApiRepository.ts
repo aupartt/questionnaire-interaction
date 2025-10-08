@@ -5,7 +5,7 @@ import { ApiNotReachableError } from "./errors";
 export class SessionApiRepository implements ISessionRepository {
     private apiUrl = `${process.env.NEXT_PUBLIC_API_URL}`;
 
-    async get(apiKey: string, questionnaireId: string): Promise<Session> {
+    async get(apiKey: string, questionnaireId: number): Promise<Session> {
         const response = await fetch(
             `${this.apiUrl}/questionnaire/${questionnaireId}/session`,
             {
