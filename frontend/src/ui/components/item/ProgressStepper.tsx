@@ -1,5 +1,4 @@
 import { Badge } from "@/components/ui/badge";
-import { ItemShort } from "@/core/entities/Session";
 import { useSessionContext } from "@/ui/contexts/SessionContext";
 
 const Spacer = () => <span className="flex-grow mx-1 h-0.5 bg-gray-300"></span>;
@@ -35,16 +34,18 @@ export function ProgressStepper() {
     const separatedList = session!.items
         .map((item, id) => (
             <ProgressBadge
-                key={id}
+                key={item.id}
                 value={id}
                 isActive={itemIsActive(item.id)}
             />
         ))
         .reduce((prev, current) => {
-            if (prev.length == 0) {
+            if (prev.length === 0) {
                 return [current];
             }
-            return [...prev, <Spacer key={`spacer-${current.key}`} />, current];
+            prev.push(<Spacer key={`spacer-${current.key}`} />);
+            prev.push(current);
+            return prev;
         }, [] as React.ReactNode[]);
 
     return (
