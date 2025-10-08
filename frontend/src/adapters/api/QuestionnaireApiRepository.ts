@@ -9,7 +9,7 @@ type ItemResponse = {
     session_id: string;
     status: string;
     is_next: boolean;
-}
+};
 
 export class QuestionnaireApiRepository implements IQuestionnaireRepository {
     private apiUrl = `${process.env.NEXT_PUBLIC_API_URL}`;

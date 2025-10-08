@@ -5,8 +5,10 @@ type TextContentProps = {
 };
 
 export function TextContent({ handleChange }: TextContentProps) {
-    return <Input
-        type="text"
-        onChange={(e) => handleChange(e.currentTarget.value)}
-    />;
+    return (
+        <Input
+            type="text"
+            onChange={(e) => handleChange(e.currentTarget.value)}
+        />
+    );
 }
