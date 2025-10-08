@@ -92,3 +92,7 @@ class Session(BaseModel):
 class Result(BaseModel):
     status: ResultStatus
     message: str
+
+
+class VerifyResult(BaseModel):
+    is_valid: bool
