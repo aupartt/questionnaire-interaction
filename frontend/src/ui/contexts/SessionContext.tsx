@@ -7,6 +7,7 @@ import {
     useContext,
     useEffect,
     useState,
+    useCallback,
 } from "react";
 import { ApiNotReachableError } from "@/adapters/api/errors";
 import {
@@ -16,7 +17,7 @@ import {
 } from "@/container/Containers";
 import type { Answer } from "@/core/entities/Answer";
 import type { Questionnaire } from "@/core/entities/Questionnaire";
-import type { Session } from "@/core/entities/Session";
+import { Session } from "@/core/entities/Session";
 
 type SessionContextType = {
     apiKey: string | null;
@@ -32,6 +33,10 @@ type SessionContextType = {
 
 const SessionContext = createContext<SessionContextType | undefined>(undefined);
 
+const submitAnswer = getSubmitAnswerUseCase();
+const getSession = getSessionUseCase();
+const getAllQuestionnaire = getAllQuestionnaireUseCase();
+
 export function SessionProvider({
     children,
     apiKey,
@@ -44,15 +49,12 @@ export function SessionProvider({
     const [loadingSession, setLoadingSession] = useState(false);
     const [loadingAnswer, setLoadingAnswer] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const submitAnswer = getSubmitAnswerUseCase();
-    const getSession = getSessionUseCase();
-    const getAllQuestionnaire = getAllQuestionnaireUseCase();
     const router = useRouter();
 
     const setSession = (s: Session) => setSessionState(s);
     const clearSession = () => setSessionState(null);
 
-    const addAnswer = async (answer: Answer) => {
+    const addAnswer = useCallback(async (answer: Answer) => {
         if (!session) return;
         setLoadingAnswer(true);
         setError(null);
@@ -64,11 +66,24 @@ export function SessionProvider({
                 session.questionnaireId,
                 answer,
             );
-            session.addAnswer(answer);
-            if (res.sessionStatus == "active" && res.nextItem) {
-                session.currentItem = res.nextItem;
-                setSession(session);
-            } else {
+
+            const updatedSession = new Session(
+                session.id,
+                session.questionnaireId,
+                [...session.items],
+                [...session.answers],
+                { ...session.currentItem }
+            );
+
+            updatedSession.addAnswer(answer);
+
+            if (res.sessionStatus === "active" && res.nextItem) {
+                updatedSession.currentItem = res.nextItem;
+            }
+
+            setSession(updatedSession);
+
+            if (res.sessionStatus !== "active") {
                 // Redirige vers onboarding (temporaire)
                 router.push(`/${apiKey}/onboarding`);
             }
@@ -79,7 +94,7 @@ export function SessionProvider({
         } finally {
             setLoadingAnswer(false);
         }
-    };
+    }, [session, apiKey, router]);
 
     useEffect(() => {
         getAllQuestionnaire
@@ -90,7 +105,7 @@ export function SessionProvider({
             .catch((err) => setError(err));
     }, [apiKey]);
 
-    const initSession = async (questionnaireId: string) => {
+    const initSession = useCallback(async (questionnaireId: string) => {
         setLoadingSession(true);
         setError(null);
 
@@ -106,7 +121,7 @@ export function SessionProvider({
         } finally {
             setLoadingSession(false);
         }
-    };
+    }, [apiKey]);
 
     return (
         <SessionContext.Provider
