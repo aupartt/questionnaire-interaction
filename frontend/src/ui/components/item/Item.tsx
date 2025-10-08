@@ -6,14 +6,11 @@ import { ItemQuestion } from './ItemQuestion';
 import { ItemContent } from './ItemContent';
 import { Button } from '@/components/ui/button';
 import { useSessionContext } from '@/ui/contexts/SessionContext';
+import { ProgressStepper } from './ProgressStepper';
 
-type ItemProps = {
-    currentItem: Item
-}
-
-export function Item({ currentItem }: ItemProps) {
+export function Item() {
     const [answerValue, setAnswerValue] = useState<string | null>(null)
-    const { addAnswer } = useSessionContext()
+    const { session, error, loadingAnswer, addAnswer } = useSessionContext()
 
     const handleChange = (newValue: string) => {
         setAnswerValue(newValue)
@@ -30,9 +27,7 @@ export function Item({ currentItem }: ItemProps) {
         })
     }
 
-    return <div className='content'>
-        <ItemQuestion question={currentItem.question} />
-        <ItemContent name={currentItem.name} content={currentItem.content} handleChange={handleChange} />
-        <Button onClick={handleSubmit}>Continuer</Button>
+    return <div className='flex flex-col gap-5'>
+        <ProgressStepper />
     </div>
 } 
