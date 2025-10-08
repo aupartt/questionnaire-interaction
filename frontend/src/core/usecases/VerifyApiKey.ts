@@ -1,5 +1,5 @@
-import { ApiKeyStatus } from "../entities/ApiKeyStatus";
-import { IAuthRepository } from "../ports/IAuthRepository";
+import type { ApiKeyStatus } from "../entities/ApiKeyStatus";
+import type { IAuthRepository } from "../ports/IAuthRepository";
 
 export class VerifyApiKey {
     constructor(private readonly authRepository: IAuthRepository) {}

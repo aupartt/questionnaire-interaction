@@ -1,6 +1,6 @@
-import { Answer, AnswerResponse } from "../entities/Answer";
+import type { Answer, AnswerResponse } from "../entities/Answer";
 import { Item } from "../entities/Session";
-import { IAnswerRepository } from "../ports/IAnswerRepository";
+import type { IAnswerRepository } from "../ports/IAnswerRepository";
 
 export class SubmitAnswer {
     constructor(private repo: IAnswerRepository) {}

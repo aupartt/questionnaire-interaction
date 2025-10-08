@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Questionnaire } from "@/core/entities/Questionnaire";
-import { IQuestionnaireRepository } from "@/core/ports/IQuestionnaireRepository";
+import type { Questionnaire } from "@/core/entities/Questionnaire";
+import type { IQuestionnaireRepository } from "@/core/ports/IQuestionnaireRepository";
 
 export function useQuestionnaires(
     apiKey: string,

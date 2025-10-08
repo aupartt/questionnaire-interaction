@@ -1,5 +1,5 @@
-import { IAnswerRepository } from "@/core/ports/IAnswerRepository";
-import { AnswerResponse } from "@/core/entities/Answer";
+import type { AnswerResponse } from "@/core/entities/Answer";
+import type { IAnswerRepository } from "@/core/ports/IAnswerRepository";
 
 export class MockAnswerRepository implements IAnswerRepository {
     private answerResponse = {

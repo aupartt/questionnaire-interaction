@@ -1,4 +1,4 @@
-import { Answer, AnswerStatus } from "./Answer";
+import type { Answer, AnswerStatus } from "./Answer";
 
 export type ItemShort = {
     id: string;

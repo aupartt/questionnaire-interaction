@@ -1,9 +1,8 @@
-import { ReactNode } from "react";
-
-import { Content } from "@/core/entities/Session";
-import { TextContent } from "./contents/TextContent";
 import { Label } from "@radix-ui/react-label";
+import { ReactNode } from "react";
 import { Input } from "@/components/ui/input";
+import type { Content } from "@/core/entities/Session";
+import { TextContent } from "./contents/TextContent";
 
 type ItemContentProps = {
     name: string;

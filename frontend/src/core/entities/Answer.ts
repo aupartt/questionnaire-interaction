@@ -1,4 +1,4 @@
-import { Item } from "./Session";
+import type { Item } from "./Session";
 
 export type AnswerStatus = "completed" | "skipped";
 

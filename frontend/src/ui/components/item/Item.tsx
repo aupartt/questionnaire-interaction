@@ -1,11 +1,10 @@
 import { useState } from "react";
 
-import { type Item } from "@/core/entities/Session";
-
-import { ItemQuestion } from "./ItemQuestion";
-import { ItemContent } from "./ItemContent";
+import type { Item } from "@/core/entities/Session";
 import { useSessionContext } from "@/ui/contexts/SessionContext";
 import { StyledButton } from "../StyledButton";
+import { ItemContent } from "./ItemContent";
+import { ItemQuestion } from "./ItemQuestion";
 import { ProgressStepper } from "./ProgressStepper";
 
 export function Item() {

@@ -1,5 +1,5 @@
-import { IAnswerRepository } from "@/core/ports/IAnswerRepository";
-import { Answer, AnswerResponse } from "@/core/entities/Answer";
+import type { Answer, AnswerResponse } from "@/core/entities/Answer";
+import type { IAnswerRepository } from "@/core/ports/IAnswerRepository";
 import { ApiNotReachableError } from "./errors";
 
 export class AnswerApiRepository implements IAnswerRepository {

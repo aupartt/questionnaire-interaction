@@ -1,4 +1,4 @@
-import { Answer, AnswerResponse } from "../entities/Answer";
+import type { Answer, AnswerResponse } from "../entities/Answer";
 
 export interface IAnswerRepository {
     getNext(

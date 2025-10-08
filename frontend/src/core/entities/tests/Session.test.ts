@@ -1,4 +1,4 @@
-import { Answer } from "../Answer";
+import type { Answer } from "../Answer";
 import { Session } from "../Session";
 
 describe("Session Entity", () => {

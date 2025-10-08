@@ -1,5 +1,5 @@
-import { ISessionRepository } from "@/core/ports/ISessionRepository";
 import { Session } from "@/core/entities/Session";
+import type { ISessionRepository } from "@/core/ports/ISessionRepository";
 import { ApiNotReachableError } from "./errors";
 
 export class SessionApiRepository implements ISessionRepository {

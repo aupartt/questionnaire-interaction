@@ -1,5 +1,5 @@
-import { IQuestionnaireRepository } from "@/core/ports/IQuestionnaireRepository";
-import { Questionnaire } from "@/core/entities/Questionnaire";
+import type { Questionnaire } from "@/core/entities/Questionnaire";
+import type { IQuestionnaireRepository } from "@/core/ports/IQuestionnaireRepository";
 
 export class MockQuestionnaireRepository implements IQuestionnaireRepository {
     private questionnaires: Questionnaire[] = [

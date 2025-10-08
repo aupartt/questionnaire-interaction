@@ -1,5 +1,5 @@
-import { ISessionRepository } from "@/core/ports/ISessionRepository";
 import { Session } from "@/core/entities/Session";
+import type { ISessionRepository } from "@/core/ports/ISessionRepository";
 
 export class MockSessionRepository implements ISessionRepository {
     private session: Session = new Session(

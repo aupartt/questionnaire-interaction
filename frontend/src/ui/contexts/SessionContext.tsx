@@ -1,23 +1,22 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import {
     createContext,
+    type ReactNode,
     useContext,
-    useState,
-    ReactNode,
     useEffect,
+    useState,
 } from "react";
-import { useRouter } from "next/navigation";
-
-import { Session } from "@/core/entities/Session";
-import { Answer } from "@/core/entities/Answer";
+import { ApiNotReachableError } from "@/adapters/api/errors";
 import {
     getAllQuestionnaireUseCase,
     getSessionUseCase,
     getSubmitAnswerUseCase,
 } from "@/container/Containers";
-import { Questionnaire } from "@/core/entities/Questionnaire";
-import { ApiNotReachableError } from "@/adapters/api/errors";
+import type { Answer } from "@/core/entities/Answer";
+import type { Questionnaire } from "@/core/entities/Questionnaire";
+import type { Session } from "@/core/entities/Session";
 
 type SessionContextType = {
     apiKey: string | null;

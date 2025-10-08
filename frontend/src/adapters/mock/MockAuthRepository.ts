@@ -1,5 +1,5 @@
-import { IAuthRepository } from "@/core/ports/IAuthRepository";
-import { ApiKeyStatus } from "@/core/entities/ApiKeyStatus";
+import type { ApiKeyStatus } from "@/core/entities/ApiKeyStatus";
+import type { IAuthRepository } from "@/core/ports/IAuthRepository";
 
 export class MockAuthRepository implements IAuthRepository {
     private sessionStatus = { isValid: true };

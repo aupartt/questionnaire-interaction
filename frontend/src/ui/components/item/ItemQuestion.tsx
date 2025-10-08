@@ -1,6 +1,6 @@
-import { type Question } from "@/core/entities/Session";
+import type { ReactNode } from "react";
+import type { Question } from "@/core/entities/Session";
 import { TextQuestion } from "./questions";
-import { ReactNode } from "react";
 
 interface ItemQuestionProps {
     question: Question;

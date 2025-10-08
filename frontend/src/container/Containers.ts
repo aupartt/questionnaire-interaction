@@ -1,11 +1,11 @@
-import { AuthApiRepository } from "@/adapters/api/AuthApiRepository";
-import { VerifyApiKey } from "@/core/usecases/VerifyApiKey";
-import { GetAllQuestionnaire } from "@/core/usecases/GetAllQuestionnaire";
-import { QuestionnaireApiRepository } from "@/adapters/api/QuestionnaireApiRepository";
-import { GetSession } from "@/core/usecases/GetSession";
-import { SessionApiRepository } from "@/adapters/api/SessionApiRepository";
-import { SubmitAnswer } from "@/core/usecases/SubmitAnswer";
 import { AnswerApiRepository } from "@/adapters/api/AnswerApiRepository";
+import { AuthApiRepository } from "@/adapters/api/AuthApiRepository";
+import { QuestionnaireApiRepository } from "@/adapters/api/QuestionnaireApiRepository";
+import { SessionApiRepository } from "@/adapters/api/SessionApiRepository";
+import { GetAllQuestionnaire } from "@/core/usecases/GetAllQuestionnaire";
+import { GetSession } from "@/core/usecases/GetSession";
+import { SubmitAnswer } from "@/core/usecases/SubmitAnswer";
+import { VerifyApiKey } from "@/core/usecases/VerifyApiKey";
 
 export function getVerifyApiKeyUseCase(): VerifyApiKey {
     return new VerifyApiKey(new AuthApiRepository());

@@ -1,5 +1,5 @@
-import { Questionnaire } from "../entities/Questionnaire";
-import { IQuestionnaireRepository } from "../ports/IQuestionnaireRepository";
+import type { Questionnaire } from "../entities/Questionnaire";
+import type { IQuestionnaireRepository } from "../ports/IQuestionnaireRepository";
 
 export class GetAllQuestionnaire {
     constructor(private readonly repo: IQuestionnaireRepository) {}

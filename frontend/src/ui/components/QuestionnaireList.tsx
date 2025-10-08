@@ -1,4 +1,4 @@
-import { Questionnaire } from "@/core/entities/Questionnaire";
+import type { Questionnaire } from "@/core/entities/Questionnaire";
 
 interface QuestionnaireListProps {
     questionnaires: Questionnaire[];

@@ -1,5 +1,5 @@
-import { Session } from "../entities/Session";
-import { ISessionRepository } from "../ports/ISessionRepository";
+import type { Session } from "../entities/Session";
+import type { ISessionRepository } from "../ports/ISessionRepository";
 
 export class GetSession {
     constructor(private readonly repo: ISessionRepository) {}
