@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 from app.schema.answers import Answer
 from app.schema.common import StatusEnum
@@ -11,8 +11,7 @@ class SessionModel(BaseModel):
     user_id: int
     status: StatusEnum
 
-    class model_config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class Session(BaseModel):

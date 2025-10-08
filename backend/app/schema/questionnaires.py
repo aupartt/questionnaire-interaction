@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 from app.schema.common import StatusEnum
 
@@ -9,8 +9,7 @@ class QuestionnaireModel(BaseModel):
     description: str
     order: int
 
-    class model_config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class QuestionnaireStatus(BaseModel):

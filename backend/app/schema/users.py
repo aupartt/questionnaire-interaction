@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class User(BaseModel):
@@ -6,3 +6,5 @@ class User(BaseModel):
     name: str
     email: str
     api_key: str
+
+    model_config = ConfigDict(from_attributes=True)

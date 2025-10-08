@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 from app.schema.common import QuestionType, StatusEnum
 
@@ -21,8 +21,7 @@ class ItemModel(BaseModel):
     content: ItemContent
     order: int
 
-    class model_config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class Item(BaseModel):
@@ -30,6 +29,8 @@ class Item(BaseModel):
     name: str
     question: ItemQuestion
     content: ItemContent
+
+    model_config = ConfigDict(from_attributes=True)
 
 
 class ItemShort(BaseModel):
