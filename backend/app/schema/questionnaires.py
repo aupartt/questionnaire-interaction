@@ -9,6 +9,9 @@ class QuestionnaireModel(BaseModel):
     description: str
     order: int
 
+    class model_config:
+        from_attributes = True
+
 
 class QuestionnaireStatus(BaseModel):
     id: int

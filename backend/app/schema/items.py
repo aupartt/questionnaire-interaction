@@ -21,6 +21,9 @@ class ItemModel(BaseModel):
     content: ItemContent
     order: int
 
+    class model_config:
+        from_attributes = True
+
 
 class Item(BaseModel):
     id: int

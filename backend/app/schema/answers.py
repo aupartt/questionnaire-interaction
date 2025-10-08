@@ -4,11 +4,14 @@ from app.schema.common import StatusEnum
 
 
 class AnswerModel(BaseModel):
-    id: int
+    id: int | None
     session_id: int
     item_id: int
     value: str | dict | None
     status: StatusEnum
+
+    class model_config:
+        from_attributes = True
 
 
 class Answer(BaseModel):
