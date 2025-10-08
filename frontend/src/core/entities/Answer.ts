@@ -9,7 +9,7 @@ export interface Answer {
 }
 
 export type AnswerResponse = {
-    nextItem: Item;
-    resultUrl: string | null;
+    nextItem?: Item;
+    resultUrl?: string;
     sessionStatus: string;
 }
