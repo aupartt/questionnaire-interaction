@@ -7,6 +7,7 @@ import { QuestionnaireList } from '@/ui/components/QuestionnaireList';
 import { NextQuestionnaireDetails } from '@/ui/components/NextQuestionnaireDetails';
 import { StyledButton } from '@/ui/components/StyledButton';
 import { useSessionContext } from '@/ui/contexts/SessionContext';
+import { ErrorMessage } from '@/ui/components/ErrorMessage';
 
 
 export default function OnboardingPage() {
@@ -34,6 +35,8 @@ export default function OnboardingPage() {
             {!next && !loadingSession && !error && (
                 <p className="text-center text-green-600 font-semibold">Tous les questionnaires sont complétés 🎉</p>
             )}
+
+            {error && <ErrorMessage className="mt-5" title={error} />}
         </main>
     )
 }
