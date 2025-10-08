@@ -1,7 +1,7 @@
 from fastapi import HTTPException, status
 
-from app.models.common import StatusEnum
-from app.models.schemas import Answer, ItemShort, NextItemResponse, QuestionnaireStatus, Session
+from app.schema import Answer, ItemShort, NextItemResponse, QuestionnaireStatus, Session
+from app.schema.common import StatusEnum
 from app.service.protocol.data_adapter_protocol import DataAdapterProtocol
 
 

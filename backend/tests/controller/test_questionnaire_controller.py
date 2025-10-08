@@ -5,8 +5,7 @@ from fastapi import FastAPI, status
 from fastapi.testclient import TestClient
 
 from app.controller.questionnaire_controller import router
-from app.models.common import QuestionType, StatusEnum
-from app.models.schemas import (
+from app.schema import (
     Answer,
     Item,
     ItemContent,
@@ -16,6 +15,7 @@ from app.models.schemas import (
     QuestionnaireStatus,
     Session,
 )
+from app.schema.common import QuestionType, StatusEnum
 
 
 @pytest.fixture()

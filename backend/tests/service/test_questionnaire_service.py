@@ -4,8 +4,7 @@ from unittest.mock import AsyncMock, Mock
 import pytest
 from fastapi import HTTPException
 
-from app.models.common import QuestionType, ResultStatus, StatusEnum
-from app.models.schemas import (
+from app.schema import (
     Answer,
     Item,
     ItemContent,
@@ -14,10 +13,10 @@ from app.models.schemas import (
     NextItemResponse,
     QuestionnaireModel,
     QuestionnaireStatus,
-    Result,
     Session,
     SessionModel,
 )
+from app.schema.common import QuestionType, Result, ResultStatus, StatusEnum
 from app.service.protocol.data_adapter_protocol import DataAdapterProtocol
 from app.service.questionnaire_service import QuestionnaireService
 
@@ -49,8 +48,8 @@ def make_mock_adapter():
 async def test_get_questionnaires_no_session(make_mock_adapter):
     mock_sessions = []
     mock_questionnaires = [
-        QuestionnaireModel(id="1", name="SuperName-1", description="SuperDesc-1", order=1),
-        QuestionnaireModel(id="2", name="SuperName-2", description="SuperDesc-2", order=2),
+        QuestionnaireModel(id=1, name="SuperName-1", description="SuperDesc-1", order=1),
+        QuestionnaireModel(id=2, name="SuperName-2", description="SuperDesc-2", order=2),
     ]
     mock_adapter = make_mock_adapter(mock_sessions, mock_questionnaires)
 
@@ -70,8 +69,8 @@ async def test_get_questionnaires_no_session(make_mock_adapter):
 async def test_get_questionnaires_with_active_session(make_mock_adapter):
     mock_sessions = [
         SessionModel(
-            id="1",
-            questionnaire_id="1",
+            id=1,
+            questionnaire_id=1,
             api_key="foo",
             status=StatusEnum.ACTIVE,
             created_at=datetime.now(),
@@ -79,8 +78,8 @@ async def test_get_questionnaires_with_active_session(make_mock_adapter):
         ),
     ]
     mock_questionnaires = [
-        QuestionnaireModel(id="1", name="SuperName-1", description="SuperDesc-1", order=1),
-        QuestionnaireModel(id="2", name="SuperName-2", description="SuperDesc-2", order=2),
+        QuestionnaireModel(id=1, name="SuperName-1", description="SuperDesc-1", order=1),
+        QuestionnaireModel(id=2, name="SuperName-2", description="SuperDesc-2", order=2),
     ]
     mock_adapter = make_mock_adapter(mock_sessions, mock_questionnaires)
 
@@ -100,8 +99,8 @@ async def test_get_questionnaires_with_active_session(make_mock_adapter):
 async def test_get_questionnaires_with_completed_session(make_mock_adapter):
     mock_sessions = [
         SessionModel(
-            id="1",
-            questionnaire_id="1",
+            id=1,
+            questionnaire_id=1,
             api_key="foo",
             status=StatusEnum.COMPLETED,
             created_at=datetime.now(),
@@ -109,8 +108,8 @@ async def test_get_questionnaires_with_completed_session(make_mock_adapter):
         ),
     ]
     mock_questionnaires = [
-        QuestionnaireModel(id="1", name="SuperName-1", description="SuperDesc-1", order=1),
-        QuestionnaireModel(id="2", name="SuperName-2", description="SuperDesc-2", order=2),
+        QuestionnaireModel(id=1, name="SuperName-1", description="SuperDesc-1", order=1),
+        QuestionnaireModel(id=2, name="SuperName-2", description="SuperDesc-2", order=2),
     ]
     mock_adapter = make_mock_adapter(mock_sessions, mock_questionnaires)
 
@@ -129,8 +128,8 @@ async def test_get_questionnaires_with_completed_session(make_mock_adapter):
 @pytest.mark.asyncio
 async def test_get_session_without_answers(make_mock_adapter):
     mock_session = SessionModel(
-        id="1",
-        questionnaire_id="1",
+        id=1,
+        questionnaire_id=1,
         api_key="foo",
         status=StatusEnum.COMPLETED,
         created_at=datetime.now(),
@@ -138,13 +137,13 @@ async def test_get_session_without_answers(make_mock_adapter):
     )
     mock_items = [
         Item(
-            id="1",
+            id=1,
             name="SuperName-1",
             question=ItemQuestion(type=QuestionType.TEXT, value="Who?"),
             content=ItemContent(type="text"),
         ),
         Item(
-            id="2",
+            id=2,
             name="SuperName-2",
             question=ItemQuestion(type=QuestionType.TEXT, value="What?"),
             content=ItemContent(type="text"),
@@ -155,7 +154,7 @@ async def test_get_session_without_answers(make_mock_adapter):
 
     service = QuestionnaireService(mock_adapter)
 
-    result = await service.get_session(api_key="foo", questionnaire_id="1")
+    result = await service.get_session(api_key="foo", questionnaire_id=1)
 
     assert isinstance(result, Session)
     assert len(result.items) == 2
@@ -167,8 +166,8 @@ async def test_get_session_without_answers(make_mock_adapter):
 @pytest.mark.asyncio
 async def test_get_session_with_answers(make_mock_adapter):
     mock_session = SessionModel(
-        id="1",
-        questionnaire_id="1",
+        id=1,
+        questionnaire_id=1,
         api_key="foo",
         status=StatusEnum.COMPLETED,
         created_at=datetime.now(),
@@ -176,24 +175,24 @@ async def test_get_session_with_answers(make_mock_adapter):
     )
     mock_items = [
         Item(
-            id="1",
+            id=1,
             name="SuperName-1",
             question=ItemQuestion(type=QuestionType.TEXT, value="Who?"),
             content=ItemContent(type="text"),
         ),
         Item(
-            id="2",
+            id=2,
             name="SuperName-2",
             question=ItemQuestion(type=QuestionType.TEXT, value="What?"),
             content=ItemContent(type="text"),
         ),
     ]
-    mock_answers = [Answer(item_id="1", value="Foo", status=StatusEnum.COMPLETED)]
+    mock_answers = [Answer(item_id=1, value="Foo", status=StatusEnum.COMPLETED)]
     mock_adapter = make_mock_adapter(session=mock_session, items=mock_items, answers=mock_answers)
 
     service = QuestionnaireService(mock_adapter)
 
-    result = await service.get_session(api_key="foo", questionnaire_id="1")
+    result = await service.get_session(api_key="foo", questionnaire_id=1)
 
     assert isinstance(result, Session)
     assert len(result.items) == 2
@@ -207,24 +206,24 @@ async def test_get_session_with_answers(make_mock_adapter):
 async def test_add_answer_success_is_next(make_mock_adapter):
     mock_items = [
         Item(
-            id="1",
+            id=1,
             name="SuperName-1",
             question=ItemQuestion(type=QuestionType.TEXT, value="Who?"),
             content=ItemContent(type="text"),
         ),
         Item(
-            id="2",
+            id=2,
             name="SuperName-2",
             question=ItemQuestion(type=QuestionType.TEXT, value="What?"),
             content=ItemContent(type="text"),
         ),
     ]
     mock_adapter = make_mock_adapter(items=mock_items)
-    mock_answer = Answer(item_id="1", value="Foo", status=StatusEnum.COMPLETED)
+    mock_answer = Answer(item_id=1, value="Foo", status=StatusEnum.COMPLETED)
 
     service = QuestionnaireService(mock_adapter)
 
-    result = await service.add_answer(questionnaire_id="1", session_id="1337", answer=mock_answer)
+    result = await service.add_answer(questionnaire_id=1, session_id=1337, answer=mock_answer)
 
     assert isinstance(result, NextItemResponse)
     assert result.next_item == mock_items[1]
@@ -235,24 +234,24 @@ async def test_add_answer_success_is_next(make_mock_adapter):
 async def test_add_answer_success_is_last(make_mock_adapter):
     mock_items = [
         Item(
-            id="1",
+            id=1,
             name="SuperName-1",
             question=ItemQuestion(type=QuestionType.TEXT, value="Who?"),
             content=ItemContent(type="text"),
         ),
         Item(
-            id="2",
+            id=2,
             name="SuperName-2",
             question=ItemQuestion(type=QuestionType.TEXT, value="What?"),
             content=ItemContent(type="text"),
         ),
     ]
     mock_adapter = make_mock_adapter(items=mock_items)
-    mock_answer = Answer(item_id="2", value="Foo", status=StatusEnum.COMPLETED)
+    mock_answer = Answer(item_id=2, value="Foo", status=StatusEnum.COMPLETED)
 
     service = QuestionnaireService(mock_adapter)
 
-    result = await service.add_answer(questionnaire_id="1", session_id="1337", answer=mock_answer)
+    result = await service.add_answer(questionnaire_id=1, session_id=1337, answer=mock_answer)
 
     assert isinstance(result, NextItemResponse)
     assert result.result_url == "/questionnaire/1/session/1337/results"
@@ -263,25 +262,25 @@ async def test_add_answer_success_is_last(make_mock_adapter):
 async def test_add_answer_error_item_id(make_mock_adapter):
     mock_items = [
         Item(
-            id="1",
+            id=1,
             name="SuperName-1",
             question=ItemQuestion(type=QuestionType.TEXT, value="Who?"),
             content=ItemContent(type="text"),
         ),
         Item(
-            id="2",
+            id=2,
             name="SuperName-2",
             question=ItemQuestion(type=QuestionType.TEXT, value="What?"),
             content=ItemContent(type="text"),
         ),
     ]
     mock_adapter = make_mock_adapter(items=mock_items)
-    mock_answer = Answer(item_id="3", value="Foo", status=StatusEnum.COMPLETED)
+    mock_answer = Answer(item_id=3, value="Foo", status=StatusEnum.COMPLETED)
 
     service = QuestionnaireService(mock_adapter)
 
     with pytest.raises(HTTPException) as excinfo:
-        await service.add_answer(questionnaire_id="1", session_id="1337", answer=mock_answer)
+        await service.add_answer(questionnaire_id=1, session_id=1337, answer=mock_answer)
 
     assert excinfo.value.status_code == 400
 
@@ -290,13 +289,13 @@ async def test_add_answer_error_item_id(make_mock_adapter):
 async def test_add_answer_error_session_id(make_mock_adapter):
     mock_items = [
         Item(
-            id="1",
+            id=1,
             name="SuperName-1",
             question=ItemQuestion(type=QuestionType.TEXT, value="Who?"),
             content=ItemContent(type="text"),
         ),
         Item(
-            id="2",
+            id=2,
             name="SuperName-2",
             question=ItemQuestion(type=QuestionType.TEXT, value="What?"),
             content=ItemContent(type="text"),
@@ -305,12 +304,12 @@ async def test_add_answer_error_session_id(make_mock_adapter):
     mock_message = "ID de session introuvable"
     mock_result = Result(status=ResultStatus.ERROR, message=mock_message)
     mock_adapter = make_mock_adapter(items=mock_items, result=mock_result)
-    mock_answer = Answer(item_id="2", value="Foo", status=StatusEnum.COMPLETED)
+    mock_answer = Answer(item_id=2, value="Foo", status=StatusEnum.COMPLETED)
 
     service = QuestionnaireService(mock_adapter)
 
     with pytest.raises(HTTPException) as excinfo:
-        await service.add_answer(questionnaire_id="1", session_id="1337", answer=mock_answer)
+        await service.add_answer(questionnaire_id=1, session_id=1337, answer=mock_answer)
 
     assert excinfo.value.status_code == 400
     assert excinfo.value.detail == mock_message

@@ -5,8 +5,8 @@ import pytest
 from pytest_mock import MockerFixture
 
 from app.adapter.in_memory_data import InMemoryAdapter
-from app.models.common import ResultStatus, StatusEnum
-from app.models.schemas import Answer, Item, QuestionnaireModel, Result, SessionModel
+from app.schema import Answer, Item, QuestionnaireModel, SessionModel
+from app.schema.common import Result, ResultStatus, StatusEnum
 
 
 @pytest.mark.asyncio

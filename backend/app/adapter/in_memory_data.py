@@ -3,8 +3,8 @@ import random
 from datetime import datetime
 
 from app.adapter.data.questionnaires import ITEMS, QUESTIONNAIRES
-from app.models.common import ResultStatus, StatusEnum
-from app.models.schemas import Answer, AnswerModel, Item, QuestionnaireModel, Result, SessionModel
+from app.schema import Answer, AnswerModel, Item, QuestionnaireModel, SessionModel
+from app.schema.common import Result, ResultStatus, StatusEnum
 from app.service.protocol.data_adapter_protocol import DataAdapterProtocol
 
 logger = logging.getLogger(__name__)

@@ -2,7 +2,8 @@ from fastapi import APIRouter, Depends
 
 from app.controller.dependencies.security import verify_api_key
 from app.controller.dependencies.services import questionnaire_service
-from app.models.schemas import Answer, NextItemResponse, QuestionnaireStatus, Session, VerifyResult
+from app.schema import Answer, NextItemResponse, QuestionnaireStatus, Session
+from app.schema.common import VerifyResult
 from app.service.questionnaire_service import QuestionnaireService
 
 router = APIRouter()

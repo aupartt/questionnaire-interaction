@@ -1,7 +1,7 @@
 from typing import Protocol
 
-from app.models.common import StatusEnum
-from app.models.schemas import Answer, Item, QuestionnaireModel, Result, SessionModel
+from app.schema import Answer, Item, QuestionnaireModel, SessionModel
+from app.schema.common import Result, StatusEnum
 
 
 class DataAdapterProtocol(Protocol):
