@@ -22,24 +22,24 @@ async def test_get_session_with_results(mocker: MockerFixture):
     adapter = InMemoryAdapter()
     adapter.sessions = [
         {
-            "id": "1",
-            "questionnaire_id": "1",
+            "id": 1,
+            "questionnaire_id": 1,
             "api_key": "foo",
             "status": StatusEnum.COMPLETED,
             "created_at": datetime.now(),
             "updated_at": datetime.now(),
         },
         {
-            "id": "2",
-            "questionnaire_id": "2",
+            "id": 2,
+            "questionnaire_id": 2,
             "api_key": "foo",
             "status": StatusEnum.COMPLETED,
             "created_at": datetime.now(),
             "updated_at": datetime.now(),
         },
         {
-            "id": "3",
-            "questionnaire_id": "1",
+            "id": 3,
+            "questionnaire_id": 1,
             "api_key": "bar",
             "status": StatusEnum.COMPLETED,
             "created_at": datetime.now(),
@@ -57,13 +57,13 @@ async def test_get_questionnaires(mocker: MockerFixture):
     adapter = InMemoryAdapter()
     adapter.questionnaires = [
         {
-            "id": "2",
+            "id": 2,
             "name": "Bar",
             "description": "BarDesc",
             "order": 2,
         },
         {
-            "id": "1",
+            "id": 1,
             "name": "Foo",
             "description": "FooDesc",
             "order": 1,
@@ -82,24 +82,24 @@ async def test_get_session_questionnaire_no_session(mocker: MockerFixture):
     adapter.sessions = []
     adapter.questionnaires = [
         {
-            "id": "2",
+            "id": 2,
             "name": "Bar",
             "description": "BarDesc",
             "order": 2,
         },
         {
-            "id": "1",
+            "id": 1,
             "name": "Foo",
             "description": "FooDesc",
             "order": 1,
         },
     ]
 
-    result = await adapter.get_session_questionnaire(api_key="foo", questionnaire_id="2")
+    result = await adapter.get_session_questionnaire(api_key="foo", questionnaire_id=2)
 
     assert isinstance(result, SessionModel)
     assert result.api_key == "foo"
-    assert result.questionnaire_id == "2"
+    assert result.questionnaire_id == 2
     assert result.status == StatusEnum.ACTIVE
 
 
@@ -108,8 +108,8 @@ async def test_get_session_questionnaire_session_found(mocker: MockerFixture):
     adapter = InMemoryAdapter()
     adapter.sessions = [
         {
-            "id": "1",
-            "questionnaire_id": "2",
+            "id": 1,
+            "questionnaire_id": 2,
             "api_key": "foo",
             "status": "completed",
             "created_at": datetime.now(),
@@ -118,24 +118,24 @@ async def test_get_session_questionnaire_session_found(mocker: MockerFixture):
     ]
     adapter.questionnaires = [
         {
-            "id": "2",
+            "id": 2,
             "name": "Bar",
             "description": "BarDesc",
             "order": 2,
         },
         {
-            "id": "1",
+            "id": 1,
             "name": "Foo",
             "description": "FooDesc",
             "order": 1,
         },
     ]
 
-    result = await adapter.get_session_questionnaire(api_key="foo", questionnaire_id="2")
+    result = await adapter.get_session_questionnaire(api_key="foo", questionnaire_id=2)
 
     assert isinstance(result, SessionModel)
     assert result.api_key == "foo"
-    assert result.questionnaire_id == "2"
+    assert result.questionnaire_id == 2
     assert result.status == StatusEnum.COMPLETED
 
 
@@ -144,7 +144,7 @@ async def test_get_items_not_found(mocker: MockerFixture):
     adapter = InMemoryAdapter()
     adapter.items = []
 
-    results = await adapter.get_items(questionnaire_id="1")
+    results = await adapter.get_items(questionnaire_id=1)
 
     assert isinstance(results, list)
     assert len(results) == 0
@@ -155,24 +155,24 @@ async def test_get_items_found(mocker: MockerFixture):
     adapter = InMemoryAdapter()
     adapter.items = [
         {
-            "id": "1",
-            "questionnaire_id": "1",
+            "id": 1,
+            "questionnaire_id": 1,
             "name": "How?",
             "question": {"type": "text", "value": "How?"},
             "content": {"type": "text"},
             "order": 2,
         },
         {
-            "id": "2",
-            "questionnaire_id": "1",
+            "id": 2,
+            "questionnaire_id": 1,
             "name": "Who?",
             "question": {"type": "text", "value": "Who?"},
             "content": {"type": "text"},
             "order": 1,
         },
         {
-            "id": "3",
-            "questionnaire_id": "2",
+            "id": 3,
+            "questionnaire_id": 2,
             "name": "When?",
             "question": {"type": "text", "value": "When?"},
             "content": {"type": "text"},
@@ -180,12 +180,12 @@ async def test_get_items_found(mocker: MockerFixture):
         },
     ]
 
-    results = await adapter.get_items(questionnaire_id="1")
+    results = await adapter.get_items(questionnaire_id=1)
 
     assert len(results) == 2
     assert isinstance(results[0], Item)
-    assert results[0].id == "2"
-    assert results[1].id == "1"
+    assert results[0].id == 2
+    assert results[1].id == 1
 
 
 @pytest.mark.asyncio
@@ -193,7 +193,7 @@ async def test_get_answers_not_found(mocker: MockerFixture):
     adapter = InMemoryAdapter()
     adapter.answers = []
 
-    results = await adapter.get_answers(session_id="1")
+    results = await adapter.get_answers(session_id=1)
 
     assert isinstance(results, list)
     assert len(results) == 0
@@ -204,29 +204,29 @@ async def test_get_answers_found(mocker: MockerFixture):
     adapter = InMemoryAdapter()
     adapter.answers = [
         {
-            "id": "1",
-            "session_id": "1",
-            "item_id": "1",
+            "id": 1,
+            "session_id": 1,
+            "item_id": 1,
             "value": "foo",
             "status": StatusEnum.COMPLETED,
         },
         {
-            "id": "2",
-            "session_id": "1",
-            "item_id": "1",
+            "id": 2,
+            "session_id": 1,
+            "item_id": 1,
             "value": None,
             "status": StatusEnum.SKIPPED,
         },
         {
-            "id": "3",
-            "session_id": "2",
-            "item_id": "1",
+            "id": 3,
+            "session_id": 2,
+            "item_id": 1,
             "value": None,
             "status": StatusEnum.SKIPPED,
         },
     ]
 
-    results = await adapter.get_answers(session_id="1")
+    results = await adapter.get_answers(session_id=1)
 
     assert isinstance(results[0], Answer)
     assert len(results) == 2
@@ -239,8 +239,8 @@ async def test_save_answer_no_update_session(mocker: MockerFixture):
     mock_datetime = datetime.now()
     adapter.sessions = [
         {
-            "id": "1337",
-            "questionnaire_id": "2",
+            "id": 1337,
+            "questionnaire_id": 2,
             "api_key": "foo",
             "status": StatusEnum.ACTIVE,
             "created_at": mock_datetime,
@@ -248,14 +248,14 @@ async def test_save_answer_no_update_session(mocker: MockerFixture):
         }
     ]
 
-    mock_answer = Answer(item_id="1", value="Foo", status=StatusEnum.ACTIVE)
+    mock_answer = Answer(item_id=1, value="Foo", status=StatusEnum.ACTIVE)
 
-    result = await adapter.save_answer(session_id="1337", answer=mock_answer, session_status=None)
+    result = await adapter.save_answer(session_id=1337, answer=mock_answer, session_status=None)
 
     assert isinstance(result, Result)
     assert result.status == ResultStatus.SUCCESS
     assert len(adapter.answers) == 1
-    assert adapter.answers[0]["session_id"] == "1337"
+    assert adapter.answers[0]["session_id"] == 1337
     assert adapter.sessions[0]["updated_at"] == mock_datetime
     assert adapter.sessions[0]["status"] == StatusEnum.ACTIVE
 
@@ -267,8 +267,8 @@ async def test_save_answer_update_session(mocker: MockerFixture):
     mock_datetime = "2025-10-06T11:58:30.549081"
     adapter.sessions = [
         {
-            "id": "1337",
-            "questionnaire_id": "2",
+            "id": 1337,
+            "questionnaire_id": 2,
             "api_key": "foo",
             "status": StatusEnum.ACTIVE,
             "created_at": mock_datetime,
@@ -276,16 +276,16 @@ async def test_save_answer_update_session(mocker: MockerFixture):
         }
     ]
 
-    mock_answer = Answer(item_id="1", value="Foo", status=StatusEnum.COMPLETED)
+    mock_answer = Answer(item_id=1, value="Foo", status=StatusEnum.COMPLETED)
 
-    await asyncio.sleep(0.1)  # To avait getting the same
+    await asyncio.sleep(0.1)  # To avoid getting the same
 
-    result = await adapter.save_answer(session_id="1337", answer=mock_answer, session_status=StatusEnum.COMPLETED)
+    result = await adapter.save_answer(session_id=1337, answer=mock_answer, session_status=StatusEnum.COMPLETED)
 
     assert isinstance(result, Result)
     assert result.status == ResultStatus.SUCCESS
     assert len(adapter.answers) == 1
-    assert adapter.answers[0]["session_id"] == "1337"
+    assert adapter.answers[0]["session_id"] == 1337
     assert adapter.sessions[0]["updated_at"] != mock_datetime
     assert adapter.sessions[0]["status"] == StatusEnum.COMPLETED
 
@@ -297,8 +297,8 @@ async def test_save_answer_not_session(mocker: MockerFixture):
     mock_datetime = "2025-10-06T11:58:30.549081"
     adapter.sessions = [
         {
-            "id": "1337",
-            "questionnaire_id": "2",
+            "id": 1337,
+            "questionnaire_id": 2,
             "api_key": "foo",
             "status": StatusEnum.ACTIVE,
             "created_at": mock_datetime,
@@ -306,11 +306,11 @@ async def test_save_answer_not_session(mocker: MockerFixture):
         }
     ]
 
-    mock_answer = Answer(item_id="1", value="Foo", status=StatusEnum.COMPLETED)
+    mock_answer = Answer(item_id=1, value="Foo", status=StatusEnum.COMPLETED)
 
     await asyncio.sleep(0.1)  # To avait getting the same
 
-    result = await adapter.save_answer(session_id="42", answer=mock_answer, session_status=StatusEnum.COMPLETED)
+    result = await adapter.save_answer(session_id=42, answer=mock_answer, session_status=StatusEnum.COMPLETED)
 
     assert isinstance(result, Result)
     assert result.status == ResultStatus.ERROR

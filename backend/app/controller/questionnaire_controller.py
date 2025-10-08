@@ -22,7 +22,7 @@ async def verify(_: str = Depends(verify_api_key)):
 
 @router.post("/questionnaire/{questionnaire_id}/session", response_model=Session)
 async def get_session(
-    questionnaire_id: str,
+    questionnaire_id: int,
     api_key: str = Depends(verify_api_key),
     service: QuestionnaireService = Depends(questionnaire_service),
 ):
@@ -31,8 +31,8 @@ async def get_session(
 
 @router.post("/questionnaire/{questionnaire_id}/session/{session_id}/answer", response_model=NextItemResponse)
 async def add_answer(
-    questionnaire_id: str,
-    session_id: str,
+    questionnaire_id: int,
+    session_id: int,
     answer: Answer,
     _: str = Depends(verify_api_key),
     service: QuestionnaireService = Depends(questionnaire_service),

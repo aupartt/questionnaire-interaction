@@ -6,17 +6,17 @@ from app.models.common import QuestionType, ResultStatus, StatusEnum
 
 
 class QuestionnaireModel(BaseModel):
-    id: str
+    id: int
     name: str
     description: str
     order: int
 
 
 class QuestionnaireStatus(BaseModel):
-    id: str
+    id: int
     name: str
     description: str
-    session_id: str | None = None
+    session_id: int | None = None
     status: StatusEnum | None = None
     is_next: bool = False
 
@@ -32,29 +32,29 @@ class ItemQuestion(BaseModel):
 
 
 class ItemModel(BaseModel):
-    id: str
-    questionnaire_id: str
-    name: str  # Permet d'afficher du texte même si la question est de type media
+    id: int
+    questionnaire_id: int
+    name: str
     question: ItemQuestion
     content: ItemContent
     order: int
 
 
 class Item(BaseModel):
-    id: str
+    id: int
     name: str
     question: ItemQuestion
     content: ItemContent
 
 
 class ItemShort(BaseModel):
-    id: str
+    id: int
     name: str
 
 
 class SessionModel(BaseModel):
-    id: str
-    questionnaire_id: str
+    id: int
+    questionnaire_id: int
     api_key: str  # TODO: créer un User ?
     status: StatusEnum
     created_at: datetime
@@ -62,15 +62,15 @@ class SessionModel(BaseModel):
 
 
 class AnswerModel(BaseModel):
-    id: str
-    session_id: str
-    item_id: str
+    id: int
+    session_id: int
+    item_id: int
     value: str | dict | None
     status: StatusEnum
 
 
 class Answer(BaseModel):
-    item_id: str
+    item_id: int
     value: str | dict | None
     status: StatusEnum
 
@@ -82,8 +82,8 @@ class NextItemResponse(BaseModel):
 
 
 class Session(BaseModel):
-    id: str
-    questionnaire_id: str
+    id: int
+    questionnaire_id: int
     items: list[ItemShort]
     answers: list[Answer]
     current_item: Item

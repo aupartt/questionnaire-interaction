@@ -52,7 +52,7 @@ async def test_get_questionnaires(make_mock_client):
     mock_service.get_questionnaires = AsyncMock(
         return_value=[
             QuestionnaireStatus(
-                id="1",
+                id=1,
                 name="SuperName",
                 description="SuperDesc",
                 session_id=None,
@@ -68,7 +68,7 @@ async def test_get_questionnaires(make_mock_client):
     data = response.json()
     assert isinstance(data, list)
     assert len(data) == 1
-    assert data[0]["id"] == "1"
+    assert data[0]["id"] == 1
     mock_service.get_questionnaires.assert_awaited_once_with(api_key="foo-api-key")
 
 
@@ -76,18 +76,18 @@ async def test_get_questionnaires(make_mock_client):
 async def test_get_session(make_mock_client):
     mock_service = MagicMock()
 
-    mock_items = [ItemShort(id="1", name="Who?"), ItemShort(id="2", name="Where?")]
-    mock_answers = [Answer(item_id="1", value="Me!", status=StatusEnum.COMPLETED)]
+    mock_items = [ItemShort(id=1, name="Who?"), ItemShort(id=2, name="Where?")]
+    mock_answers = [Answer(item_id=1, value="Me!", status=StatusEnum.COMPLETED)]
     mock_item = Item(
-        id="2",
+        id=2,
         name="Where?",
         question=ItemQuestion(type=QuestionType.TEXT, value="Where?"),
         content=ItemContent(type="text"),
     )
     mock_service.get_session = AsyncMock(
         return_value=Session(
-            id="1",
-            questionnaire_id="1",
+            id=1,
+            questionnaire_id=1,
             items=mock_items,
             answers=mock_answers,
             current_item=mock_item,
@@ -100,7 +100,7 @@ async def test_get_session(make_mock_client):
     assert response.status_code == status.HTTP_200_OK
     data = response.json()
     assert Session.model_validate(data)
-    mock_service.get_session.assert_awaited_once_with(api_key="foo-api-key", questionnaire_id="42")
+    mock_service.get_session.assert_awaited_once_with(api_key="foo-api-key", questionnaire_id=42)
 
 
 @pytest.mark.asyncio
@@ -112,7 +112,7 @@ async def test_add_answer(make_mock_client):
             result_url="/questionnaire/5/session/3/answer", session_status=StatusEnum.COMPLETED
         )
     )
-    mock_answer = Answer(item_id="2", value="Ceci va échouer", status=StatusEnum.COMPLETED)
+    mock_answer = Answer(item_id=2, value="Ceci va échouer", status=StatusEnum.COMPLETED)
 
     client = make_mock_client(mock_service=mock_service, api_key="foo-api-key")
     response = client.post(
@@ -124,4 +124,4 @@ async def test_add_answer(make_mock_client):
     assert response.status_code == status.HTTP_200_OK
     data = response.json()
     assert NextItemResponse.model_validate(data)
-    mock_service.add_answer.assert_awaited_once_with(questionnaire_id="42", session_id="3", answer=mock_answer)
+    mock_service.add_answer.assert_awaited_once_with(questionnaire_id=42, session_id=3, answer=mock_answer)

@@ -59,7 +59,7 @@ class QuestionnaireService:
 
         return questionnaires
 
-    async def get_session(self, api_key: str, questionnaire_id: str) -> Session:
+    async def get_session(self, api_key: str, questionnaire_id: int) -> Session:
         """Vérifie si une session existe déjà pour le questionnaire, sinon crée une nouvelle session.
 
         Args
@@ -98,7 +98,7 @@ class QuestionnaireService:
             current_item=items[0],
         )
 
-    async def add_answer(self, questionnaire_id: str, session_id: str, answer: Answer) -> NextItemResponse:
+    async def add_answer(self, questionnaire_id: int, session_id: int, answer: Answer) -> NextItemResponse:
         """Sauvegarde la réponse et retourne le prochain item du questionnaire s'il y en a un
         Sinon retourne"""
 

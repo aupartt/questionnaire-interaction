@@ -1,5 +1,5 @@
 import logging
-import uuid
+import random
 from datetime import datetime
 
 from app.adapter.data.questionnaires import ITEMS, QUESTIONNAIRES
@@ -34,7 +34,7 @@ class InMemoryAdapter(DataAdapterProtocol):
             key=lambda x: x.order,
         )
 
-    async def get_questionnaire_by_id(self, questionnaire_id: str) -> QuestionnaireModel | None:
+    async def get_questionnaire_by_id(self, questionnaire_id: int) -> QuestionnaireModel | None:
         """Cherche un questionnaire par son id, retourne None si aucun ne correspond."""
         questionnaire = next(filter(lambda q: q["id"] == questionnaire_id, self.questionnaires), None)
 
@@ -43,7 +43,7 @@ class InMemoryAdapter(DataAdapterProtocol):
 
         return None
 
-    async def get_session_questionnaire(self, api_key: str, questionnaire_id: str) -> SessionModel:
+    async def get_session_questionnaire(self, api_key: str, questionnaire_id: int) -> SessionModel:
         """Retourne la session pour le questionnaire si elle existe
         Sinon crée une nouvelle session et la retourne"""
         session = next(
@@ -56,7 +56,7 @@ class InMemoryAdapter(DataAdapterProtocol):
 
         if session is None:
             new_session = SessionModel(
-                id=str(uuid.uuid4()),
+                id=random.randint(0, 9999),
                 api_key=api_key,
                 questionnaire_id=questionnaire_id,
                 status=StatusEnum.ACTIVE,
@@ -69,19 +69,19 @@ class InMemoryAdapter(DataAdapterProtocol):
 
         return SessionModel(**session)
 
-    async def get_items(self, questionnaire_id: str) -> list[Item]:
+    async def get_items(self, questionnaire_id: int) -> list[Item]:
         """Retourne la liste d'item pour un questionnaire dans l'ordre"""
         item_list = list(filter(lambda x: x["questionnaire_id"] == questionnaire_id, self.items))
 
         return [Item(**item) for item in sorted(item_list, key=lambda x: x["order"])]
 
-    async def get_answers(self, session_id: str) -> list[Answer]:
+    async def get_answers(self, session_id: int) -> list[Answer]:
         """Retourne toutes les réponse d'une session"""
         answer_list = list(filter(lambda x: x["session_id"] == session_id, self.answers))
 
         return [Answer(**answer) for answer in answer_list]
 
-    async def save_answer(self, session_id: str, answer: Answer, session_status: StatusEnum | None) -> Result:
+    async def save_answer(self, session_id: int, answer: Answer, session_status: StatusEnum | None) -> Result:
         """Sauvegarde la réponse et update le status de la session"""
         # Vérifie que la session existe
         session_idx = next((i for i, session in enumerate(self.sessions) if session["id"] == session_id), None)
@@ -91,7 +91,7 @@ class InMemoryAdapter(DataAdapterProtocol):
 
         # Sauvegarde la réponse
         new_answer = AnswerModel(
-            id=str(uuid.uuid4()),
+            id=random.randint(0, 9999),
             session_id=session_id,
             item_id=answer.item_id,
             value=answer.value,
