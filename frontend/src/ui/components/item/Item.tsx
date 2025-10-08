@@ -29,6 +29,8 @@ export function Item() {
 
     return <div className='flex flex-col gap-5'>
         <ProgressStepper />
+        <ItemQuestion question={session!.currentItem.question} />
+        <ItemContent name={session!.currentItem.name} content={session!.currentItem.content} handleChange={handleChange} />
         <div className='flex flex-row-reverse'>
             <StyledButton value="Continuer" action={handleSubmit} />
         </div>

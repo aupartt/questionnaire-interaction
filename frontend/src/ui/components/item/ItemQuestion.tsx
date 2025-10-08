@@ -10,12 +10,8 @@ export function ItemQuestion({ question }: ItemQuestionProps) {
     let node: ReactNode = <></>
     switch (question.type) {
         case "text":
-            node = <TextQuestion value={question.value} />
+            node = <TextQuestion className="font-bold" value={question.value} />
     }
 
-    return (
-        <div className='flex pb-4'>
-            {node}
-        </div>
-    )
+    return node
 }
