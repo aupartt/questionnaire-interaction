@@ -19,13 +19,13 @@ class QuestionnaireDB(Base):
 
     # Relations
     sessions: Mapped[list["SessionDB"]] = relationship(
-        "Session",
+        "SessionDB",
         backref=backref("questionnaire"),
         cascade="all, delete-orphan",
         passive_deletes=True,
     )
     items: Mapped[list["ItemDB"]] = relationship(
-        "Item",
+        "ItemDB",
         backref=backref("questionnaire"),
         cascade="all, delete-orphan",
         passive_deletes=True,
