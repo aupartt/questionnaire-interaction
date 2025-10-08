@@ -73,6 +73,6 @@ class SessionRepository:
 
             except Exception as e:
                 logger.error(
-                    f"Failed to update session {e}",
+                    f"Impossible de mettre à jours la session {e}",
                 )
                 await session.rollback()

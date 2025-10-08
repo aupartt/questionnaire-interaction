@@ -48,8 +48,11 @@ class AnswerRepository:
             if session_status is not None:
                 await self.repo.update_status(session_id, session_status)
 
+            return Result(status=ResultStatus.SUCCESS, message="Réponse sauvegardé")
+
         except Exception as e:
             logger.error(
-                f"Failed to save answer {e}",
+                f"Impossible de sauvegarder la réponse {e}",
             )
             await session.rollback()
+            return Result(status=ResultStatus.ERROR, message="Impossible de sauvegarder la réponse")
