@@ -23,7 +23,7 @@ class QuestionnaireStatus(BaseModel):
 
 class ItemContent(BaseModel):
     type: str
-    likert_value: list[str] | None = None
+    value: str | list[str] | None = None
 
 
 class ItemQuestion(BaseModel):
@@ -92,3 +92,7 @@ class Session(BaseModel):
 class Result(BaseModel):
     status: ResultStatus
     message: str
+
+
+class VerifyResult(BaseModel):
+    is_valid: bool

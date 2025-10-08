@@ -34,17 +34,27 @@ class InMemoryAdapter(DataAdapterProtocol):
             key=lambda x: x.order,
         )
 
+    async def get_questionnaire_by_id(self, questionnaire_id: str) -> QuestionnaireModel | None:
+        """Cherche un questionnaire par son id, retourne None si aucun ne correspond."""
+        questionnaire = next(filter(lambda q: q["id"] == questionnaire_id, self.questionnaires), None)
+
+        if questionnaire is not None:
+            return QuestionnaireModel(**questionnaire)
+
+        return None
+
     async def get_session_questionnaire(self, api_key: str, questionnaire_id: str) -> SessionModel:
         """Retourne la session pour le questionnaire si elle existe
         Sinon crée une nouvelle session et la retourne"""
-        session_list = list(
+        session = next(
             filter(
                 lambda x: x["api_key"] == api_key and x["questionnaire_id"] == questionnaire_id,
                 self.sessions,
-            )
+            ),
+            None,
         )
 
-        if len(session_list) == 0:
+        if session is None:
             new_session = SessionModel(
                 id=str(uuid.uuid4()),
                 api_key=api_key,
@@ -54,9 +64,10 @@ class InMemoryAdapter(DataAdapterProtocol):
                 updated_at=datetime.now(),
             )
             self.sessions.append(new_session.model_dump())
+            logger.info(f"Création d'une nouvelle session avec l'ID {new_session.id}.")
             return new_session
 
-        return SessionModel(**session_list[0])
+        return SessionModel(**session)
 
     async def get_items(self, questionnaire_id: str) -> list[Item]:
         """Retourne la liste d'item pour un questionnaire dans l'ordre"""
@@ -75,6 +86,7 @@ class InMemoryAdapter(DataAdapterProtocol):
         # Vérifie que la session existe
         session_idx = next((i for i, session in enumerate(self.sessions) if session["id"] == session_id), None)
         if session_idx is None:
+            logger.warning(f"La session {session_id} n'existe pas: {self.sessions}")
             return Result(status=ResultStatus.ERROR, message="ID de session introuvable")
 
         # Sauvegarde la réponse
@@ -87,7 +99,7 @@ class InMemoryAdapter(DataAdapterProtocol):
         )
         self.answers.append(new_answer.model_dump())
 
-        # Update le status de la session si nécéssaire
+        # Update le status de la session si nécessaire
         if session_status is not None:
             self.sessions[session_idx]["status"] = session_status
             self.sessions[session_idx]["updated_at"] = datetime.now().isoformat()

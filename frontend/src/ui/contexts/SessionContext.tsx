@@ -1,0 +1,156 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import {
+    createContext,
+    type ReactNode,
+    useCallback,
+    useContext,
+    useEffect,
+    useState,
+} from "react";
+import { ApiNotReachableError } from "@/adapters/api/errors";
+import {
+    getAllQuestionnaireUseCase,
+    getSessionUseCase,
+    getSubmitAnswerUseCase,
+} from "@/container/Containers";
+import type { Answer } from "@/core/entities/Answer";
+import type { Questionnaire } from "@/core/entities/Questionnaire";
+import { Session } from "@/core/entities/Session";
+
+type SessionContextType = {
+    apiKey: string | null;
+    questionnaires: Questionnaire[];
+    session: Session | null;
+    loadingSession: boolean;
+    loadingAnswer: boolean;
+    error: string | null;
+    clearSession: () => void;
+    addAnswer: (answer: Answer) => void;
+    initSession: (questionnaireId: string) => void;
+};
+
+const SessionContext = createContext<SessionContextType | undefined>(undefined);
+
+const submitAnswer = getSubmitAnswerUseCase();
+const getSession = getSessionUseCase();
+const getAllQuestionnaire = getAllQuestionnaireUseCase();
+
+export function SessionProvider({
+    children,
+    apiKey,
+}: {
+    children: ReactNode;
+    apiKey: string;
+}) {
+    const [questionnaires, setQuestionnaires] = useState<Questionnaire[]>([]);
+    const [session, setSession] = useState<Session | null>(null);
+    const [loadingSession, setLoadingSession] = useState(false);
+    const [loadingAnswer, setLoadingAnswer] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const router = useRouter();
+
+    const clearSession = () => setSession(null);
+
+    const addAnswer = useCallback(
+        async (answer: Answer) => {
+            if (!session) return;
+            setLoadingAnswer(true);
+            setError(null);
+
+            try {
+                const res = await submitAnswer.execute(
+                    apiKey,
+                    session.id,
+                    session.questionnaireId,
+                    answer,
+                );
+
+                const updatedSession = new Session(
+                    session.id,
+                    session.questionnaireId,
+                    [...session.items],
+                    [...session.answers],
+                    { ...session.currentItem },
+                );
+
+                updatedSession.addAnswer(answer);
+
+                if (res.sessionStatus === "active" && res.nextItem) {
+                    updatedSession.currentItem = res.nextItem;
+                }
+
+                setSession(updatedSession);
+
+                if (res.sessionStatus !== "active") {
+                    // Redirige vers onboarding (temporaire)
+                    router.push(`/${apiKey}/onboarding`);
+                }
+            } catch (err) {
+                if (err instanceof ApiNotReachableError) {
+                    setError(err.message);
+                }
+            } finally {
+                setLoadingAnswer(false);
+            }
+        },
+        [session, apiKey, router],
+    );
+
+    useEffect(() => {
+        getAllQuestionnaire
+            .execute(apiKey)
+            .then((questionnaires) => {
+                setQuestionnaires(questionnaires);
+            })
+            .catch((err) => setError(err));
+    }, [apiKey]);
+
+    const initSession = useCallback(
+        async (questionnaireId: string) => {
+            setLoadingSession(true);
+            setError(null);
+
+            try {
+                const data = await getSession.execute(apiKey, questionnaireId);
+
+                if (!data) return;
+
+                setSession(data);
+                setLoadingSession(false);
+            } catch (err) {
+                if (err instanceof Error) setError(err.message);
+            } finally {
+                setLoadingSession(false);
+            }
+        },
+        [apiKey],
+    );
+
+    return (
+        <SessionContext.Provider
+            value={{
+                apiKey,
+                questionnaires,
+                session,
+                loadingSession,
+                loadingAnswer,
+                error,
+                clearSession,
+                addAnswer,
+                initSession,
+            }}
+        >
+            {children}
+        </SessionContext.Provider>
+    );
+}
+
+export function useSessionContext() {
+    const context = useContext(SessionContext);
+    if (!context) {
+        throw new Error("useSession must be used within a SessionProvider");
+    }
+    return context;
+}

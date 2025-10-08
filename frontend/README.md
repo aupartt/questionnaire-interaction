@@ -3,7 +3,6 @@
 ## Routes
 
 Afin de faciliter l'utilisation de la clé API, celle-ci sera directement l'intégrer au routes: `/{api_key}/path`.
-Ce qui permettra d'envoyer un simple lien par mail avec la clé nouvellement créé.
 > http://example.com/foo123/onboarding
 
 ---
