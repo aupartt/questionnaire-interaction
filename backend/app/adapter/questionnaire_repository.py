@@ -18,7 +18,7 @@ class QuestionnaireRepository:
             db_questionnaires = result.scalars().all()
             return [QuestionnaireModel.model_validate(q) for q in db_questionnaires]
 
-    async def get_questionnaire_by_id(self, questionnaire_id: str) -> QuestionnaireModel | None:
+    async def get_questionnaire_by_id(self, questionnaire_id: int) -> QuestionnaireModel | None:
         """Retourne un questionnaire par son ID"""
         async with get_db() as session:
             stmt = select(QuestionnaireDB).where(QuestionnaireDB.id == questionnaire_id)
