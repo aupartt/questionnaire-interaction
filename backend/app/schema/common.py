@@ -32,3 +32,7 @@ class Result(BaseModel):
 
 class VerifyResult(BaseModel):
     is_valid: bool
+
+
+class WillSmith(BaseModel):
+    img_url: str

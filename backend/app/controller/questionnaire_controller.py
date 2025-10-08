@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends
 from app.controller.dependencies.security import verify_api_key
 from app.controller.dependencies.services import questionnaire_service
 from app.schema import Answer, NextItemResponse, QuestionnaireStatus, Session
-from app.schema.common import VerifyResult
+from app.schema.common import VerifyResult, WillSmith
 from app.service.questionnaire_service import QuestionnaireService
 
 router = APIRouter()
@@ -39,3 +39,8 @@ async def add_answer(
     service: QuestionnaireService = Depends(questionnaire_service),
 ):
     return await service.add_answer(questionnaire_id=questionnaire_id, session_id=session_id, answer=answer)
+
+
+@router.post("/questionnaire/{questionnaire_id}/session/{session_id}/results", response_model=WillSmith)
+async def get_results(questionnaire_id: int, session_id: int, _: str = Depends(verify_api_key)):
+    return WillSmith(img_url="https://a.pinatafarm.com/540x494/76636b7956/tada-will-smith.jpg")
