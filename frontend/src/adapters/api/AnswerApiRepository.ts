@@ -7,8 +7,8 @@ export class AnswerApiRepository implements IAnswerRepository {
 
     async getNext(
         apiKey: string,
-        sessionId: string,
-        questionnaireId: string,
+        sessionId: number,
+        questionnaireId: number,
         answer: Answer,
     ): Promise<AnswerResponse> {
         const jsonAnswer = JSON.stringify({
