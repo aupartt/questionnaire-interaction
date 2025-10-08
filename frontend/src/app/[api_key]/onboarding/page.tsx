@@ -3,12 +3,9 @@
 import { useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 
-import { Button } from "@/components/ui/button";
-
 import { QuestionnaireList } from '@/ui/components/QuestionnaireList';
-import { useQuestionnaires } from '@/ui/hooks/useQuestionnaires';
-import { QuestionnaireApiRepository } from '@/adapters/api/QuestionnaireApiRepository';
 import { NextQuestionnaireDetails } from '@/ui/components/NextQuestionnaireDetails';
+import { StyledButton } from '@/ui/components/StyledButton';
 import { useSessionContext } from '@/ui/contexts/SessionContext';
 
 
@@ -30,12 +27,7 @@ export default function OnboardingPage() {
             {next && (
                 <div className='flex flex-wrap items-center gap-5 flex-col'>
                     <NextQuestionnaireDetails name={next.name} description={next.description} />
-                    <Button
-                        className='rounded-full bg-green-600 hover:bg-green-700 cursor-pointer transition-colors'
-                        onClick={() => router.push(`/${params.api_key}/questionnaire/${next.id}`)}
-                    >
-                        Continuer
-                    </Button>
+                    <StyledButton value="Continuer" action={() => router.push(`/${params.api_key}/questionnaire/${next.id}`)} />
                 </div>
             )}
 

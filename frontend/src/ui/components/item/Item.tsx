@@ -1,11 +1,11 @@
-import { ReactNode, useState } from 'react';
+import { useState } from 'react';
 
 import { type Item } from '@/core/entities/Session'
 
 import { ItemQuestion } from './ItemQuestion';
 import { ItemContent } from './ItemContent';
-import { Button } from '@/components/ui/button';
 import { useSessionContext } from '@/ui/contexts/SessionContext';
+import { StyledButton } from '../StyledButton';
 import { ProgressStepper } from './ProgressStepper';
 
 export function Item() {
@@ -21,7 +21,7 @@ export function Item() {
             return
 
         addAnswer({
-            itemId: currentItem.id,
+            itemId: session!.currentItem.id,
             value: answerValue,
             status: "completed"
         })
@@ -29,5 +29,8 @@ export function Item() {
 
     return <div className='flex flex-col gap-5'>
         <ProgressStepper />
+        <div className='flex flex-row-reverse'>
+            <StyledButton value="Continuer" action={handleSubmit} />
+        </div>
     </div>
 } 
