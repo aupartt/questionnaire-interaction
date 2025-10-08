@@ -6,8 +6,7 @@ export class AuthApiRepository implements IAuthRepository {
     private apiUrl = `${process.env.NEXT_PUBLIC_API_URL}`;
 
     async verify(apiKey: string): Promise<ApiKeyStatus> {
-        return { isValid: true }
-        // TODO: Implémenter la route en backend
+
         const response = await fetch(`${this.apiUrl}/verify`, {
             headers: {
                 'X-API-Key': apiKey,
