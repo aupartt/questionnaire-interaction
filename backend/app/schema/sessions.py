@@ -6,7 +6,7 @@ from app.schema.items import Item, ItemShort
 
 
 class SessionModel(BaseModel):
-    id: int | None
+    id: int
     questionnaire_id: int
     user_id: int
     status: StatusEnum
