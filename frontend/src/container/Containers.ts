@@ -20,6 +20,6 @@ export function getSessionUseCase(): GetSession {
     return new GetSession(new SessionApiRepository())
 }
 
-export function getSubmitAnswer(): SubmitAnswer {
+export function getSubmitAnswerUseCase(): SubmitAnswer {
     return new SubmitAnswer(new AnswerApiRepository())
 }
