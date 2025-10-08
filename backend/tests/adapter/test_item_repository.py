@@ -18,7 +18,7 @@ def mock_db_models():
 
 @pytest.mark.asyncio
 async def test_get_items_found(mocker: MockerFixture, make_mock_get_db, mock_db_models):
-    mock_get_db = make_mock_get_db(scalars_all=mock_db_models)
+    mock_get_db, _ = make_mock_get_db(scalars_all=mock_db_models)
 
     mocker.patch("app.adapter.item_repository.get_db", side_effect=mock_get_db)
 
@@ -32,7 +32,7 @@ async def test_get_items_found(mocker: MockerFixture, make_mock_get_db, mock_db_
 
 @pytest.mark.asyncio
 async def test_get_items_not_found(mocker: MockerFixture, make_mock_get_db, mock_db_models):
-    mock_get_db = make_mock_get_db(scalars_all=[])
+    mock_get_db, _ = make_mock_get_db(scalars_all=[])
 
     mocker.patch("app.adapter.item_repository.get_db", side_effect=mock_get_db)
 

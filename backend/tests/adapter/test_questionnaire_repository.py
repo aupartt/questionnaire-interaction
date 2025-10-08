@@ -16,7 +16,7 @@ def mock_db_models():
 
 @pytest.mark.asyncio
 async def test_get_questionnaires_found(mocker: MockerFixture, make_mock_get_db, mock_db_models):
-    mock_get_db = make_mock_get_db(scalars_all=mock_db_models)
+    mock_get_db, _ = make_mock_get_db(scalars_all=mock_db_models)
 
     mocker.patch("app.adapter.questionnaire_repository.get_db", side_effect=mock_get_db)
 
@@ -31,7 +31,7 @@ async def test_get_questionnaires_found(mocker: MockerFixture, make_mock_get_db,
 @pytest.mark.asyncio
 async def test_get_questionnaires_not_found(mocker: MockerFixture, make_mock_get_db):
     mock_result = []
-    mock_get_db = make_mock_get_db(scalars_all=mock_result)
+    mock_get_db, _ = make_mock_get_db(scalars_all=mock_result)
 
     mocker.patch("app.adapter.questionnaire_repository.get_db", side_effect=mock_get_db)
 
@@ -45,7 +45,7 @@ async def test_get_questionnaires_not_found(mocker: MockerFixture, make_mock_get
 @pytest.mark.asyncio
 async def test_get_questionnaire_by_id_found(mocker: MockerFixture, make_mock_get_db, mock_db_models):
     mock_result = mock_db_models[0]
-    mock_get_db = make_mock_get_db(scalar_one_or_none=mock_result)
+    mock_get_db, _ = make_mock_get_db(scalar_one_or_none=mock_result)
 
     mocker.patch("app.adapter.questionnaire_repository.get_db", side_effect=mock_get_db)
 
@@ -59,7 +59,7 @@ async def test_get_questionnaire_by_id_found(mocker: MockerFixture, make_mock_ge
 @pytest.mark.asyncio
 async def test_get_questionnaire_by_id_not_found(mocker: MockerFixture, make_mock_get_db, mock_db_models):
     mock_result = None
-    mock_get_db = make_mock_get_db(scalar_one_or_none=mock_result)
+    mock_get_db, _ = make_mock_get_db(scalar_one_or_none=mock_result)
 
     mocker.patch("app.adapter.questionnaire_repository.get_db", side_effect=mock_get_db)
 
