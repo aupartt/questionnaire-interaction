@@ -7,17 +7,17 @@ import { useEffect } from 'react';
 import { useSessionContext } from '@/ui/contexts/SessionContext'
 
 export default function QuestionnairePage() {
-    const params = useParams<{ api_key: string, questionnaireId: string }>()
-    const { session, loading, error, initSession } = useSessionContext()
+    const params = useParams<{ questionnaireId: string }>()
+    const { session, loadingAnswer, error, initSession } = useSessionContext()
 
     useEffect(() => {
-        initSession(params.api_key, params.questionnaireId)
-    }, [])
+        initSession(params.questionnaireId)
+    }, [params])
 
     return (
         <main className="container mx-auto p-4">
             {session &&
-                <Item currentItem={session.currentItem} />
+                <Item />
             }
             {loading && <p>Loading...</p>}
             {error && <p>{error}</p>}

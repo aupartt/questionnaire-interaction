@@ -9,13 +9,13 @@ import { QuestionnaireList } from '@/ui/components/QuestionnaireList';
 import { useQuestionnaires } from '@/ui/hooks/useQuestionnaires';
 import { QuestionnaireApiRepository } from '@/adapters/api/QuestionnaireApiRepository';
 import { NextQuestionnaireDetails } from '@/ui/components/NextQuestionnaireDetails';
+import { useSessionContext } from '@/ui/contexts/SessionContext';
 
-const questionnaireRepository = new QuestionnaireApiRepository()
 
 export default function OnboardingPage() {
     const router = useRouter()
     const params = useParams<{ api_key: string }>()
-    const { questionnaires, loading, error } = useQuestionnaires(params.api_key, questionnaireRepository)
+    const { questionnaires, loadingSession, error } = useSessionContext()
 
     const next = questionnaires.find((q) => q.isNext)
 
@@ -23,7 +23,7 @@ export default function OnboardingPage() {
         <main className="container mx-auto p-4">
             <QuestionnaireList
                 questionnaires={questionnaires}
-                loading={loading}
+                loading={loadingSession}
                 error={error}
             />
 
@@ -39,7 +39,7 @@ export default function OnboardingPage() {
                 </div>
             )}
 
-            {!next && (
+            {!next && !loadingSession && !error && (
                 <p className="text-center text-green-600 font-semibold">Tous les questionnaires sont complétés 🎉</p>
             )}
         </main>
