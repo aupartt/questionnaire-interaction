@@ -1,5 +1,6 @@
 import { ApiNotReachableError } from '@/adapters/api/errors'
 import { getVerifyApiKeyUseCase } from '@/container/Containers'
+import { SessionProvider } from "@/ui/contexts/SessionContext";
 
 export default async function ApiKeyLayout({
     params,
@@ -15,7 +16,9 @@ export default async function ApiKeyLayout({
         const apiStatus = await verifyApiKey.execute(api_key)
 
         if (apiStatus?.isValid) {
-            return <div>{children}</div>
+            return <SessionProvider apiKey={api_key}>
+                {children}
+            </SessionProvider>
         }
 
         return (
