@@ -7,14 +7,14 @@ from sqlalchemy.orm import Mapped, backref, mapped_column, relationship
 from .base import Base
 
 if TYPE_CHECKING:
-    from .answers import Answer
+    from .answers import AnswerDB
 
 
-class Session(Base):
+class SessionDB(Base):
     __tablename__ = "sessions"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    api_key: Mapped[str]
+    user_id: Mapped[str]
     status: Mapped[str]
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=lambda: datetime.now(UTC)
@@ -28,8 +28,8 @@ class Session(Base):
 
     # Relations
     questionnaire_id: Mapped[int] = mapped_column(ForeignKey("questionnaires.id", ondelete="CASCADE"))
-    answers: Mapped[list["Answer"]] = relationship(
-        "Answer",
+    answers: Mapped[list["AnswerDB"]] = relationship(
+        "AnswerDB",
         backref=backref("session"),
         cascade="all, delete-orphan",
         passive_deletes=True,

@@ -5,11 +5,11 @@ from sqlalchemy.orm import Mapped, backref, mapped_column, relationship
 from .base import Base
 
 if TYPE_CHECKING:
-    from .items import Item
-    from .sessions import Session
+    from .items import ItemDB
+    from .sessions import SessionDB
 
 
-class Questionnaire(Base):
+class QuestionnaireDB(Base):
     __tablename__ = "questionnaires"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
@@ -18,13 +18,13 @@ class Questionnaire(Base):
     order: Mapped[int]
 
     # Relations
-    sessions: Mapped[list["Session"]] = relationship(
+    sessions: Mapped[list["SessionDB"]] = relationship(
         "Session",
         backref=backref("questionnaire"),
         cascade="all, delete-orphan",
         passive_deletes=True,
     )
-    items: Mapped[list["Item"]] = relationship(
+    items: Mapped[list["ItemDB"]] = relationship(
         "Item",
         backref=backref("questionnaire"),
         cascade="all, delete-orphan",

@@ -6,7 +6,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 from .base import Base
 
 
-class Answer(Base):
+class AnswerDB(Base):
     __tablename__ = "answers"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)

@@ -5,10 +5,10 @@ from sqlalchemy.orm import Mapped, backref, mapped_column, relationship
 from .base import Base
 
 if TYPE_CHECKING:
-    from .sessions import Session
+    from .sessions import SessionDB
 
 
-class User(Base):
+class UserDB(Base):
     __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
@@ -17,8 +17,8 @@ class User(Base):
     api_key: Mapped[str] = mapped_column(unique=True)
 
     # Relations
-    sessions: Mapped[list["Session"]] = relationship(
-        "Session",
+    sessions: Mapped[list["SessionDB"]] = relationship(
+        "SessionDB",
         backref=backref("user"),
         cascade="all, delete-orphan",
         passive_deletes=True,

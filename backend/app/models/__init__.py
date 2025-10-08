@@ -1,6 +1,7 @@
-from .answers import Answer
-from .items import Item
-from .questionnaires import Questionnaire
-from .sessions import Session
+from .answers import AnswerDB
+from .items import ItemDB
+from .questionnaires import QuestionnaireDB
+from .sessions import SessionDB
+from .users import UserDB
 
-__all__ = ["Answer", "Item", "Questionnaire", "Session"]
+__all__ = ["AnswerDB", "ItemDB", "QuestionnaireDB", "SessionDB", "UserDB"]
