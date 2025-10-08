@@ -45,14 +45,13 @@ export function SessionProvider({
     apiKey: string;
 }) {
     const [questionnaires, setQuestionnaires] = useState<Questionnaire[]>([]);
-    const [session, setSessionState] = useState<Session | null>(null);
+    const [session, setSession] = useState<Session | null>(null);
     const [loadingSession, setLoadingSession] = useState(false);
     const [loadingAnswer, setLoadingAnswer] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
 
-    const setSession = (s: Session) => setSessionState(s);
-    const clearSession = () => setSessionState(null);
+    const clearSession = () => setSession(null);
 
     const addAnswer = useCallback(
         async (answer: Answer) => {
