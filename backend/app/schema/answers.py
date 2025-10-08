@@ -17,3 +17,5 @@ class Answer(BaseModel):
     item_id: int
     value: str | dict | None
     status: StatusEnum
+
+    model_config = ConfigDict(from_attributes=True)
