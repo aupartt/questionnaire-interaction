@@ -8,7 +8,8 @@
         "start": "next start",
         "lint": "biome check",
         "format": "biome format --write",
-        "test": "jest"
+        "test": "jest",
+        "test:ci": "jest --ci"
     },
     "dependencies": {
         "@radix-ui/react-label": "^2.1.7",
