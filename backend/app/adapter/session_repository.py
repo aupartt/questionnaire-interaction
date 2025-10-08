@@ -37,7 +37,7 @@ class SessionRepository:
         async with get_db() as session:
             try:
                 stmt = select(SessionDB).where(
-                    SessionDB.id == user_id,
+                    SessionDB.user_id == user_id,
                     SessionDB.questionnaire_id == questionnaire_id,
                 )
                 result = await session.execute(stmt)
@@ -55,5 +55,24 @@ class SessionRepository:
             except Exception as e:
                 logger.error(
                     f"Failed to get session {e}",
+                )
+                await session.rollback()
+
+    async def update_status(self, session_id: int, status: StatusEnum) -> None:
+        """Mets à jours le status d'une Session"""
+        async with get_db() as session:
+            try:
+                stmt = select(SessionDB).where(SessionDB.id == session_id)
+                result = await session.execute(stmt)
+                db_session = result.scalar_one_or_none()
+
+                if db_session is not None:
+                    db_session.status = status
+                    session.add(db_session)
+                    await session.commit()
+
+            except Exception as e:
+                logger.error(
+                    f"Failed to update session {e}",
                 )
                 await session.rollback()
