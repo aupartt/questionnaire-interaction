@@ -1,5 +1,5 @@
-import { IAnswerRepository } from '@/core/ports/IAnswerRepository';
-import { AnswerResponse } from '@/core/entities/Answer';
+import { IAnswerRepository } from "@/core/ports/IAnswerRepository";
+import { AnswerResponse } from "@/core/entities/Answer";
 
 export class MockAnswerRepository implements IAnswerRepository {
     private answerResponse = {
@@ -12,14 +12,14 @@ export class MockAnswerRepository implements IAnswerRepository {
             },
             content: {
                 type: "text",
-                likertValue: null
-            }
+                likertValue: null,
+            },
         },
         resultUrl: null,
-        sessionStatus: "active"
-    }
+        sessionStatus: "active",
+    };
 
     async getNext(): Promise<AnswerResponse> {
-        return Promise.resolve(this.answerResponse)
+        return Promise.resolve(this.answerResponse);
     }
 }

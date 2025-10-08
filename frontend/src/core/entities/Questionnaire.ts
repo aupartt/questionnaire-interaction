@@ -1,4 +1,4 @@
-export type QuestionnaireStatus = "active" | "completed" | "skipped"
+export type QuestionnaireStatus = "active" | "completed" | "skipped";
 
 export interface Questionnaire {
     id: string;

@@ -1,4 +1,4 @@
-import { ApiKeyStatus } from '../entities/ApiKeyStatus'
+import { ApiKeyStatus } from "../entities/ApiKeyStatus";
 
 export interface IAuthRepository {
     verify(apiKey: string): Promise<ApiKeyStatus>;

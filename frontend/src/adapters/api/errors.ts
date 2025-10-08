@@ -1,12 +1,14 @@
 export class ApiError extends Error {
     constructor(message: string) {
-        super(message)
-        this.name = this.constructor.name
+        super(message);
+        this.name = this.constructor.name;
     }
 }
 
 export class ApiNotReachableError extends ApiError {
-    constructor(message: string = `API non disponible, vérifier l'url ou votre connexion.`) {
-        super(message)
+    constructor(
+        message: string = `API non disponible, vérifier l'url ou votre connexion.`,
+    ) {
+        super(message);
     }
 }

@@ -1,6 +1,6 @@
 import { Item } from "./Session";
 
-export type AnswerStatus = 'completed' | 'skipped'
+export type AnswerStatus = "completed" | "skipped";
 
 export interface Answer {
     itemId: string;
@@ -12,4 +12,4 @@ export type AnswerResponse = {
     nextItem?: Item;
     resultUrl?: string;
     sessionStatus: string;
-}
+};

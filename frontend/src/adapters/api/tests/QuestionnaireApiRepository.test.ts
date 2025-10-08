@@ -1,4 +1,4 @@
-import { QuestionnaireApiRepository } from '../QuestionnaireApiRepository';
+import { QuestionnaireApiRepository } from "../QuestionnaireApiRepository";
 
 const mockApiResponse = [
     {
@@ -16,8 +16,8 @@ const mockApiResponse = [
         session_id: null,
         status: null,
         is_next: true,
-    }
-]
+    },
+];
 
 const mockRepositoryResponse = [
     {
@@ -35,27 +35,25 @@ const mockRepositoryResponse = [
         sessionId: null,
         status: null,
         isNext: true,
-    }
-]
+    },
+];
 
 describe("QuestionnaireApiRepository", () => {
-    let repository: QuestionnaireApiRepository
-    let fetchMock: jest.SpyInstance
+    let repository: QuestionnaireApiRepository;
+    let fetchMock: jest.SpyInstance;
 
     beforeEach(() => {
-
-        fetchMock = jest.spyOn(global, 'fetch').mockImplementation(
-            () =>
-                Promise.resolve({
-                    ok: true,
-                    json: () => Promise.resolve(mockApiResponse),
-                } as Response)
-        )
-        repository = new QuestionnaireApiRepository()
-    })
+        fetchMock = jest.spyOn(global, "fetch").mockImplementation(() =>
+            Promise.resolve({
+                ok: true,
+                json: () => Promise.resolve(mockApiResponse),
+            } as Response),
+        );
+        repository = new QuestionnaireApiRepository();
+    });
 
     it("devrait récupérer et transformer les questionnaires", async () => {
-        const questionnaires = await repository.getAll("foo")
+        const questionnaires = await repository.getAll("foo");
 
         expect(fetchMock).toHaveBeenCalledWith(
             expect.stringContaining("/questionnaires"),
@@ -63,26 +61,26 @@ describe("QuestionnaireApiRepository", () => {
                 headers: {
                     "X-API-Key": "foo",
                 },
-            })
-        )
+            }),
+        );
 
-        expect(questionnaires).toStrictEqual(mockRepositoryResponse)
-    })
+        expect(questionnaires).toStrictEqual(mockRepositoryResponse);
+    });
 
     it("devrait lancer une erreur si la réponse est ko", async () => {
         fetchMock.mockResolvedValueOnce({
             ok: false,
             status: 500,
-        })
+        });
 
         await expect(repository.getAll("foo")).rejects.toThrow(
-            "API non disponible, vérifier l'url ou votre connexion."
-        )
-    })
+            "API non disponible, vérifier l'url ou votre connexion.",
+        );
+    });
 
     it("devrait lancer une erreur si fetch échoue", async () => {
-        fetchMock.mockRejectedValueOnce(new Error("Network error"))
+        fetchMock.mockRejectedValueOnce(new Error("Network error"));
 
-        await expect(repository.getAll("foo")).rejects.toThrow("Network error")
-    })
-})
+        await expect(repository.getAll("foo")).rejects.toThrow("Network error");
+    });
+});

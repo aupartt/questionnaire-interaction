@@ -4,7 +4,7 @@ type StyledButtonProps = {
     className?: string;
     value: string;
     action: () => void;
-}
+};
 
 export function StyledButton({ className, value, action }: StyledButtonProps) {
     return (
@@ -13,6 +13,6 @@ export function StyledButton({ className, value, action }: StyledButtonProps) {
             onClick={action}
         >
             {value}
-        </Button >
-    )
+        </Button>
+    );
 }

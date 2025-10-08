@@ -1,14 +1,11 @@
-import { Questionnaire } from '../entities/Questionnaire';
-import { IQuestionnaireRepository } from '../ports/IQuestionnaireRepository';
-
+import { Questionnaire } from "../entities/Questionnaire";
+import { IQuestionnaireRepository } from "../ports/IQuestionnaireRepository";
 
 export class GetAllQuestionnaire {
-    constructor(
-        private readonly repo: IQuestionnaireRepository
-    ) { }
+    constructor(private readonly repo: IQuestionnaireRepository) {}
 
     async execute(apiKey: string): Promise<Questionnaire[]> {
-        const questionnaires = await this.repo.getAll(apiKey)
-        return questionnaires
+        const questionnaires = await this.repo.getAll(apiKey);
+        return questionnaires;
     }
 }

@@ -1,5 +1,5 @@
-import { ISessionRepository } from '@/core/ports/ISessionRepository';
-import { Session } from '@/core/entities/Session';
+import { ISessionRepository } from "@/core/ports/ISessionRepository";
+import { Session } from "@/core/entities/Session";
 
 export class MockSessionRepository implements ISessionRepository {
     private session: Session = new Session(
@@ -16,12 +16,12 @@ export class MockSessionRepository implements ISessionRepository {
             },
             content: {
                 type: "text",
-                likertValue: null
-            }
-        }
-    )
+                likertValue: null,
+            },
+        },
+    );
 
     async get(): Promise<Session> {
-        return Promise.resolve(this.session)
+        return Promise.resolve(this.session);
     }
 }

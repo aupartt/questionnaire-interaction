@@ -1,17 +1,19 @@
-import { type Question } from '@/core/entities/Session'
-import { TextQuestion } from './questions';
-import { ReactNode } from 'react';
+import { type Question } from "@/core/entities/Session";
+import { TextQuestion } from "./questions";
+import { ReactNode } from "react";
 
 interface ItemQuestionProps {
-    question: Question
+    question: Question;
 }
 
 export function ItemQuestion({ question }: ItemQuestionProps) {
-    let node: ReactNode = <></>
+    let node: ReactNode = <></>;
     switch (question.type) {
         case "text":
-            node = <TextQuestion className="font-bold" value={question.value} />
+            node = (
+                <TextQuestion className="font-bold" value={question.value} />
+            );
     }
 
-    return node
+    return node;
 }

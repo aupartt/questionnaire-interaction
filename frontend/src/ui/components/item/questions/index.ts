@@ -1,1 +1,1 @@
-export { TextQuestion } from './TextQuestion'
+export { TextQuestion } from "./TextQuestion";
