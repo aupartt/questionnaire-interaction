@@ -9,12 +9,11 @@ import {
     useEffect,
     useState,
 } from "react";
-import { ApiNotReachableError } from "@/adapters/api/errors";
 import {
-    getAllQuestionnaireUseCase,
-    getResultsUseCase,
-    getSessionUseCase,
-    getSubmitAnswerUseCase,
+    getAllQuestionnairePubUseCase,
+    getResultsPubUseCase,
+    getSessionPubUseCase,
+    getSubmitAnswerPubUseCase,
 } from "@/container/Containers";
 import type { Answer } from "@/core/entities/Answer";
 import type { Questionnaire } from "@/core/entities/Questionnaire";
@@ -39,10 +38,10 @@ type SessionContextType = {
 
 const SessionContext = createContext<SessionContextType | undefined>(undefined);
 
-const submitAnswer = getSubmitAnswerUseCase();
-const getSession = getSessionUseCase();
-const getAllQuestionnaire = getAllQuestionnaireUseCase();
-const getResults = getResultsUseCase();
+const submitAnswer = getSubmitAnswerPubUseCase();
+const getSession = getSessionPubUseCase();
+const getAllQuestionnaire = getAllQuestionnairePubUseCase();
+const getResults = getResultsPubUseCase();
 
 export function SessionProvider({
     children,
@@ -106,11 +105,15 @@ export function SessionProvider({
                         `Questionnaire fini, résultat reçu ! ${results}`,
                     );
 
-                    // router.push(`/${apiKey}/onboarding`);
+                    // Met à jours les questionnaires
+                    updateQuestionnaireList()
                 }
             } catch (err) {
-                if (err instanceof ApiNotReachableError) {
+                if (err instanceof Error) {
+                    console.log(err.message);
                     setError(err.message);
+                } else {
+                    console.log("Erreur inconnue:", error);
                 }
             } finally {
                 setLoadingAnswer(false);
@@ -119,17 +122,20 @@ export function SessionProvider({
         [session, apiKey, results],
     );
 
+    const updateQuestionnaireList = () => {
+        getAllQuestionnaire
+            .execute(
+                apiKey
+            )
+            .then((questionnaires) => {
+                setQuestionnaires(questionnaires);
+            })
+            .catch((err) => setError(err));
+    }
+
     useEffect(() => {
-        if (!status) {
-            setStatus("active");
-            getAllQuestionnaire
-                .execute(apiKey)
-                .then((questionnaires) => {
-                    setQuestionnaires(questionnaires);
-                })
-                .catch((err) => setError(err));
-        }
-    }, [apiKey, status]);
+        updateQuestionnaireList()
+    }, [apiKey]);
 
     const initSession = useCallback(
         async (questionnaireId: number) => {
@@ -139,7 +145,10 @@ export function SessionProvider({
             setResults(null);
 
             try {
-                const data = await getSession.execute(apiKey, questionnaireId);
+                const data = await getSession.execute(
+                    apiKey,
+                    questionnaireId,
+                );
 
                 if (!data) return;
 

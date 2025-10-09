@@ -1,4 +1,4 @@
-import type { Session } from "../entities/Session";
+import { Session } from "../entities/Session";
 import type { ISessionRepository } from "../ports/ISessionRepository";
 
 export class GetSession {
@@ -9,6 +9,13 @@ export class GetSession {
         questionnaireId: number,
     ): Promise<Session | null> {
         const session = await this.repo.get(apiKey, questionnaireId);
-        return session;
+
+        return new Session(
+            session.id,
+            session.questionnaireId,
+            session.items,
+            session.answers,
+            session.currentItem,
+        );
     }
 }
