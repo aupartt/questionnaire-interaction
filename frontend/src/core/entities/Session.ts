@@ -11,7 +11,7 @@ export type Question = {
 
 export type Content = {
     type: string;
-    likertValue?: string[];
+    value?: string | string[] | null;
 };
 
 export type Item = {
@@ -28,7 +28,7 @@ export class Session {
         public items: ItemShort[],
         public answers: Answer[],
         public currentItem: Item,
-    ) {}
+    ) { }
 
     addAnswer(answer: Answer): void {
         // Regarde si la réponse existe
