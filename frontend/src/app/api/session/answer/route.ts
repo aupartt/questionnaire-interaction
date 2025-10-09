@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSubmitAnswerUseCase } from "@/container/Containers"
+import { getSubmitAnswerApiUseCase } from "@/container/Containers"
 
 export async function POST(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     }
 
     try {
-        const getSubmitAnswer = getSubmitAnswerUseCase()
+        const getSubmitAnswer = getSubmitAnswerApiUseCase()
         const res = await getSubmitAnswer.execute(apiKey, parseInt(questionnaireId), parseInt(sessionId), answer)
         return NextResponse.json(res);
     } catch (error) {

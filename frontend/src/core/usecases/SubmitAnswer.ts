@@ -2,7 +2,7 @@ import type { Answer, AnswerResponse } from "../entities/Answer";
 import type { IAnswerRepository } from "../ports/IAnswerRepository";
 
 export class SubmitAnswer {
-    constructor(private repo: IAnswerRepository) {}
+    constructor(private repo: IAnswerRepository) { }
 
     async execute(
         apiKey: string,

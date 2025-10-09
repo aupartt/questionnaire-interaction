@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSessionUseCase } from "@/container/Containers"
+import { getSessionApiUseCase } from "@/container/Containers"
 
 export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
     }
 
     try {
-        const getSession = getSessionUseCase()
+        const getSession = getSessionApiUseCase()
         const session = await getSession.execute(apiKey, parseInt(questionnaireId))
         return NextResponse.json(session);
     } catch (error) {

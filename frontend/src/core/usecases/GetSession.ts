@@ -2,7 +2,7 @@ import type { Session } from "../entities/Session";
 import type { ISessionRepository } from "../ports/ISessionRepository";
 
 export class GetSession {
-    constructor(private readonly repo: ISessionRepository) {}
+    constructor(private readonly repo: ISessionRepository) { }
 
     async execute(
         apiKey: string,

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getResultsUseCase } from "@/container/Containers"
+import { getResultsApiUseCase } from "@/container/Containers"
 
 export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
     }
 
     try {
-        const getResults = getResultsUseCase()
+        const getResults = getResultsApiUseCase()
         const res = await getResults.execute(apiKey, parseInt(questionnaireId), parseInt(sessionId))
         return NextResponse.json(res);
     } catch (error) {
