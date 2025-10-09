@@ -62,13 +62,13 @@ services:
         entrypoint: ["python", "-u", "-m"]
         command: alembic upgrade head
         depends_on:
-        postgres:
-            condition: service_healthy
+            postgres:
+                condition: service_healthy
         volumes:
             - ./backend/alembic.ini:/app/alembic.ini
             - ./backend/alembic:/app/alembic
         networks:
-        - app-network
+            - app-network
 
     frontend: 
         build: 
