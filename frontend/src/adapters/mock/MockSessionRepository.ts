@@ -3,12 +3,12 @@ import type { ISessionRepository } from "@/core/ports/ISessionRepository";
 
 export class MockSessionRepository implements ISessionRepository {
     private session: Session = new Session(
-        "1",
-        "2",
-        [{ id: "1", name: "foo" }],
+        1,
+        2,
+        [{ id: 1, name: "foo" }],
         [],
         {
-            id: "1",
+            id: 1,
             name: "foo",
             question: {
                 type: "text",
@@ -16,7 +16,7 @@ export class MockSessionRepository implements ISessionRepository {
             },
             content: {
                 type: "text",
-                likertValue: null,
+                value: null,
             },
         },
     );
