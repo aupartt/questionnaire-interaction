@@ -28,7 +28,7 @@ export class Session {
         public items: ItemShort[],
         public answers: Answer[],
         public currentItem: Item,
-    ) { }
+    ) {}
 
     addAnswer(answer: Answer): void {
         // Regarde si la réponse existe

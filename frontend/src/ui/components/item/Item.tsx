@@ -1,12 +1,11 @@
-import { useState } from "react";
 import Image from "next/image";
-
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useSessionContext } from "@/ui/contexts/SessionContext";
 import { StyledButton } from "../StyledButton";
 import { ItemContent } from "./ItemContent";
 import { ItemQuestion } from "./ItemQuestion";
 import { ProgressStepper } from "./ProgressStepper";
-import { useRouter } from "next/navigation";
 
 export function Item() {
     const [answerValue, setAnswerValue] = useState<string | null>(null);
@@ -34,17 +33,17 @@ export function Item() {
     return (
         <div className="flex flex-col gap-5">
             <ProgressStepper />
-            {
-                status === "active" && <>
+            {status === "active" && (
+                <>
                     <ItemQuestion question={session!.currentItem.question} />
                     <ItemContent
                         content={session!.currentItem.content}
                         handleChange={handleChange}
                     />
                 </>
-            }
-            {
-                status === "completed" && results && <>
+            )}
+            {status === "completed" && results && (
+                <>
                     <div className="flex flex-col justify-center items-center">
                         <p className="font-bold pb-5">Questionnaire fini !</p>
                         <Image
@@ -54,10 +53,13 @@ export function Item() {
                             height={180}
                             priority
                         />
-                        <p className="pt-5">Cliquez sur continuer pour retourner à la liste des questionnaires</p>
+                        <p className="pt-5">
+                            Cliquez sur continuer pour retourner à la liste des
+                            questionnaires
+                        </p>
                     </div>
                 </>
-            }
+            )}
             <div className="flex flex-row-reverse">
                 <StyledButton value="Continuer" action={handleSubmit} />
             </div>
