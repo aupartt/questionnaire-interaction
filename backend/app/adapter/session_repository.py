@@ -68,7 +68,6 @@ class SessionRepository:
 
                 if db_session is not None:
                     db_session.status = status
-                    session.add(db_session)
                     await session.commit()
 
             except Exception as e:

@@ -11,7 +11,7 @@ export type Question = {
 
 export type Content = {
     type: string;
-    likertValue?: string[];
+    value?: string | string[] | null;
 };
 
 export type Item = {

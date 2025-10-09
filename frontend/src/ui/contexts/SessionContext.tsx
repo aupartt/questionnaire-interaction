@@ -12,12 +12,16 @@ import {
 import { ApiNotReachableError } from "@/adapters/api/errors";
 import {
     getAllQuestionnaireUseCase,
+    getResultsUseCase,
     getSessionUseCase,
     getSubmitAnswerUseCase,
 } from "@/container/Containers";
 import type { Answer } from "@/core/entities/Answer";
 import type { Questionnaire } from "@/core/entities/Questionnaire";
+import type { Results } from "@/core/entities/Results";
 import { Session } from "@/core/entities/Session";
+
+type StatusType = "completed" | "active" | null;
 
 type SessionContextType = {
     apiKey: string | null;
@@ -26,6 +30,8 @@ type SessionContextType = {
     loadingSession: boolean;
     loadingAnswer: boolean;
     error: string | null;
+    status: StatusType;
+    results: Results | null;
     clearSession: () => void;
     addAnswer: (answer: Answer) => void;
     initSession: (questionnaireId: number) => void;
@@ -36,6 +42,7 @@ const SessionContext = createContext<SessionContextType | undefined>(undefined);
 const submitAnswer = getSubmitAnswerUseCase();
 const getSession = getSessionUseCase();
 const getAllQuestionnaire = getAllQuestionnaireUseCase();
+const getResults = getResultsUseCase();
 
 export function SessionProvider({
     children,
@@ -49,6 +56,8 @@ export function SessionProvider({
     const [loadingSession, setLoadingSession] = useState(false);
     const [loadingAnswer, setLoadingAnswer] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [results, setResults] = useState<Results | null>(null);
+    const [status, setStatus] = useState<StatusType | null>(null);
     const router = useRouter();
 
     const clearSession = () => setSession(null);
@@ -78,14 +87,26 @@ export function SessionProvider({
                 updatedSession.addAnswer(answer);
 
                 if (res.sessionStatus === "active" && res.nextItem) {
+                    console.info(`Prochain Item reçu !`);
                     updatedSession.currentItem = res.nextItem;
                 }
 
                 setSession(updatedSession);
 
                 if (res.sessionStatus !== "active") {
-                    // Redirige vers onboarding (temporaire)
-                    router.push(`/${apiKey}/onboarding`);
+                    setStatus("completed");
+                    const res = await getResults.execute(
+                        apiKey,
+                        session.questionnaireId,
+                        session.id,
+                    );
+                    setResults(res);
+
+                    console.info(
+                        `Questionnaire fini, résultat reçu ! ${results}`,
+                    );
+
+                    // router.push(`/${apiKey}/onboarding`);
                 }
             } catch (err) {
                 if (err instanceof ApiNotReachableError) {
@@ -95,22 +116,27 @@ export function SessionProvider({
                 setLoadingAnswer(false);
             }
         },
-        [session, apiKey, router],
+        [session, apiKey, results],
     );
 
     useEffect(() => {
-        getAllQuestionnaire
-            .execute(apiKey)
-            .then((questionnaires) => {
-                setQuestionnaires(questionnaires);
-            })
-            .catch((err) => setError(err));
-    }, [apiKey]);
+        if (!status) {
+            setStatus("active");
+            getAllQuestionnaire
+                .execute(apiKey)
+                .then((questionnaires) => {
+                    setQuestionnaires(questionnaires);
+                })
+                .catch((err) => setError(err));
+        }
+    }, [apiKey, status]);
 
     const initSession = useCallback(
         async (questionnaireId: number) => {
             setLoadingSession(true);
             setError(null);
+            setStatus("active");
+            setResults(null);
 
             try {
                 const data = await getSession.execute(apiKey, questionnaireId);
@@ -137,6 +163,8 @@ export function SessionProvider({
                 loadingSession,
                 loadingAnswer,
                 error,
+                status,
+                results,
                 clearSession,
                 addAnswer,
                 initSession,
