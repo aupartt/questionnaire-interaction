@@ -34,6 +34,7 @@ services:
             dockerfile: ./Dockerfile
         image: backend-api:latest
         environment:
+            API_KEY_NAME: ${API_KEY_NAME}
             API_KEY_MOCK: ${API_KEY_MOCK}
             API_BASE_PATH: ${API_BASE_PATH:-/api/v1}
             API_BASE_VERSION: ${API_BASE_PATH:-v1}
