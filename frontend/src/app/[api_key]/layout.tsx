@@ -1,5 +1,5 @@
 import { ApiNotReachableError } from "@/adapters/api/errors";
-import { getVerifyApiKeyUseCase } from "@/container/Containers";
+import { getVerifyApiKeyApiUseCase } from "@/container/Containers";
 import { SessionProvider } from "@/ui/contexts/SessionContext";
 
 export default async function ApiKeyLayout({
@@ -9,7 +9,7 @@ export default async function ApiKeyLayout({
     params: Promise<{ api_key: string }>;
     children: React.ReactNode;
 }) {
-    const verifyApiKey = getVerifyApiKeyUseCase();
+    const verifyApiKey = getVerifyApiKeyApiUseCase();
     const { api_key } = await params;
 
     try {
@@ -22,7 +22,7 @@ export default async function ApiKeyLayout({
         }
 
         return (
-            <div style={{ padding: "20px", textAlign: "center", color: "red" }}>
+            <div>
                 <p>Clé API non valide</p>
             </div>
         );

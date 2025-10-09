@@ -4,7 +4,7 @@ import type { IAnswerRepository } from "@/core/ports/IAnswerRepository";
 export class MockAnswerRepository implements IAnswerRepository {
     private answerResponse = {
         nextItem: {
-            id: "1",
+            id: 1,
             name: "foo",
             question: {
                 type: "text",
@@ -12,10 +12,9 @@ export class MockAnswerRepository implements IAnswerRepository {
             },
             content: {
                 type: "text",
-                likertValue: null,
+                value: "value",
             },
         },
-        resultUrl: null,
         sessionStatus: "active",
     };
 

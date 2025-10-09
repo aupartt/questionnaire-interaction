@@ -4,18 +4,18 @@ import type { IQuestionnaireRepository } from "@/core/ports/IQuestionnaireReposi
 export class MockQuestionnaireRepository implements IQuestionnaireRepository {
     private questionnaires: Questionnaire[] = [
         {
-            id: "1",
+            id: 1,
             name: "Information utilisateur",
             description: "Vos informations.",
-            sessionId: "session-123",
+            sessionId: 123,
             status: "completed",
             isNext: false,
         },
         {
-            id: "2",
+            id: 2,
             name: "Préférences",
             description: "Vos attentes professionnelles.",
-            sessionId: "session-123",
+            sessionId: 23,
             status: "active",
             isNext: true,
         },

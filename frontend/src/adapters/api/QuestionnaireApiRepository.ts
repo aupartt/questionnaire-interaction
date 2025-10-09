@@ -12,12 +12,13 @@ type ItemResponse = {
 };
 
 export class QuestionnaireApiRepository implements IQuestionnaireRepository {
-    private apiUrl = `${process.env.NEXT_PUBLIC_API_URL}`;
+    private apiUrl = `${process.env.API_URL}`;
+    private apiKeyName = `${process.env.API_KEY_NAME}`;
 
     async getAll(apiKey: string): Promise<Questionnaire[]> {
         const response = await fetch(`${this.apiUrl}/questionnaires`, {
             headers: {
-                "X-API-Key": apiKey,
+                [this.apiKeyName]: apiKey,
             },
         });
 

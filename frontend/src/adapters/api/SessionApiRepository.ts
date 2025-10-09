@@ -3,7 +3,8 @@ import type { ISessionRepository } from "@/core/ports/ISessionRepository";
 import { ApiNotReachableError } from "./errors";
 
 export class SessionApiRepository implements ISessionRepository {
-    private apiUrl = `${process.env.NEXT_PUBLIC_API_URL}`;
+    private apiUrl = `${process.env.API_URL}`;
+    private apiKeyName = `${process.env.API_KEY_NAME}`;
 
     async get(apiKey: string, questionnaireId: number): Promise<Session> {
         const response = await fetch(
@@ -11,7 +12,7 @@ export class SessionApiRepository implements ISessionRepository {
             {
                 method: "POST",
                 headers: {
-                    "X-API-Key": apiKey,
+                    [this.apiKeyName]: apiKey,
                 },
             },
         );

@@ -62,9 +62,7 @@ jobs:
         
       - name: Run Biome lint
         run: bun run lint
-        continue-on-error: false
       
       - name: Run tests
         run: bun run test:ci
-        continue-on-error: false
     

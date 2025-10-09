@@ -3,7 +3,8 @@ import type { IAnswerRepository } from "@/core/ports/IAnswerRepository";
 import { ApiNotReachableError } from "./errors";
 
 export class AnswerApiRepository implements IAnswerRepository {
-    private apiUrl = `${process.env.NEXT_PUBLIC_API_URL}`;
+    private apiUrl = `${process.env.API_URL}`;
+    private apiKeyName = `${process.env.API_KEY_NAME}`;
 
     async getNext(
         apiKey: string,
@@ -21,7 +22,7 @@ export class AnswerApiRepository implements IAnswerRepository {
             {
                 method: "POST",
                 headers: {
-                    "X-API-Key": apiKey,
+                    [this.apiKeyName]: apiKey,
                     "Content-Type": "application/json",
                 },
                 body: jsonAnswer,
