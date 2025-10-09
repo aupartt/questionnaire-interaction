@@ -9,8 +9,9 @@ type ResultsResponse = {
 export class ResultsApiRepository implements IResultsRepository {
     private apiUrl = `${process.env.NEXT_PUBLIC_API_URL}`;
 
-    async get(apiKey: string): Promise<Results> {
-        const response = await fetch(`${this.apiUrl}/questionnaires`, {
+    async get(apiKey: string, questionnaireId: number, sessionId: number): Promise<Results> {
+        const response = await fetch(`${this.apiUrl}/questionnaire/${questionnaireId}/session/${sessionId}/results`, {
+            method: "POST",
             headers: {
                 "X-API-Key": apiKey,
             },
