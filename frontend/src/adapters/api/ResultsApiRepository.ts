@@ -7,7 +7,8 @@ type ResultsResponse = {
 };
 
 export class ResultsApiRepository implements IResultsRepository {
-    private apiUrl = `${process.env.NEXT_PUBLIC_API_URL}`;
+    private apiUrl = `${process.env.API_URL}`;
+    private apiKeyName = `${process.env.API_KEY_NAME}`;
 
     async get(
         apiKey: string,
@@ -19,7 +20,7 @@ export class ResultsApiRepository implements IResultsRepository {
             {
                 method: "POST",
                 headers: {
-                    "X-API-Key": apiKey,
+                    [this.apiKeyName]: apiKey,
                 },
             },
         );
