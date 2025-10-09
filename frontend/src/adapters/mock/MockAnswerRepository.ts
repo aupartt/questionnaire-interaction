@@ -12,10 +12,9 @@ export class MockAnswerRepository implements IAnswerRepository {
             },
             content: {
                 type: "text",
-                value: null,
+                value: "value",
             },
         },
-        resultUrl: null,
         sessionStatus: "active",
     };
 
