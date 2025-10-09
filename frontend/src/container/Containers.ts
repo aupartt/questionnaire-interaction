@@ -6,6 +6,8 @@ import { GetAllQuestionnaire } from "@/core/usecases/GetAllQuestionnaire";
 import { GetSession } from "@/core/usecases/GetSession";
 import { SubmitAnswer } from "@/core/usecases/SubmitAnswer";
 import { VerifyApiKey } from "@/core/usecases/VerifyApiKey";
+import { GetResults } from "@/core/usecases/GetResults";
+import { ResultsApiRepository } from "@/adapters/api/ResultsApiRepository";
 
 export function getVerifyApiKeyUseCase(): VerifyApiKey {
     return new VerifyApiKey(new AuthApiRepository());
@@ -21,4 +23,8 @@ export function getSessionUseCase(): GetSession {
 
 export function getSubmitAnswerUseCase(): SubmitAnswer {
     return new SubmitAnswer(new AnswerApiRepository());
+}
+
+export function getResultsUseCase(): GetResults {
+    return new GetResults(new ResultsApiRepository());
 }
