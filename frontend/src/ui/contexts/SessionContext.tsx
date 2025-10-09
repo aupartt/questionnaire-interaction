@@ -21,7 +21,7 @@ import type { Questionnaire } from "@/core/entities/Questionnaire";
 import type { Results } from "@/core/entities/Results";
 import { Session } from "@/core/entities/Session";
 
-type StatusType = "completed" | "active";
+type StatusType = "completed" | "active" | null;
 
 type SessionContextType = {
     apiKey: string | null;
