@@ -3,7 +3,7 @@ import type { Item } from "./Session";
 export type AnswerStatus = "completed" | "skipped";
 
 export interface Answer {
-    itemId: string;
+    itemId: number;
     value: string;
     status: AnswerStatus;
 }

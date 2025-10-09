@@ -3,8 +3,8 @@ import logging
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
-from app.config import settings
 from app.controller import questionnaire_controller
+from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 

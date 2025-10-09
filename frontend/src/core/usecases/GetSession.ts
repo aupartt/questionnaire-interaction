@@ -6,7 +6,7 @@ export class GetSession {
 
     async execute(
         apiKey: string,
-        questionnaireId: string,
+        questionnaireId: number,
     ): Promise<Session | null> {
         const session = await this.repo.get(apiKey, questionnaireId);
         return session;

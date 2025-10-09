@@ -1,5 +1,7 @@
 from enum import Enum
 
+from pydantic import BaseModel
+
 
 class StatusEnum(str, Enum):
     ACTIVE = "active"
@@ -21,3 +23,16 @@ class ResponseType(str, Enum):
 class ResultStatus(str, Enum):
     SUCCESS = "success"
     ERROR = "error"
+
+
+class Result(BaseModel):
+    status: ResultStatus
+    message: str
+
+
+class VerifyResult(BaseModel):
+    is_valid: bool
+
+
+class WillSmith(BaseModel):
+    img_url: str

@@ -3,10 +3,10 @@ import type { IQuestionnaireRepository } from "@/core/ports/IQuestionnaireReposi
 import { ApiNotReachableError } from "./errors";
 
 type ItemResponse = {
-    id: string;
+    id: number;
     name: string;
     description: string;
-    session_id: string;
+    session_id: number;
     status: string;
     is_next: boolean;
 };

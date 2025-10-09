@@ -24,7 +24,7 @@ const ProgressBadge = ({
 export function ProgressStepper() {
     const { session } = useSessionContext();
 
-    const itemIsActive = (itemId: string) => {
+    const itemIsActive = (itemId: number) => {
         return (
             itemId === session!.currentItem.id ||
             session!.getItemStatus(itemId) !== null

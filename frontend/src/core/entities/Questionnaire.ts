@@ -1,10 +1,10 @@
 export type QuestionnaireStatus = "active" | "completed" | "skipped";
 
 export interface Questionnaire {
-    id: string;
+    id: number;
     name: string;
     description: string;
-    sessionId: string | null;
+    sessionId: number | null;
     status: QuestionnaireStatus | null;
     isNext: boolean;
 }

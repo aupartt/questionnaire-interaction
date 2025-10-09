@@ -11,7 +11,7 @@ export default function QuestionnairePage() {
     const { session, loadingAnswer, error, initSession } = useSessionContext();
 
     useEffect(() => {
-        initSession(params.questionnaireId);
+        initSession(parseInt(params.questionnaireId, 10));
     }, [params, initSession]);
 
     return (

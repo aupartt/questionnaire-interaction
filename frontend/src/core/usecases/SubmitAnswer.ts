@@ -6,8 +6,8 @@ export class SubmitAnswer {
 
     async execute(
         apiKey: string,
-        sessionId: string,
-        questionnaireId: string,
+        sessionId: number,
+        questionnaireId: number,
         answerData: Answer,
     ): Promise<AnswerResponse> {
         const nextItem = await this.repo.getNext(

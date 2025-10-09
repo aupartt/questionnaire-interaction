@@ -1,0 +1,14 @@
+[
+    {
+        "id": 1,
+        "name": "Information utilisateur",
+        "description": "Vos informations.",
+        "order": 1
+    },
+    {
+        "id": 2,
+        "name": "Préférences",
+        "description": "Vos attentes professionnelles",
+        "order": 2
+    }
+]
