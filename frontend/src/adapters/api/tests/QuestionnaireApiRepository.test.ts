@@ -46,8 +46,8 @@ describe("QuestionnaireApiRepository", () => {
     beforeEach(() => {
         jest.resetModules();
 
-        process.env.API_URL = 'https://api.com';
-        process.env.API_KEY_NAME = 'MY_API_NAME';
+        process.env.API_URL = "https://api.com";
+        process.env.API_KEY_NAME = "MY_API_NAME";
 
         fetchMock = jest.spyOn(global, "fetch").mockImplementation(() =>
             Promise.resolve({
@@ -57,14 +57,14 @@ describe("QuestionnaireApiRepository", () => {
         );
 
         repository = new QuestionnaireApiRepository();
-        process.env = { ...OLD_ENV }
+        process.env = { ...OLD_ENV };
     });
 
     it("devrait récupérer et transformer les questionnaires", async () => {
         const questionnaires = await repository.getAll("foo");
 
-        process.env.API_URL = 'https://api.com';
-        process.env.API_KEY_NAME = 'MY_API_NAME';
+        process.env.API_URL = "https://api.com";
+        process.env.API_KEY_NAME = "MY_API_NAME";
 
         expect(fetchMock).toHaveBeenCalledWith(
             expect.stringContaining(`${process.env.API_URL}/questionnaires`),
