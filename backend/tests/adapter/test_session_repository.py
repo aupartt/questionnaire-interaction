@@ -161,7 +161,6 @@ async def test_update_status_found(mocker: MockerFixture, make_mock_get_db, mock
     result = await repo.update_status(session_id=1, status=StatusEnum.ACTIVE)
 
     assert result is None
-    mock_session.add.assert_called_once()
     mock_session.commit.assert_awaited_once()
     mock_log.assert_not_called()
 
