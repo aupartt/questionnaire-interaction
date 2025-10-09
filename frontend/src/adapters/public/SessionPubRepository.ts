@@ -1,11 +1,8 @@
-import { Session } from "@/core/entities/Session";
+import type { Session } from "@/core/entities/Session";
 import type { ISessionRepository } from "@/core/ports/ISessionRepository";
 
 export class SessionPubRepository implements ISessionRepository {
-    async get(
-        apiKey: string,
-        questionnaireId: number
-    ): Promise<Session> {
+    async get(apiKey: string, questionnaireId: number): Promise<Session> {
         const response = await fetch(
             `/api/session?apiKey=${apiKey}&questionnaireId=${questionnaireId}`,
         );
@@ -17,4 +14,3 @@ export class SessionPubRepository implements ISessionRepository {
         return await response.json();
     }
 }
-

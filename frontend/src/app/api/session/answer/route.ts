@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getSubmitAnswerApiUseCase } from "@/container/Containers"
+import { type NextRequest, NextResponse } from "next/server";
+import { getSubmitAnswerApiUseCase } from "@/container/Containers";
 
 export async function POST(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
@@ -13,19 +13,24 @@ export async function POST(request: NextRequest) {
     if (!apiKey || !questionnaireId || !sessionId || !answer) {
         return NextResponse.json(
             { error: "Paramètres non valide." },
-            { status: 400 }
+            { status: 400 },
         );
     }
 
     try {
-        const getSubmitAnswer = getSubmitAnswerApiUseCase()
-        const res = await getSubmitAnswer.execute(apiKey, parseInt(questionnaireId), parseInt(sessionId), answer)
+        const getSubmitAnswer = getSubmitAnswerApiUseCase();
+        const res = await getSubmitAnswer.execute(
+            apiKey,
+            parseInt(questionnaireId),
+            parseInt(sessionId),
+            answer,
+        );
         return NextResponse.json(res);
     } catch (error) {
         console.error("Erreur API:", error);
         return NextResponse.json(
             { error: "Erreur lors de l'envois de la réponse" },
-            { status: 500 }
+            { status: 500 },
         );
     }
 }

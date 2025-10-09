@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import {
     createContext,
     type ReactNode,
@@ -57,9 +56,17 @@ export function SessionProvider({
     const [error, setError] = useState<string | null>(null);
     const [results, setResults] = useState<Results | null>(null);
     const [status, setStatus] = useState<StatusType | null>(null);
-    const router = useRouter();
 
     const clearSession = () => setSession(null);
+
+    const updateQuestionnaireList = useCallback(() => {
+        getAllQuestionnaire
+            .execute(apiKey)
+            .then((questionnaires) => {
+                setQuestionnaires(questionnaires);
+            })
+            .catch((err) => setError(err));
+    }, [apiKey]);
 
     const addAnswer = useCallback(
         async (answer: Answer) => {
@@ -106,7 +113,7 @@ export function SessionProvider({
                     );
 
                     // Met à jours les questionnaires
-                    updateQuestionnaireList()
+                    updateQuestionnaireList();
                 }
             } catch (err) {
                 if (err instanceof Error) {
@@ -119,23 +126,12 @@ export function SessionProvider({
                 setLoadingAnswer(false);
             }
         },
-        [session, apiKey, results],
+        [session, apiKey, results, error, updateQuestionnaireList],
     );
 
-    const updateQuestionnaireList = () => {
-        getAllQuestionnaire
-            .execute(
-                apiKey
-            )
-            .then((questionnaires) => {
-                setQuestionnaires(questionnaires);
-            })
-            .catch((err) => setError(err));
-    }
-
     useEffect(() => {
-        updateQuestionnaireList()
-    }, [apiKey]);
+        updateQuestionnaireList();
+    }, [updateQuestionnaireList]);
 
     const initSession = useCallback(
         async (questionnaireId: number) => {
@@ -145,10 +141,7 @@ export function SessionProvider({
             setResults(null);
 
             try {
-                const data = await getSession.execute(
-                    apiKey,
-                    questionnaireId,
-                );
+                const data = await getSession.execute(apiKey, questionnaireId);
 
                 if (!data) return;
 

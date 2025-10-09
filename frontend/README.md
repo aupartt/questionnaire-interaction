@@ -26,7 +26,7 @@ frontend/
 └── src/
     ├── app/
     │   ├── api/ # API Routes
-    │   └── page.tsx # 
+    │   └── page.tsx # Main page
     ├── lib/
     │   └── utils.ts  # Tools
     ├── components/  # Composants @shadcn

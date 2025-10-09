@@ -1,7 +1,6 @@
 import type { Results } from "@/core/entities/Results";
 import type { IResultsRepository } from "@/core/ports/IResultsRepository";
 
-
 export class ResultsPubRepository implements IResultsRepository {
     async get(
         apiKey: string,
@@ -9,7 +8,7 @@ export class ResultsPubRepository implements IResultsRepository {
         sessionId: number,
     ): Promise<Results> {
         const response = await fetch(
-            `/api/session/results?apiKey=${apiKey}&questionnaireId=${questionnaireId}&sessionId=${sessionId}`
+            `/api/session/results?apiKey=${apiKey}&questionnaireId=${questionnaireId}&sessionId=${sessionId}`,
         );
 
         if (!response.ok) {

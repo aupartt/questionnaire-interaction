@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
     images: {
         domains: ["a.pinatafarm.com"],
     },
-    output: 'standalone',
+    output: "standalone",
 };
 
 export default nextConfig;

@@ -23,6 +23,6 @@ export function StyledButton({ className, value, action }: StyledButtonProps) {
             className={`rounded-full bg-green-600 hover:bg-green-700 cursor-pointer transition-colors ${className}`}
         >
             {value}
-        </Button >
-    )
+        </Button>
+    );
 }

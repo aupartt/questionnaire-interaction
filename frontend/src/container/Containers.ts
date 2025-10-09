@@ -48,4 +48,3 @@ export function getSubmitAnswerPubUseCase(): SubmitAnswer {
 export function getResultsPubUseCase(): GetResults {
     return new GetResults(new ResultsPubRepository());
 }
-

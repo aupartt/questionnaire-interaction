@@ -9,10 +9,11 @@ import { useSessionContext } from "@/ui/contexts/SessionContext";
 
 export default function OnboardingPage() {
     const router = useRouter();
-    const { apiKey, questionnaires, loadingSession, error } = useSessionContext();
+    const { apiKey, questionnaires, loadingSession, error } =
+        useSessionContext();
 
-    if (questionnaires.length == 0) {
-        return <p>Liste de questionnaire vide.</p>
+    if (questionnaires.length === 0) {
+        return <p>Liste de questionnaire vide.</p>;
     }
 
     const next = questionnaires.find((q) => q.isNext);
@@ -35,17 +36,13 @@ export default function OnboardingPage() {
                     <StyledButton
                         value="Continuer"
                         action={() =>
-                            router.push(
-                                `/${apiKey}/questionnaire/${next.id}`,
-                            )
+                            router.push(`/${apiKey}/questionnaire/${next.id}`)
                         }
                     />
                 </div>
             )}
 
-            {
-                loadingSession && <p>Loading...</p>
-            }
+            {loadingSession && <p>Loading...</p>}
 
             {!next && !loadingSession && !error && (
                 <p className="text-center text-green-600 font-semibold">

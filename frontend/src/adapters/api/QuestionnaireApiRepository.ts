@@ -15,9 +15,7 @@ export class QuestionnaireApiRepository implements IQuestionnaireRepository {
     private apiUrl = `${process.env.API_URL}`;
     private apiKeyName = `${process.env.API_KEY_NAME}`;
 
-    async getAll(
-        apiKey: string
-    ): Promise<Questionnaire[]> {
+    async getAll(apiKey: string): Promise<Questionnaire[]> {
         const response = await fetch(`${this.apiUrl}/questionnaires`, {
             headers: {
                 [this.apiKeyName]: apiKey,

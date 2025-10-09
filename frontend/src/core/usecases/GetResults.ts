@@ -2,7 +2,7 @@ import type { Results } from "../entities/Results";
 import type { IResultsRepository } from "../ports/IResultsRepository";
 
 export class GetResults {
-    constructor(private readonly repo: IResultsRepository) { }
+    constructor(private readonly repo: IResultsRepository) {}
 
     async execute(
         apiKey: string,

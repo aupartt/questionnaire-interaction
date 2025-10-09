@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getResultsApiUseCase } from "@/container/Containers"
+import { type NextRequest, NextResponse } from "next/server";
+import { getResultsApiUseCase } from "@/container/Containers";
 
 export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
@@ -10,19 +10,23 @@ export async function GET(request: NextRequest) {
     if (!apiKey || !questionnaireId || !sessionId) {
         return NextResponse.json(
             { error: "Paramètres non valide." },
-            { status: 400 }
+            { status: 400 },
         );
     }
 
     try {
-        const getResults = getResultsApiUseCase()
-        const res = await getResults.execute(apiKey, parseInt(questionnaireId), parseInt(sessionId))
+        const getResults = getResultsApiUseCase();
+        const res = await getResults.execute(
+            apiKey,
+            parseInt(questionnaireId),
+            parseInt(sessionId),
+        );
         return NextResponse.json(res);
     } catch (error) {
         console.error("Erreur API:", error);
         return NextResponse.json(
             { error: "Erreur lors de la récupération des résultats" },
-            { status: 500 }
+            { status: 500 },
         );
     }
 }

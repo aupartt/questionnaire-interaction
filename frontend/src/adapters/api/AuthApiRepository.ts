@@ -6,9 +6,7 @@ export class AuthApiRepository implements IAuthRepository {
     private apiUrl = `${process.env.API_URL}`;
     private apiKeyName = `${process.env.API_KEY_NAME}`;
 
-    async verify(
-        apiKey: string
-    ): Promise<ApiKeyStatus> {
+    async verify(apiKey: string): Promise<ApiKeyStatus> {
         const response = await fetch(`${this.apiUrl}/verify`, {
             headers: {
                 [this.apiKeyName]: apiKey,

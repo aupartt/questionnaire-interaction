@@ -6,10 +6,7 @@ export class SessionApiRepository implements ISessionRepository {
     private apiUrl = `${process.env.API_URL}`;
     private apiKeyName = `${process.env.API_KEY_NAME}`;
 
-    async get(
-        apiKey: string,
-        questionnaireId: number
-    ): Promise<Session> {
+    async get(apiKey: string, questionnaireId: number): Promise<Session> {
         const response = await fetch(
             `${this.apiUrl}/questionnaire/${questionnaireId}/session`,
             {

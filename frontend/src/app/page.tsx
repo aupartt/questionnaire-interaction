@@ -1,5 +1,5 @@
-import { StyledButton } from "@/ui/components/StyledButton";
 import Link from "next/link";
+import { StyledButton } from "@/ui/components/StyledButton";
 
 export default function Home() {
     const apiKeyMock = process.env.API_KEY_MOCK;

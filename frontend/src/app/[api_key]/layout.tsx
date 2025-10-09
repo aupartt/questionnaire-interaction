@@ -17,7 +17,7 @@ export default async function ApiKeyLayout({
 
         if (apiStatus?.isValid) {
             return (
-                <SessionProvider apiKey={api_key} >{children}</SessionProvider>
+                <SessionProvider apiKey={api_key}>{children}</SessionProvider>
             );
         }
 
