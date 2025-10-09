@@ -4,7 +4,6 @@ from app.controller.dependencies.security import verify_api_key
 from app.schema import Answer, NextItemResponse, QuestionnaireStatus, Session
 from app.schema.common import VerifyResult, WillSmith
 from app.service import AnswerService, QuestionnaireService, ResultsService, SessionService
-from app.service.questionnaire_service import QuestionnaireService
 
 router = APIRouter()
 
