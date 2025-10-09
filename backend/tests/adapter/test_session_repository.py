@@ -1,4 +1,5 @@
 from datetime import UTC, datetime
+from unittest.mock import AsyncMock
 
 import pytest
 from pytest_mock import MockerFixture
@@ -116,7 +117,12 @@ async def test_get_session_questionnaire_found(mocker: MockerFixture, make_mock_
 
 @pytest.mark.asyncio
 async def test_get_session_questionnaire_not_found(mocker: MockerFixture, make_mock_get_db, mock_db_models):
-    mock_get_db, _ = make_mock_get_db(scalar_one_or_none=None)
+    mock_get_db, mock_session = make_mock_get_db(scalar_one_or_none=None)
+
+    async def mock_refresh(obj):
+        obj.id = 42
+
+    mock_session.refresh = AsyncMock(side_effect=mock_refresh)
 
     mocker.patch("app.adapter.session_repository.get_db", side_effect=mock_get_db)
 
@@ -125,7 +131,7 @@ async def test_get_session_questionnaire_not_found(mocker: MockerFixture, make_m
     result = await repo.get_session_questionnaire(user_id=1, questionnaire_id=4)
 
     assert isinstance(result, SessionModel)
-    assert result.id == None
+    assert result.id == 42
     assert result.questionnaire_id == 4
 
 

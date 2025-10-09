@@ -15,20 +15,21 @@ from app.schema import (
     QuestionnaireStatus,
     Session,
 )
-from app.schema.common import QuestionType, StatusEnum
+from app.schema.common import QuestionType, StatusEnum, WillSmith
+from app.service import AnswerService, QuestionnaireService, ResultsService, SessionService
 
 
 @pytest.fixture()
 def make_mock_client():
-    def make(mock_service=AsyncMock(), api_key=""):
+    def make(service=None, mock_service=AsyncMock(), user_id=0):
         app = FastAPI()
         app.include_router(router)
 
         from app.controller.dependencies.security import verify_api_key
-        from app.controller.dependencies.services import questionnaire_service
 
-        app.dependency_overrides[questionnaire_service] = lambda: mock_service
-        app.dependency_overrides[verify_api_key] = lambda: api_key
+        if service is not None:
+            app.dependency_overrides[service] = lambda: mock_service
+        app.dependency_overrides[verify_api_key] = lambda: user_id
 
         return TestClient(app)
 
@@ -37,7 +38,7 @@ def make_mock_client():
 
 @pytest.mark.asyncio
 async def test_verify_success(make_mock_client):
-    client = make_mock_client(api_key="foo-api-key")
+    client = make_mock_client(user_id=42)
 
     response = client.get("/verify", headers={"X-API-Key": "foo-api-key"})
 
@@ -61,7 +62,7 @@ async def test_get_questionnaires(make_mock_client):
             )
         ]
     )
-    client = make_mock_client(mock_service=mock_service, api_key="foo-api-key")
+    client = make_mock_client(QuestionnaireService, mock_service=mock_service, user_id=42)
     response = client.get("/questionnaires", headers={"X-API-Key": "foo-api-key"})
 
     assert response.status_code == status.HTTP_200_OK
@@ -69,7 +70,7 @@ async def test_get_questionnaires(make_mock_client):
     assert isinstance(data, list)
     assert len(data) == 1
     assert data[0]["id"] == 1
-    mock_service.get_questionnaires.assert_awaited_once_with(api_key="foo-api-key")
+    mock_service.get_questionnaires.assert_awaited_once_with(user_id=42)
 
 
 @pytest.mark.asyncio
@@ -94,13 +95,13 @@ async def test_get_session(make_mock_client):
         )
     )
 
-    client = make_mock_client(mock_service=mock_service, api_key="foo-api-key")
+    client = make_mock_client(SessionService, mock_service=mock_service, user_id=42)
     response = client.post("/questionnaire/42/session", headers={"X-API-Key": "foo-api-key"})
 
     assert response.status_code == status.HTTP_200_OK
     data = response.json()
     assert Session.model_validate(data)
-    mock_service.get_session.assert_awaited_once_with(api_key="foo-api-key", questionnaire_id=42)
+    mock_service.get_session.assert_awaited_once_with(user_id=42, questionnaire_id=42)
 
 
 @pytest.mark.asyncio
@@ -114,7 +115,7 @@ async def test_add_answer(make_mock_client):
     )
     mock_answer = Answer(item_id=2, value="Ceci va échouer", status=StatusEnum.COMPLETED)
 
-    client = make_mock_client(mock_service=mock_service, api_key="foo-api-key")
+    client = make_mock_client(AnswerService, mock_service=mock_service, user_id=42)
     response = client.post(
         "/questionnaire/42/session/3/answer",
         headers={"X-API-Key": "foo-api-key"},
@@ -125,3 +126,19 @@ async def test_add_answer(make_mock_client):
     data = response.json()
     assert NextItemResponse.model_validate(data)
     mock_service.add_answer.assert_awaited_once_with(questionnaire_id=42, session_id=3, answer=mock_answer)
+
+
+@pytest.mark.asyncio
+async def test_get_results(make_mock_client):
+    mock_service = MagicMock()
+
+    mock_service.get_results = AsyncMock(return_value=WillSmith(img_url="FOOOO.jpg"))
+
+    client = make_mock_client(ResultsService, mock_service=mock_service, user_id=42)
+    response = client.post("/questionnaire/42/session/3/results", headers={"X-API-Key": "foo-api-key"})
+
+    assert response.status_code == status.HTTP_200_OK
+    data = response.json()
+    assert WillSmith.model_validate(data)
+    assert data["img_url"] == "FOOOO.jpg"
+    mock_service.get_results.assert_awaited_once_with(questionnaire_id=42, session_id=3)
