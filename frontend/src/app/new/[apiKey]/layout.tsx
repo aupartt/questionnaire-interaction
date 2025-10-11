@@ -1,3 +1,5 @@
+import { ThemeProvider } from "@/ui/contexts/ThemeContext";
+
 export default async function ApiKeyLayout({
     children,
     params
@@ -8,7 +10,9 @@ export default async function ApiKeyLayout({
     const { apiKey } = await params
     return (
         <main>
+            <ThemeProvider>
             {children}
+            </ThemeProvider>
         </main>
     );
 }
