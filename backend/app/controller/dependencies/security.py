@@ -1,20 +1,20 @@
 from fastapi import Depends, Header, HTTPException, status
 
-from app.adapter.user_repository import UserRepository
 from app.core.config import settings
+from app.service.user_service import UserService
 
 
 async def verify_api_key(
-    api_key: str = Header(..., alias=settings.API_KEY_NAME), repo: UserRepository = Depends(UserRepository)
+    api_key: str = Header(..., alias=settings.API_KEY_NAME), service: UserService = Depends(UserService)
 ) -> int:
     """Vérifie la clé X-API-Key."""
 
-    user_id = await repo.get_user_id(api_key=api_key)
+    result = await service.get_user_id(api_key=api_key)
 
-    if user_id is None:
+    if not result:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid API Key",
         )
 
-    return user_id
+    return result

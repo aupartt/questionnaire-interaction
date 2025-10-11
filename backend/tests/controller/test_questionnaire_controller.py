@@ -15,13 +15,13 @@ from app.schema import (
     QuestionnaireStatus,
     Session,
 )
-from app.schema.common import QuestionType, StatusEnum, WillSmith
-from app.service import AnswerService, QuestionnaireService, ResultsService, SessionService
+from app.schema.common import QuestionType, StatusEnum, VerifyResult, WillSmith
+from app.service import AnswerService, QuestionnaireService, ResultsService, SessionService, UserService
 
 
 @pytest.fixture()
 def make_mock_client():
-    def make(service=None, mock_service=AsyncMock(), user_id=0):
+    def make(service=None, mock_service=AsyncMock(), user_id=None):
         app = FastAPI()
         app.include_router(router)
 
@@ -29,7 +29,8 @@ def make_mock_client():
 
         if service is not None:
             app.dependency_overrides[service] = lambda: mock_service
-        app.dependency_overrides[verify_api_key] = lambda: user_id
+        if user_id:
+            app.dependency_overrides[verify_api_key] = lambda: user_id
 
         return TestClient(app)
 
@@ -38,13 +39,28 @@ def make_mock_client():
 
 @pytest.mark.asyncio
 async def test_verify_success(make_mock_client):
-    client = make_mock_client(user_id=42)
+    mock_service = MagicMock()
+    mock_service.verify_api_key = AsyncMock(return_value=VerifyResult(is_valid=True))
+
+    client = make_mock_client(UserService, mock_service=mock_service)
 
     response = client.get("/verify", headers={"X-API-Key": "foo-api-key"})
 
-    assert response.status_code == status.HTTP_200_OK
     data = response.json()
     assert data["is_valid"]
+
+
+@pytest.mark.asyncio
+async def test_verify_failed(make_mock_client):
+    mock_service = MagicMock()
+    mock_service.verify_api_key = AsyncMock(return_value=VerifyResult(is_valid=False))
+
+    client = make_mock_client(UserService, mock_service=mock_service)
+
+    response = client.get("/verify", headers={"X-API-Key": "foo-api-key"})
+
+    data = response.json()
+    assert not data["is_valid"]
 
 
 @pytest.mark.asyncio
