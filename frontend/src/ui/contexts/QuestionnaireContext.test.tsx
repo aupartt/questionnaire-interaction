@@ -1,5 +1,5 @@
 
-import { renderHook, act, render, screen } from '@testing-library/react';
+import { renderHook, act, render, screen, cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { QuestionnaireProvider, useQuestionnaireContext } from './QuestionnaireContext';
 import { Questionnaire } from '@/core/entities/Questionnaire';
@@ -29,6 +29,7 @@ const TestConsumer = () => {
 };
 
 describe('QuestionnaireContext', () => {
+    afterEach(cleanup);
 
     // Test 1: Vérifie que le hook lève une erreur si utilisé hors du Provider
     it('should throw an error when used outside of Provider', () => {
