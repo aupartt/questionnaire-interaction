@@ -1,9 +1,10 @@
 import '@testing-library/jest-dom';
 import { renderHook, act, render, cleanup, screen } from '@testing-library/react';
 import { Tabs, Tab } from './Tabs';
-import { ItemShort } from '@/core/entities/Session';
+import { Session } from '@/core/entities/Session';
 
 const mockUsePathname = jest.fn();
+const mockUseQuestionnaireContext = jest.fn();
 
 jest.mock('next/navigation', () => ({
     usePathname() {
@@ -11,32 +12,60 @@ jest.mock('next/navigation', () => ({
     },
 }));
 
+jest.mock('../contexts/SessionContext', () => ({
+    useSessionContext() {
+        return mockUseQuestionnaireContext();
+    },
+}));
+
 
 describe('Tab', () => {
+    let sessionMock: Session
+
+    beforeEach(() => {
+        sessionMock = new Session(
+            1,
+            1,
+            [],
+            [],
+            {
+                id: 1,
+                name: "Foo",
+                question: {
+                    type: "text",
+                    value: "Who?"
+                },
+                content: {
+                    type: "text",
+                }
+            },
+            "active"
+        )
+    });
+
     afterEach(cleanup);
 
     it("devrait être marqué comme actif", () => {
-        mockUsePathname.mockImplementation(() => '/foo/bar/1');
-
-        const mockBasePath = '/foo/bar'
+        sessionMock.currentItem.id = 42
+        mockUseQuestionnaireContext.mockImplementation(() => ({ session: sessionMock }))
         const mockItem = {
-            id: 1,
+            id: 42,
             name: "foo"
         }
-        const { container } = render(<Tab basePath={mockBasePath} item={mockItem} />);
+
+        const { container } = render(<Tab item={mockItem} />);
 
         expect(container.children[0].getAttribute("class")).toContain("bg-")
     });
 
     it("devrait être marqué comme inactif", () => {
-        mockUsePathname.mockImplementation(() => '/foo/bar/2');
-
-        const mockBasePath = '/foo/bar'
+        sessionMock.currentItem.id = 42
+        mockUseQuestionnaireContext.mockImplementation(() => ({ session: sessionMock }))
         const mockItem = {
             id: 1,
             name: "foo"
         }
-        const { container } = render(<Tab basePath={mockBasePath} item={mockItem} />);
+        const { container } = render(<Tab item={mockItem} />);
 
         expect(container.children[0].getAttribute("class")).not.toContain("bg-")
     });
@@ -44,12 +73,32 @@ describe('Tab', () => {
 
 
 describe('Tabs', () => {
+    let sessionMock: Session
+
+    beforeEach(() => {
+        sessionMock = new Session(
+            1,
+            1,
+            [],
+            [],
+            {
+                id: 1,
+                name: "Foo",
+                question: {
+                    type: "text",
+                    value: "Who?"
+                },
+                content: {
+                    type: "text",
+                }
+            },
+            "active"
+        )
+    });
+
     afterEach(cleanup);
 
     it("devrait rendre les enfants (le salop !)", () => {
-        mockUsePathname.mockImplementation(() => '/foo/bar/1');
-
-        const mockBasePath = '/foo/bar'
         const mockItems = [
             {
                 id: 1,
@@ -60,7 +109,10 @@ describe('Tabs', () => {
                 name: "bar"
             },
         ]
-        const { container } = render(<Tabs basePath={mockBasePath} items={mockItems} />);
+        sessionMock.items = mockItems
+        mockUseQuestionnaireContext.mockImplementation(() => ({ session: sessionMock }))
+
+        const { container } = render(<Tabs />);
 
         const wrapper = container.firstChild as HTMLElement;
         expect(wrapper.children).toHaveLength(2)

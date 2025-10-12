@@ -3,8 +3,6 @@
 "use client";
 
 import { ItemShort } from "@/core/entities/Session";
-import { usePathname } from "next/navigation";
-import { useQuestionnaireContext } from "../contexts/QuestionnaireContext";
 import { useSessionContext } from "../contexts/SessionContext";
 
 
@@ -20,10 +18,8 @@ export function Tabs() {
 }
 
 export function Tab({
-    basePath = '',
     item,
 }: {
-    basePath?: string;
     item: ItemShort;
 }) {
     const { session } = useSessionContext()

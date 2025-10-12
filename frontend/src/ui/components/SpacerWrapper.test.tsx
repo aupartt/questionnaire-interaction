@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import { renderHook, act, render, cleanup, screen } from '@testing-library/react';
+import { render, cleanup, screen } from '@testing-library/react';
 import { SpacerWrapper } from './SpacerWrapper';
 
 
