@@ -4,13 +4,16 @@
 
 import { ItemShort } from "@/core/entities/Session";
 import { usePathname } from "next/navigation";
+import { useQuestionnaireContext } from "../contexts/QuestionnaireContext";
+import { useSessionContext } from "../contexts/SessionContext";
 
 
-export function Tabs({ basePath, items }: { basePath: string; items: ItemShort[] }) {
+export function Tabs() {
+    const { session } = useSessionContext()
     return (
         <div className="flex flex-col my-4">
-            {items.map((item) => (
-                <Tab key={basePath + item.id} item={item} basePath={basePath} />
+            {session?.items.map((item, id) => (
+                <Tab key={id} item={item} />
             ))}
         </div>
     );
@@ -23,14 +26,17 @@ export function Tab({
     basePath?: string;
     item: ItemShort;
 }) {
-    const href = item.id ? `${basePath}/${item.id}` : basePath;
-    const pathname = usePathname();
-    const isActive = pathname === href;
+    const { session } = useSessionContext()
+
+    const isActive = item.id === session?.currentItem.id;
+    const isDone = Boolean(session?.answers.find(i => i.itemId === item.id));
+    let statusItem = isActive ? '-' : 'o'
+    if (isDone) statusItem = 'x'
 
     return (
         <div className={`flex ${isActive ? "bg-green-100" : ""} p-3 justify-between`}>
             <p className="font-bold">{item.name}</p>
-            <span>{isActive ? 'x' : 'o'}</span>
+            <span>{statusItem}</span>
         </div>
     )
 }

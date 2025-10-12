@@ -1,9 +1,10 @@
 import { Button } from "@/components/ui/button";
+import { Answer } from "@/core/entities/Answer";
 
 type StyledButtonProps = {
     className?: string;
     value: string;
-    action?: () => void;
+    action?: any;
 };
 
 export function StyledButton({ className, value, action }: StyledButtonProps) {
