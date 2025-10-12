@@ -3,7 +3,7 @@
 import { createContext, useContext, ReactNode } from "react";
 
 type Theme = {
-    class: {
+    className: {
         textPrimary: string;
         textSecondary: string;
         bgPrimary: string;
@@ -12,7 +12,7 @@ type Theme = {
 };
 
 const defaultTheme: Theme = {
-    class: {
+    className: {
         textPrimary: "text-green-600",
         textSecondary: "string",
         bgPrimary: "bg-green-600",
