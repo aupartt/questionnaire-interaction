@@ -2,7 +2,7 @@
 
 import { createContext, useContext, ReactNode, useState, useEffect, useCallback } from "react";
 import { Session } from "@/core/entities/Session";
-import { Answer } from "@/core/entities/Answer";
+import { Answer, AnswerResponse } from "@/core/entities/Answer";
 
 type ContextType = {
     session: Session | null;
@@ -31,7 +31,7 @@ export const SessionProvider = ({ children, apiKey, questionnaireId }: ProviderP
             setLoading(true);
             setError(null);
 
-            const resp = await fetch(`/new/api/session?apiKey=${apiKey}&questionnaireId=${questionnaireId}`)
+            const resp = await fetch(`/api/session?apiKey=${apiKey}&questionnaireId=${questionnaireId}`)
 
             if (!resp.ok) {
                 throw new Error("Impossible de récupérer la session.")
@@ -70,17 +70,26 @@ export const SessionProvider = ({ children, apiKey, questionnaireId }: ProviderP
         setError(null);
 
         try {
-            const res = await submitAnswer.execute(
-                apiKey,
-                session.id,
-                questionnaireId,
-                answer,
-            );
+            const res = await fetch(`/api/session/answer?apiKey=${apiKey}&questionnaireId=${questionnaireId}&sessionId=${session.id}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(answer)
+            })
+
+            if (!res.ok) {
+                throw new Error("Impossible de récupérer la session.")
+            }
+
+            const data: AnswerResponse = await res.json()
+
+            if (!data) throw new Error("Session introuvable");
 
             // Ajoute la réponse à la session et change l'item s'il existe
             const updatedSession = session.addAnswer(answer);
-            if (res.nextItem) updatedSession.currentItem = res.nextItem
-            updatedSession.status = res.sessionStatus
+            if (data.nextItem) updatedSession.currentItem = data.nextItem
+            updatedSession.status = data.sessionStatus
 
             setSession(updatedSession);
         } catch (err) {

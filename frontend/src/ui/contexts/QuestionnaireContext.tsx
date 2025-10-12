@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, ReactNode, useState, useEffect, useCallback } from "react";
+import { createContext, useContext, ReactNode, useState, useEffect } from "react";
 import { Questionnaire } from "@/core/entities/Questionnaire";
 
 type ContextType = {
@@ -28,15 +28,13 @@ export const QuestionnaireProvider = ({ children, apiKey }: ProviderProps) => {
         try {
             setLoading(true)
 
-            const resp = await fetch(`/new/api/questionnaires?apiKey=${apiKey}`)
+            const resp = await fetch(`/api/questionnaires?apiKey=${apiKey}`)
 
             if (!resp.ok) {
                 throw new Error("Impossible de récupérer les questionnaires.")
             }
 
             const data = await resp.json()
-
-            console.log("Questionnaires récupérés:", data)
 
             setQuestionnaires(data)
             setError(null)
