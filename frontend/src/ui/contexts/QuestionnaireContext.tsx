@@ -5,18 +5,51 @@ import { Questionnaire } from "@/core/entities/Questionnaire";
 
 type ContextType = {
     questionnaires: Questionnaire[];
+    loading: boolean;
+    error: string | null;
     nextQuestionnaire: Questionnaire | null;
+    refresh: () => void;
 };
 
 export const QuestionnaireContext = createContext<ContextType | undefined>(undefined);
 
 type ProviderProps = {
     children: ReactNode;
-    questionnaires: Questionnaire[];
+    apiKey: string
 }
 
-export const QuestionnaireProvider = ({ children, questionnaires }: ProviderProps) => {
+export const QuestionnaireProvider = ({ children, apiKey }: ProviderProps) => {
+    const [questionnaires, setQuestionnaires] = useState<Questionnaire[]>([])
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState<string | null>(null)
     const [nextQuestionnaire, setNextQuestionnaire] = useState<Questionnaire | null>(null)
+
+    const refresh = async () => {
+        try {
+            setLoading(true)
+
+            const resp = await fetch(`/new/api/questionnaires?apiKey=${apiKey}`)
+
+            if (!resp.ok) {
+                throw new Error("Impossible de récupérer les questionnaires.")
+            }
+
+            const data = await resp.json()
+
+            console.log("Questionnaires récupérés:", data)
+
+            setQuestionnaires(data)
+            setError(null)
+        } catch (err) {
+            setError(err instanceof Error ? err.message : String(err))
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        refresh()
+    }, [apiKey])
 
     // Met à jours le prochain questionnaire quand la liste change
     useEffect(() => {
@@ -32,7 +65,7 @@ export const QuestionnaireProvider = ({ children, questionnaires }: ProviderProp
     }, [questionnaires])
 
     return (
-        <QuestionnaireContext value={{ questionnaires, nextQuestionnaire }}>
+        <QuestionnaireContext value={{ questionnaires, loading, error, nextQuestionnaire, refresh }}>
             {children}
         </QuestionnaireContext>
     );
