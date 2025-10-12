@@ -1,58 +1,35 @@
+"use client";
+
 import { Button } from "@/components/ui/button"
-import Image from "next/image";
 import Link from "next/link";
-import db from "@/lib/db";
+import { useQuestionnaireContext } from "@/ui/contexts/QuestionnaireContext";
+import { QuestSteps } from "@/ui/components/questionnaire/QuestSteps";
+import { QuestImages } from "@/ui/components/questionnaire/QuestImages";
+import { useTheme } from "@/ui/contexts/ThemeContext";
 
 
-export default async function ApiKeyPage({
-    params
-}: {
-    params: Promise<{ apiKey: string }>
-}) {
-    const { apiKey } = await params
+export default function QuestionnairesPage() {
+    const { loading, error, nextQuestionnaire } = useQuestionnaireContext()
+    const { className } = useTheme()
 
-    const qId = 0
-
-    const questionnaires = db.getQuestionnaires()
-
-    const nextQ = questionnaires[qId]
+    if (loading) return <div>Loading...</div>
+    if (error) return <div>Error: {error}</div>
+    if (!nextQuestionnaire) return <div>Aucun questionnaire suivant</div>
 
     return (
         <div className="grid place-items-center h-screen">
-            <div className="flex flex-wrap gap-10 max-w-sm flex-col items-center">
-                <div className="flex px-[50px] items-center w-full justify-center gap-4">
-                    <span className="font-bold text-gray-900">Étape 1</span>
-                    <div className="flex-grow border-t border-dotted border-green-700 relative">
-                    </div>
-                    <span className="font-bold text-gray-400">Étape 2</span>
-                </div>
-                <div className="flex w-full justify-between">
-                    <Image
-                        className="border-1"
-                        src="https://a.pinatafarm.com/540x494/76636b7956/tada-will-smith.jpg"
-                        alt="result img"
-                        width={150}
-                        height={150}
-                        priority
-                    />
-                    <Image
-                        className="border-1"
-                        src="https://a.pinatafarm.com/540x494/76636b7956/tada-will-smith.jpg"
-                        alt="result img"
-                        width={150}
-                        height={150}
-                        priority
-                    />
+            <div className="flex flex-wrap gap-10 w-1/3 max-w-lg min-w-sm flex-col items-center">
+                <QuestSteps />
+                <QuestImages />
+                <div>
+                    <h2 className={`text-2xl text-center font-black ${className.textPrimary}`}>{nextQuestionnaire.name}</h2>
                 </div>
                 <div>
-                    <h2 className="text-2xl text-center font-black text-green-600">{nextQ.name}</h2>
+                    <p className="text-center text-gray-500">{nextQuestionnaire.description}</p>
                 </div>
-                <div>
-                    <p className="text-center text-gray-500">{nextQ.description}</p>
-                </div>
-                <Link href={`questionnaires/${nextQ.id}`}>
+                <Link href={`questionnaires/${nextQuestionnaire.id}/items`}>
                     <Button
-                        className="rounded-full bg-green-600 hover:bg-green-700 transition-colors"
+                        className={`rounded-full ${className.bgPrimary} hover:bg-green-700 transition-colors`}
                     >
                         C'est parti !
                     </Button>
