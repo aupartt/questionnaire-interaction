@@ -4,27 +4,15 @@ import { useSessionContext } from "@/ui/contexts/SessionContext";
 import { ItemStepper } from "@/ui/components/item/ItemStepper";
 import { Item } from "@/ui/components/item";
 import { Answer } from "@/core/entities/Answer";
-import { useRouter } from "next/navigation";
-import { use } from "react";
 
-export default function ApiKeyPage({
-    params
-}: {
-    params: Promise<{ apiKey: string }>
-}) {
-    const { apiKey } = use(params)
-    const router = useRouter()
+export default function ApiKeyPage() {
     const { session, addAnswer } = useSessionContext()
 
     if (!session) return "No session" // For lint
 
     const submitAnswer = (answer: Answer) => {
-        if (session.status === "active") {
-            if (!answer) return;
-            addAnswer(answer);
-        } else {
-            router.push(`/${apiKey}/onboarding`);
-        }
+        if (!answer) return;
+        addAnswer(answer);
     }
 
     return (
