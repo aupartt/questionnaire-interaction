@@ -7,7 +7,7 @@ class AnswerModel(BaseModel):
     id: int | None
     session_id: int
     item_id: int
-    value: str | dict | None
+    value: str
     status: StatusEnum
 
     model_config = ConfigDict(from_attributes=True)
@@ -15,7 +15,7 @@ class AnswerModel(BaseModel):
 
 class Answer(BaseModel):
     item_id: int
-    value: str | dict | None
+    value: str
     status: StatusEnum
 
     model_config = ConfigDict(from_attributes=True)

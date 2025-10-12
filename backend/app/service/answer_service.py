@@ -41,8 +41,19 @@ class AnswerService:
             result_url = None
 
         # Sauvegarde la réponse et update le status de la session
-        res = await self.answer_repo.save_answer(session_id=session_id, answer=answer, session_status=session_status)
-        if res.status == "error":
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=res.message)
+        db_answer = await self.answer_repo.get_answer_by_id(session_id=session_id, item_id=answer.item_id)
+        if db_answer is not None and db_answer.id:
+            success = await self.answer_repo.update_answer(answer_id=db_answer.id, answer=answer)
+            if not success:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=f"Impossible de mettre à jour la réponse {db_answer.id}",
+                )
+        else:
+            res = await self.answer_repo.save_answer(
+                session_id=session_id, answer=answer, session_status=session_status
+            )
+            if res.status == "error":
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=res.message)
 
         return NextItemResponse(next_item=next_item, session_status=session_status, result_url=result_url)

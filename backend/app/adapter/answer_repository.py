@@ -7,6 +7,7 @@ from app.adapter.session_repository import SessionRepository
 from app.core.database import get_db
 from app.models import AnswerDB
 from app.schema import Answer
+from app.schema.answers import AnswerModel
 from app.schema.common import Result, ResultStatus, StatusEnum
 
 logger = logging.getLogger(__name__)
@@ -16,6 +17,19 @@ class AnswerRepository:
     def __init__(self, repo: SessionRepository = Depends(SessionRepository)) -> None:
         self.repo = repo
 
+    async def get_answer_by_id(self, session_id, item_id) -> AnswerModel | None:
+        """Retourne une réponse lié pour un item précis"""
+        async with get_db() as session:
+            stmt = select(AnswerDB).where(
+                AnswerDB.session_id == session_id,
+                AnswerDB.item_id == item_id,
+            )
+            results = await session.execute(stmt)
+            db_answers = results.scalar_one_or_none()
+            if db_answers is not None:
+                return AnswerModel.model_validate(db_answers)
+            return None
+
     async def get_answers(self, session_id: int) -> list[Answer]:
         """Retourne toutes les réponse liées à une session"""
         async with get_db() as session:
@@ -23,6 +37,26 @@ class AnswerRepository:
             results = await session.execute(stmt)
             db_answers = results.scalars().all()
             return [Answer.model_validate(a) for a in db_answers]
+
+    async def update_answer(self, answer_id: int, answer: Answer) -> bool:
+        """Met à jour une réponse"""
+        async with get_db() as session:
+            try:
+                stmt = select(AnswerDB).where(AnswerDB.id == answer_id)
+                results = await session.execute(stmt)
+                db_answers = results.scalar_one_or_none()
+                if db_answers is None:
+                    return False
+                db_answers.value = answer.value
+                db_answers.status = answer.status
+                await session.commit()
+                return True
+            except Exception as e:
+                await session.rollback()
+                logger.error(
+                    f"Failed to update answer {e}",
+                )
+                raise e
 
     async def save_answer(self, session_id: int, answer: Answer, session_status: StatusEnum | None) -> Result:
         """Sauvegarde la réponse et update le status de la session"""
