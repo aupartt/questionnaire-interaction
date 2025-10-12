@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { getResultsApiUseCase } from "@/container/Containers";
+import { getResultsUseCase } from "@/container/Containers";
 
 export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
     }
 
     try {
-        const getResults = getResultsApiUseCase();
+        const getResults = getResultsUseCase();
         const res = await getResults.execute(
             apiKey,
             parseInt(questionnaireId),
