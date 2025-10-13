@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { StyledButton } from "@/ui/components/StyledButton";
 
 export default function Home() {
