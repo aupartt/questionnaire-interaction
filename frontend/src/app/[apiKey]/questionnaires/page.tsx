@@ -19,8 +19,8 @@ export default function QuestionnairesPage() {
             <div className="flex flex-wrap gap-10 w-1/3 max-w-lg min-w-sm flex-col items-center">
                 <QuestSteps />
                 <QuestImages />
-                {
-                    nextQuestionnaire && <>
+                {nextQuestionnaire && (
+                    <>
                         <div>
                             <h2
                                 className={`text-2xl text-center font-black ${className.textPrimary}`}
@@ -33,7 +33,9 @@ export default function QuestionnairesPage() {
                                 {nextQuestionnaire.description}
                             </p>
                         </div>
-                        <Link href={`questionnaires/${nextQuestionnaire.id}/items`}>
+                        <Link
+                            href={`questionnaires/${nextQuestionnaire.id}/items`}
+                        >
                             <Button
                                 className={`rounded-full ${className.bgPrimary} hover:bg-green-700 transition-colors`}
                             >
@@ -41,7 +43,7 @@ export default function QuestionnairesPage() {
                             </Button>
                         </Link>
                     </>
-                }
+                )}
                 <div className="w-full flex flex-col items-center">
                     <p className="pb-3 text-gray-500 text-sm">
                         Je m'arrête là pour aujourd'hui

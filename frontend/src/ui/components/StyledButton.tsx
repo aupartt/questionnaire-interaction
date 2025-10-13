@@ -6,9 +6,14 @@ type StyledButtonProps = {
     className?: string;
     value: string;
     action?: () => void;
-    href?: string
+    href?: string;
 };
-export function StyledButton({ className, value, action, href }: StyledButtonProps) {
+export function StyledButton({
+    className,
+    value,
+    action,
+    href,
+}: StyledButtonProps) {
     const buttonComponent = (
         <Button
             className={`rounded-full bg-green-600 hover:bg-green-700 cursor-pointer transition-colors ${className}`}
@@ -19,11 +24,11 @@ export function StyledButton({ className, value, action, href }: StyledButtonPro
     );
 
     if (action) {
-        buttonComponent.props.onClick = action
-        return buttonComponent
+        buttonComponent.props.onClick = action;
+        return buttonComponent;
     }
 
-    if (href) return <Link href={href}>{buttonComponent}</Link>
+    if (href) return <Link href={href}>{buttonComponent}</Link>;
 
-    return "action and href not specified."
+    return "action and href not specified.";
 }

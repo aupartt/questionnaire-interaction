@@ -9,15 +9,15 @@ import { useEffect } from "react";
 
 export default function ApiKeyPage() {
     const { session, addAnswer } = useSessionContext();
-    const router = useRouter()
+    const router = useRouter();
 
     if (!session) return "No session"; // For lint
 
     useEffect(() => {
         if (session.status === "completed") {
-            router.push(`results`)
+            router.push(`results`);
         }
-    }, [session])
+    }, [session]);
 
     const submitAnswer = (answer: Answer) => {
         if (!answer) return;
