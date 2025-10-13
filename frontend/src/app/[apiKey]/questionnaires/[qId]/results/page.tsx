@@ -1,13 +1,12 @@
 "use client";
 
-import useSWR from "swr";
-
-import type { Results } from "@/core/entities/Results";
 import Image from "next/image";
-import { use } from "react";
-import { useSessionContext } from "@/ui/contexts/SessionContext";
-import { StyledButton } from "@/ui/components/StyledButton";
 import { useRouter } from "next/navigation";
+import { use } from "react";
+import useSWR from "swr";
+import type { Results } from "@/core/entities/Results";
+import { StyledButton } from "@/ui/components/StyledButton";
+import { useSessionContext } from "@/ui/contexts/SessionContext";
 
 type FetchArgs = Parameters<typeof fetch>;
 const fetcher = (...args: FetchArgs) =>

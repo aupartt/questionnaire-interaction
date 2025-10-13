@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ReactNode } from "react";
+import { Button } from "@/components/ui/button";
 
 type StyledButtonProps = {
     className?: string;

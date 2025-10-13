@@ -1,11 +1,11 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import type { Answer } from "@/core/entities/Answer";
 import { ItemSection } from "@/ui/components/item/Item";
 import { ItemStepper } from "@/ui/components/item/ItemStepper";
 import { useSessionContext } from "@/ui/contexts/SessionContext";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
 export default function ApiKeyPage() {
     const { session, addAnswer } = useSessionContext();
