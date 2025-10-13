@@ -14,7 +14,6 @@ permissions:
 
 jobs:
   backend-lint-and-test:
-    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -47,7 +46,6 @@ jobs:
         run: uv run pytest
 
   frontend-lint-and-test:
-    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     defaults:
       run:
