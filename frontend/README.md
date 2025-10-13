@@ -1,7 +1,5 @@
 # Questionnaire Interaction App
 
-> L'application ne fonctionne actuellement pas en version Docker, dû à un manque de connaissance de Next.js de ma part. Une refactorisation est en cours, incluant les bonne pratiques de routing (layout, page, ...). Pour plus de détails c'est [ici](./docs/front_refactorisation.md).
-
 ## 🚀 Lancement rapide
 
 ### Prérequis
@@ -41,4 +39,26 @@ frontend/
         ├── components/  # React Components
         └── contexts/  # React Contexts
 ```
+
+## 🛣️ Routes
+
+```
+app/
+└── [apiKey]/
+    ├── layout.tsx  # Récupérer et vérifie la clé API
+    └── questionnaires/
+        ├── page.tsx
+        ├── layout.tsx # QuestionnaireProvider
+        └── [qID]/
+            ├── layout.tsx  # SessionProvider
+            ├── items/ # Affichage des questions
+            │   ├── layout.tsx
+            │   ├── @sidebar/
+            │   │   └── page.tsx
+            │   └── @item/
+            │       └── page.tsx
+            └── results/
+                └── page.tsx # Affichage des résultats
+```
+
  
