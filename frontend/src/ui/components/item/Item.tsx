@@ -1,15 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSessionContext } from "@/ui/contexts/SessionContext";
 import { StyledButton } from "../StyledButton";
 import { ItemContent } from "./ItemContent";
 import { ItemQuestion } from "./ItemQuestion";
 import { Answer } from "@/core/entities/Answer";
+import { type Item } from '@/core/entities/Session'
 
-export function Item({ submit }: { submit: (answer: Answer) => void }) {
-    const [answerValue, setAnswerValue] = useState<string | null>(null);
-    const { session } = useSessionContext();
+export function Item({ currentItem, submit }: { currentItem: Item, submit: (answer: Answer) => void }) {
+    const [answerValue, setAnswerValue] = useState<string>("");
 
-    if (!session) return "Aucune session" // For lint
+    useEffect(() => {
+        setAnswerValue("")
+    }, [currentItem])
 
     const handleChange = (newValue: string) => {
         setAnswerValue(newValue);
@@ -18,7 +20,7 @@ export function Item({ submit }: { submit: (answer: Answer) => void }) {
     // Crée l'objet Answer et le submit
     const onSubmit = () => {
         submit({
-            itemId: session?.currentItem.id,
+            itemId: currentItem.id,
             value: answerValue,
             status: "completed"
         })
@@ -26,10 +28,11 @@ export function Item({ submit }: { submit: (answer: Answer) => void }) {
 
     return (
         <div className="flex flex-col gap-5">
-            <ItemQuestion question={session!.currentItem.question} />
+            <ItemQuestion question={currentItem.question} />
             <ItemContent
-                content={session!.currentItem.content}
+                content={currentItem.content}
                 handleChange={handleChange}
+                value={answerValue}
             />
             <div className="flex flex-row-reverse">
                 <StyledButton value="Continuer" action={onSubmit} />
