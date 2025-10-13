@@ -1,7 +1,7 @@
 "use client";
 
-import { useQuestionnaireContext } from "@/ui/contexts/QuestionnaireContext";
 import Image from "next/image";
+import { useQuestionnaireContext } from "@/ui/contexts/QuestionnaireContext";
 
 export function QuestImages() {
     const { questionnaires } = useQuestionnaireContext();
@@ -13,7 +13,7 @@ export function QuestImages() {
         <div className="flex w-full justify-between">
             {questionnaires.map((el, id) => (
                 <ImgChild
-                    key={id}
+                    key={el.id}
                     url={mockImg}
                     alt={`Image Questionnaire ${id + 1}`}
                 />

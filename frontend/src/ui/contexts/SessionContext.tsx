@@ -2,14 +2,14 @@
 
 import {
     createContext,
-    useContext,
-    ReactNode,
-    useState,
-    useEffect,
+    type ReactNode,
     useCallback,
+    useContext,
+    useEffect,
+    useState,
 } from "react";
+import type { Answer, AnswerResponse } from "@/core/entities/Answer";
 import { Session } from "@/core/entities/Session";
-import { Answer, AnswerResponse } from "@/core/entities/Answer";
 
 type ContextType = {
     session: Session | null;
@@ -36,7 +36,7 @@ export const SessionProvider = ({
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const initSession = async () => {
+    const initSession = useCallback(async () => {
         try {
             setLoading(true);
             setError(null);
@@ -69,7 +69,7 @@ export const SessionProvider = ({
         } finally {
             setLoading(false);
         }
-    };
+    }, [apiKey, questionnaireId]);
 
     useEffect(() => {
         console.info(
@@ -77,7 +77,7 @@ export const SessionProvider = ({
             questionnaireId,
         );
         initSession();
-    }, [apiKey, questionnaireId]);
+    }, [questionnaireId, initSession]);
 
     const addAnswer = async (answer: Answer) => {
         if (!session) throw new Error("Aucune session active");

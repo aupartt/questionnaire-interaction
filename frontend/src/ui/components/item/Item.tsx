@@ -1,12 +1,11 @@
-import { useEffect, useState } from "react";
-import { useSessionContext } from "@/ui/contexts/SessionContext";
+import { useState } from "react";
+import type { Answer } from "@/core/entities/Answer";
+import type { Item } from "@/core/entities/Session";
 import { StyledButton } from "../StyledButton";
 import { ItemContent } from "./ItemContent";
 import { ItemQuestion } from "./ItemQuestion";
-import { Answer } from "@/core/entities/Answer";
-import { type Item } from "@/core/entities/Session";
 
-export function Item({
+export function ItemSection({
     currentItem,
     submit,
 }: {
@@ -14,10 +13,6 @@ export function Item({
     submit: (answer: Answer) => void;
 }) {
     const [answerValue, setAnswerValue] = useState<string>("");
-
-    useEffect(() => {
-        setAnswerValue("");
-    }, [currentItem]);
 
     const handleChange = (newValue: string) => {
         setAnswerValue(newValue);
@@ -30,6 +25,7 @@ export function Item({
             value: answerValue,
             status: "completed",
         });
+        setAnswerValue("");
     };
 
     return (

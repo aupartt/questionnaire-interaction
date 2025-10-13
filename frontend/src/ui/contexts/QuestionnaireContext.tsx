@@ -2,12 +2,13 @@
 
 import {
     createContext,
+    type ReactNode,
+    useCallback,
     useContext,
-    ReactNode,
-    useState,
     useEffect,
+    useState,
 } from "react";
-import { Questionnaire } from "@/core/entities/Questionnaire";
+import type { Questionnaire } from "@/core/entities/Questionnaire";
 
 type ContextType = {
     questionnaires: Questionnaire[];
@@ -33,7 +34,7 @@ export const QuestionnaireProvider = ({ children, apiKey }: ProviderProps) => {
     const [nextQuestionnaire, setNextQuestionnaire] =
         useState<Questionnaire | null>(null);
 
-    const refresh = async () => {
+    const refresh = useCallback(async () => {
         try {
             setLoading(true);
 
@@ -52,11 +53,11 @@ export const QuestionnaireProvider = ({ children, apiKey }: ProviderProps) => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [apiKey]);
 
     useEffect(() => {
         refresh();
-    }, [apiKey]);
+    }, [refresh]);
 
     // Met à jours le prochain questionnaire quand la liste change
     useEffect(() => {

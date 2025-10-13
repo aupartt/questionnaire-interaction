@@ -1,4 +1,4 @@
-import { type Results } from "@/core/entities/Results";
+import type { Results } from "@/core/entities/Results";
 import { QuestionnaireResults } from "@/ui/components/questionnaire/QuestionnaireResults";
 
 export default function ResultsPage() {

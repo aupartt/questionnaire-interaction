@@ -110,21 +110,21 @@ const db = {
         return questionnaires;
     },
     getQuestionnaire: (qId: number) => {
-        return questionnaires.find((q) => q.id == qId);
+        return questionnaires.find((q) => q.id === qId);
     },
     getItems: (qId: number) => {
-        const res = items.filter((i) => i.questionnaireId == qId);
+        const res = items.filter((i) => i.questionnaireId === qId);
         return res;
     },
     getItem: (itemId: number) => {
-        return items.find((i) => i.id == itemId);
+        return items.find((i) => i.id === itemId);
     },
     getFirstItemId: (qId: number) => {
         const qItems = db.getItems(qId);
         return qItems[0];
     },
     getNextItemId: (itemId: number) => {
-        const res = items.find((i) => i.id == itemId);
+        const res = items.find((i) => i.id === itemId);
         if (!res) return;
         const qItems = db.getItems(res.questionnaireId);
         const iIdx = qItems.indexOf(res);

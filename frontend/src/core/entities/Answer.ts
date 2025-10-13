@@ -1,5 +1,5 @@
+import type { SessionStatus } from "@/core/entities/Session";
 import type { Item } from "./Session";
-import { SessionStatus } from "@/core/entities/Session";
 
 export type AnswerStatus = "completed" | "skipped";
 

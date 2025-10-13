@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
-import { VerifyApiKey } from "./VerifyApiKey";
 import type { ApiKeyStatus } from "@/core/entities/ApiKeyStatus";
 import type { IAuthRepository } from "@/core/ports/IAuthRepository";
+import { VerifyApiKey } from "./VerifyApiKey";
 
 describe("VerifyApiKey", () => {
     it("devrait correctement renvoyer la valeur de isValid", async () => {

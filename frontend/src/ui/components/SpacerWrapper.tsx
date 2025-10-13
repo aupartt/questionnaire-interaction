@@ -11,9 +11,16 @@ export function SpacerWrapper({ children, spacer }: SpacerWrapperProps) {
 
     const separatedChild = childList.reduce<React.ReactNode[]>(
         (acc, child, index) => {
+            const childKey = React.isValidElement(child)
+                ? child.key
+                : `child-${index}`;
+            const safeChildKey =
+                childKey !== null ? String(childKey) : `child-index-${index}`;
             if (index > 0) {
                 const spacerElement = React.isValidElement(spacer)
-                    ? React.cloneElement(spacer, { key: `spacer-${index}` })
+                    ? React.cloneElement(spacer, {
+                          key: `spacer-${safeChildKey}`,
+                      })
                     : spacer;
 
                 acc.push(spacerElement);

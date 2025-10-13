@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom";
-import { GetSession } from "./GetSession";
 import type { ISessionRepository } from "../ports/ISessionRepository";
+import { GetSession } from "./GetSession";
 
 describe("GetSession", () => {
     it("devrait correctement renvoyer une entity Session", async () => {

@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge";
-import { SpacerWrapper } from "../SpacerWrapper";
 import { useSessionContext } from "@/ui/contexts/SessionContext";
 import { useTheme } from "@/ui/contexts/ThemeContext";
+import { SpacerWrapper } from "../SpacerWrapper";
 
 const Spacer = <span className="flex-grow mx-1 h-0.5 bg-gray-300"></span>;
 

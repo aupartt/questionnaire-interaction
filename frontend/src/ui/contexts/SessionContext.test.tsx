@@ -1,14 +1,14 @@
 import {
-    renderHook,
     act,
-    render,
-    screen,
     cleanup,
+    render,
+    renderHook,
+    screen,
     waitFor,
 } from "@testing-library/react";
 import "@testing-library/jest-dom";
+import { type ReactNode, useEffect } from "react";
 import { SessionProvider, useSessionContext } from "./SessionContext";
-import { ReactNode, useEffect } from "react";
 
 const createMockSession = () => ({
     id: 1,

@@ -2,7 +2,7 @@
 
 "use client";
 
-import { ItemShort } from "@/core/entities/Session";
+import type { ItemShort } from "@/core/entities/Session";
 import { useSessionContext } from "../contexts/SessionContext";
 
 export function Tabs() {
@@ -10,7 +10,7 @@ export function Tabs() {
     return (
         <div className="flex flex-col my-4">
             {session?.items.map((item, id) => (
-                <Tab key={id} item={item} />
+                <Tab key={item.id} item={item} />
             ))}
         </div>
     );

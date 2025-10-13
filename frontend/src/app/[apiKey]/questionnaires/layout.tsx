@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import { QuestionnaireProvider } from "@/ui/contexts/QuestionnaireContext";
 
 export default async function QuestionnairesLayout({

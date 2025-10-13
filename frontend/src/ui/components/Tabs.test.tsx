@@ -1,13 +1,13 @@
 import "@testing-library/jest-dom";
 import {
-    renderHook,
     act,
-    render,
     cleanup,
+    render,
+    renderHook,
     screen,
 } from "@testing-library/react";
-import { Tabs, Tab } from "./Tabs";
 import { Session } from "@/core/entities/Session";
+import { Tab, Tabs } from "./Tabs";
 
 const mockUsePathname = jest.fn();
 const mockUseQuestionnaireContext = jest.fn();

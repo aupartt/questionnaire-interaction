@@ -1,5 +1,5 @@
-import { type Results } from "@/core/entities/Results";
 import Image from "next/image";
+import type { Results } from "@/core/entities/Results";
 
 export function QuestionnaireResults({ results }: { results: Results }) {
     return (

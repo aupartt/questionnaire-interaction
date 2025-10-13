@@ -10,7 +10,7 @@ export function QuestSteps() {
         <div className="flex px-[50px] items-center w-full justify-center gap-5">
             <SpacerWrapper spacer={Spacer()}>
                 {questionnaires.map((item, id) => (
-                    <Step key={id} isActive={item.isNext}>
+                    <Step key={item.id} isActive={item.isNext}>
                         Etape {id + 1}
                     </Step>
                 ))}

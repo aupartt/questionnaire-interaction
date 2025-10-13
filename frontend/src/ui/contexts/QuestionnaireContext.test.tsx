@@ -1,10 +1,10 @@
-import { waitFor, act, render, screen, cleanup } from "@testing-library/react";
+import { act, cleanup, render, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
+import type { Questionnaire } from "@/core/entities/Questionnaire";
 import {
     QuestionnaireProvider,
     useQuestionnaireContext,
 } from "./QuestionnaireContext";
-import { Questionnaire } from "@/core/entities/Questionnaire";
 
 // Fonction utilitaire pour créer des questionnaires mock
 const createMockQuestionnaire = (

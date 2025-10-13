@@ -1,9 +1,9 @@
 "use client";
 
-import { useSessionContext } from "@/ui/contexts/SessionContext";
+import type { Answer } from "@/core/entities/Answer";
+import { ItemSection } from "@/ui/components/item/Item";
 import { ItemStepper } from "@/ui/components/item/ItemStepper";
-import { Item } from "@/ui/components/item";
-import { Answer } from "@/core/entities/Answer";
+import { useSessionContext } from "@/ui/contexts/SessionContext";
 
 export default function ApiKeyPage() {
     const { session, addAnswer } = useSessionContext();
@@ -21,7 +21,10 @@ export default function ApiKeyPage() {
             <div className="flex flex-col item-center gap-7 mx-auto min-w-2xl w-1/2">
                 <ItemStepper />
                 <h2 className="font-bold">{session?.currentItem.name}</h2>
-                <Item currentItem={session.currentItem} submit={submitAnswer} />
+                <ItemSection
+                    currentItem={session.currentItem}
+                    submit={submitAnswer}
+                />
             </div>
         </div>
     );
