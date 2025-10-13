@@ -9,7 +9,7 @@ export function Tabs() {
     const { session } = useSessionContext();
     return (
         <div className="flex flex-col my-4">
-            {session?.items.map((item, id) => (
+            {session?.items.map((item, _id) => (
                 <Tab key={item.id} item={item} />
             ))}
         </div>

@@ -18,8 +18,8 @@ export async function GET(request: NextRequest) {
         const getResults = getResultsUseCase();
         const res = await getResults.execute(
             apiKey,
-            parseInt(questionnaireId),
-            parseInt(sessionId),
+            parseInt(questionnaireId, 10),
+            parseInt(sessionId, 10),
         );
         return NextResponse.json(res);
     } catch (error) {

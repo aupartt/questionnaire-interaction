@@ -1,4 +1,3 @@
-import type { ApiKeyStatus } from "../entities/ApiKeyStatus";
 import type { IAuthRepository } from "../ports/IAuthRepository";
 
 export class VerifyApiKey {

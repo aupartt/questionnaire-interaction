@@ -1,11 +1,5 @@
 import "@testing-library/jest-dom";
-import {
-    act,
-    cleanup,
-    render,
-    renderHook,
-    screen,
-} from "@testing-library/react";
+import { cleanup, render } from "@testing-library/react";
 import { Session } from "@/core/entities/Session";
 import { Tab, Tabs } from "./Tabs";
 

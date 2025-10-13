@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
         const getSession = getSessionUseCase();
         const session = await getSession.execute(
             apiKey,
-            parseInt(questionnaireId),
+            parseInt(questionnaireId, 10),
         );
         return NextResponse.json(session);
     } catch (error) {

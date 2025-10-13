@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Answer } from "@/core/entities/Answer";
 
 type StyledButtonProps = {
     className?: string;

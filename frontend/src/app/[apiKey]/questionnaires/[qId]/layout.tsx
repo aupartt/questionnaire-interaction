@@ -14,7 +14,7 @@ export default async function QuestionnaireLayout({
             <div className="flex h-screen">
                 <SessionProvider
                     apiKey={apiKey}
-                    questionnaireId={parseInt(qId)}
+                    questionnaireId={parseInt(qId, 10)}
                 >
                     {children}
                 </SessionProvider>

@@ -1,11 +1,4 @@
-import {
-    act,
-    cleanup,
-    render,
-    renderHook,
-    screen,
-    waitFor,
-} from "@testing-library/react";
+import { act, cleanup, render, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { type ReactNode, useEffect } from "react";
 import { SessionProvider, useSessionContext } from "./SessionContext";
@@ -111,7 +104,7 @@ describe("SessionContext", () => {
             const questionnaireId = params.get("questionnaireId");
             if (questionnaireId) {
                 const mockSession = createMockSession();
-                mockSession.questionnaireId = parseInt(questionnaireId);
+                mockSession.questionnaireId = parseInt(questionnaireId, 10);
                 mockSession.currentItem.name =
                     questionnaireId === "1" ? "Foo" : "Bar";
                 return Promise.resolve({

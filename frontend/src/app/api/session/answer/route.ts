@@ -27,8 +27,8 @@ export async function POST(request: NextRequest) {
         const getSubmitAnswer = getSubmitAnswerUseCase();
         const res = await getSubmitAnswer.execute(
             apiKey,
-            parseInt(sessionId),
-            parseInt(questionnaireId),
+            parseInt(sessionId, 10),
+            parseInt(questionnaireId, 10),
             answer,
         );
         return NextResponse.json(res);
