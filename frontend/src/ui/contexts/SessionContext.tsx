@@ -75,7 +75,7 @@ export const SessionProvider = ({ children, apiKey, questionnaireId }: ProviderP
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify(answer)
+                body: JSON.stringify({ answer })
             })
 
             if (!res.ok) {

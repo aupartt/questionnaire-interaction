@@ -203,7 +203,7 @@ describe('SessionContext', () => {
         const [url, options] = spyFetch.mock.calls[1];
         expect(url).toBe('/api/session/answer?apiKey=foo&questionnaireId=1&sessionId=1');
         expect(options.method).toBe('POST');
-        expect(options.body).toBe(JSON.stringify(mockAnswer));
+        expect(options.body).toBe(JSON.stringify({ answer: mockAnswer }));
 
         expect(capturedContext.session.id).toBe(1);
         expect(capturedContext.session.questionnaireId).toBe(1);

@@ -21,7 +21,7 @@ export default function ApiKeyPage() {
             <div className="flex flex-col item-center gap-7 mx-auto min-w-2xl w-1/2">
                 <ItemStepper />
                 <h2 className="font-bold">{session?.currentItem.name}</h2>
-                <Item submit={submitAnswer} />
+                <Item currentItem={session.currentItem} submit={submitAnswer} />
             </div>
         </div>
     )
