@@ -31,7 +31,7 @@ export class Session {
         public answers: Answer[],
         public currentItem: Item,
         public status: SessionStatus = "active",
-    ) {}
+    ) { }
 
     addAnswer(answer: Answer): Session {
         // Regarde si la réponse existe
