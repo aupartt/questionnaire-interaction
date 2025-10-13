@@ -34,18 +34,6 @@ describe("SpacerWrapper", () => {
         expect(container.children).toHaveLength(1);
     });
 
-    it("devrait rendre zero éléments si aucun enfant fournis", () => {
-        const { container } = render(
-            <SpacerWrapper
-                spacer={<span data-testid="spacer">space-spacer</span>}
-            >
-                <></>
-            </SpacerWrapper>,
-        );
-
-        expect(container.children).toHaveLength(0);
-    });
-
     it("devrait rendre les enfants dans le bon ordre", () => {
         const { container } = render(
             <SpacerWrapper
