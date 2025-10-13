@@ -1,3 +1,3 @@
-export { Item } from "./Item";
+export { ItemSection } from "./Item";
 export { ItemContent } from "./ItemContent";
 export { ItemQuestion } from "./ItemQuestion";

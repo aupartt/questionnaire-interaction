@@ -24,14 +24,6 @@ COPY . .
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED=1
 
-ARG API_URL="http://localhost:8090/api/v1"
-ARG API_KEY_NAME="X-API-Key"
-ARG API_KEY_MOCK="foo"
-
-ENV API_URL=${API_URL}
-ENV API_KEY_NAME=${API_KEY_NAME}
-ENV API_KEY_MOCK=${API_KEY_MOCK}
-
 RUN bun run build
 
 # Production image, copy all the files and run next
