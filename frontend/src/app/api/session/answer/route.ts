@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { getSubmitAnswerApiUseCase } from "@/container/Containers";
+import { getSubmitAnswerUseCase } from "@/container/Containers";
 
 export async function POST(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
@@ -11,6 +11,12 @@ export async function POST(request: NextRequest) {
     const { answer } = body;
 
     if (!apiKey || !questionnaireId || !sessionId || !answer) {
+        console.error("Paramètres non valide:", {
+            apiKey,
+            questionnaireId,
+            sessionId,
+            answer,
+        });
         return NextResponse.json(
             { error: "Paramètres non valide." },
             { status: 400 },
@@ -18,11 +24,11 @@ export async function POST(request: NextRequest) {
     }
 
     try {
-        const getSubmitAnswer = getSubmitAnswerApiUseCase();
+        const getSubmitAnswer = getSubmitAnswerUseCase();
         const res = await getSubmitAnswer.execute(
             apiKey,
-            parseInt(questionnaireId),
-            parseInt(sessionId),
+            parseInt(sessionId, 10),
+            parseInt(questionnaireId, 10),
             answer,
         );
         return NextResponse.json(res);

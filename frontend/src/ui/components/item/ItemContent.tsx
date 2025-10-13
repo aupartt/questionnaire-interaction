@@ -3,13 +3,18 @@ import { TextContent } from "./contents/TextContent";
 
 type ItemContentProps = {
     content: Content;
+    value: string;
     handleChange: (x: string) => void;
 };
 
-export function ItemContent({ content, handleChange }: ItemContentProps) {
+export function ItemContent({
+    content,
+    value,
+    handleChange,
+}: ItemContentProps) {
     switch (content.type) {
         case "text":
-            return <TextContent handleChange={handleChange} />;
+            return <TextContent handleChange={handleChange} value={value} />;
         default:
             return <p>Type de content invalide</p>;
     }

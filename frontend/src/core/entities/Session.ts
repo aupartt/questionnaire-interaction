@@ -21,6 +21,8 @@ export type Item = {
     content: Content;
 };
 
+export type SessionStatus = "completed" | "active";
+
 export class Session {
     constructor(
         public readonly id: number,
@@ -28,9 +30,10 @@ export class Session {
         public items: ItemShort[],
         public answers: Answer[],
         public currentItem: Item,
+        public status: SessionStatus = "active",
     ) {}
 
-    addAnswer(answer: Answer): void {
+    addAnswer(answer: Answer): Session {
         // Regarde si la réponse existe
         const exist_idx = this.answers.findIndex(
             (x) => x.itemId === answer.itemId,
@@ -45,6 +48,14 @@ export class Session {
         else {
             this.answers.push(answer);
         }
+
+        return new Session(
+            this.id,
+            this.questionnaireId,
+            this.items,
+            this.answers,
+            this.currentItem,
+        );
     }
 
     getItemStatus(itemId: number): AnswerStatus | null {

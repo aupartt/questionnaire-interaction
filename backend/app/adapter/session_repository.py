@@ -57,6 +57,7 @@ class SessionRepository:
                     f"Failed to get session {e}",
                 )
                 await session.rollback()
+                raise e
 
     async def update_status(self, session_id: int, status: StatusEnum) -> None:
         """Mets à jours le status d'une Session"""
@@ -75,3 +76,4 @@ class SessionRepository:
                     f"Impossible de mettre à jours la session {e}",
                 )
                 await session.rollback()
+                raise e

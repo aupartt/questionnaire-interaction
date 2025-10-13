@@ -1,68 +1,60 @@
-import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useSessionContext } from "@/ui/contexts/SessionContext";
+import type { Answer } from "@/core/entities/Answer";
+import type { Item } from "@/core/entities/Session";
 import { StyledButton } from "../StyledButton";
 import { ItemContent } from "./ItemContent";
 import { ItemQuestion } from "./ItemQuestion";
-import { ProgressStepper } from "./ProgressStepper";
 
-export function Item() {
-    const [answerValue, setAnswerValue] = useState<string | null>(null);
-    const { session, status, results, apiKey, addAnswer } = useSessionContext();
-    const router = useRouter();
+export function ItemSection({
+    currentItem,
+    submit,
+}: {
+    currentItem: Item;
+    submit: (answer: Answer) => void;
+}) {
+    const [answerValue, setAnswerValue] = useState<string>("");
 
     const handleChange = (newValue: string) => {
         setAnswerValue(newValue);
     };
 
-    const handleSubmit = () => {
-        if (status === "active") {
-            if (!answerValue) return;
-
-            addAnswer({
-                itemId: session!.currentItem.id,
-                value: answerValue,
-                status: "completed",
-            });
-        } else {
-            router.push(`/${apiKey}/onboarding`);
-        }
+    // Crée l'objet Answer et le submit
+    const onSubmit = () => {
+        submit({
+            itemId: currentItem.id,
+            value: answerValue,
+            status: "completed",
+        });
+        setAnswerValue("");
     };
 
     return (
         <div className="flex flex-col gap-5">
-            <ProgressStepper />
-            {status === "active" && (
-                <>
-                    <ItemQuestion question={session!.currentItem.question} />
-                    <ItemContent
-                        content={session!.currentItem.content}
-                        handleChange={handleChange}
-                    />
-                </>
-            )}
-            {status === "completed" && results && (
-                <>
-                    <div className="flex flex-col justify-center items-center">
-                        <p className="font-bold pb-5">Questionnaire fini !</p>
-                        <Image
-                            src={results.imgUrl}
-                            alt="result img"
-                            width={180}
-                            height={180}
-                            priority
-                        />
-                        <p className="pt-5">
-                            Cliquez sur continuer pour retourner à la liste des
-                            questionnaires
-                        </p>
-                    </div>
-                </>
-            )}
+            <ItemQuestion question={currentItem.question} />
+            <ItemContent
+                content={currentItem.content}
+                handleChange={handleChange}
+                value={answerValue}
+            />
             <div className="flex flex-row-reverse">
-                <StyledButton value="Continuer" action={handleSubmit} />
+                <StyledButton value="Continuer" action={onSubmit} />
             </div>
         </div>
     );
+}
+
+{
+    /* <ul className="">
+    <li className="p-3 text-center border-2 rounded-t-sm font-bold border-gray-400 text-gray-400">En période de transition</li>
+    <li className="p-3 text-center border-x-2 font-bold border-gray-400 text-gray-400">En formation</li>
+    <li className="p-3 text-center border-2 font-bold border-gray-400 text-gray-400">En poste</li>
+    <li className="p-3 text-center border-x-2 font-bold border-gray-400 text-green-600 bg-green-100">En recherche d'emploi</li>
+    <li className="p-3 text-center border-2 rounded-b-sm font-bold border-gray-400 text-gray-400">En reconversion</li>
+</ul>
+<div className="flex flex-row-reverse">
+    <Button
+        onClick={nextItem}
+        className="rounded-full bg-green-600 hover:bg-green-700 transition-colors"
+    >Suivant</Button>
+</div> */
 }

@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { getAllQuestionnaireApiUseCase } from "@/container/Containers";
+import { getAllQuestionnaireUseCase } from "@/container/Containers";
 
 export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     }
 
     try {
-        const getAllQuestionnaire = getAllQuestionnaireApiUseCase();
+        const getAllQuestionnaire = getAllQuestionnaireUseCase();
         const questionnaire = await getAllQuestionnaire.execute(apiKey);
         return NextResponse.json(questionnaire);
     } catch (error) {

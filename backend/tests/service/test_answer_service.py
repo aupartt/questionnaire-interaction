@@ -60,6 +60,7 @@ async def test_add_answer_no_save(mocker: MockerFixture):
 
     answer_repo = AsyncMock(spec=AnswerRepository)
     answer_repo.save_answer = AsyncMock(return_value=Result(status=ResultStatus.ERROR, message="YOUPI"))
+    answer_repo.get_answer_by_id = AsyncMock(return_value=None)
 
     mock_answer = Answer(item_id=1, value="gneu", status=StatusEnum.COMPLETED)
 
