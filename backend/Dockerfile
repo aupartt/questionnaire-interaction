@@ -15,6 +15,8 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 COPY ./app/ ./app/
 COPY ./main.py .
+COPY ./alembic/ ./alembic/
+COPY alembic.ini .
 
 # Set the PATH and PYTHONPATH for the application
 ENV PATH="/backend/.venv/bin:$PATH"
