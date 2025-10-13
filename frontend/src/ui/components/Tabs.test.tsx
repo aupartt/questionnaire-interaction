@@ -1,26 +1,31 @@
-import '@testing-library/jest-dom';
-import { renderHook, act, render, cleanup, screen } from '@testing-library/react';
-import { Tabs, Tab } from './Tabs';
-import { Session } from '@/core/entities/Session';
+import "@testing-library/jest-dom";
+import {
+    renderHook,
+    act,
+    render,
+    cleanup,
+    screen,
+} from "@testing-library/react";
+import { Tabs, Tab } from "./Tabs";
+import { Session } from "@/core/entities/Session";
 
 const mockUsePathname = jest.fn();
 const mockUseQuestionnaireContext = jest.fn();
 
-jest.mock('next/navigation', () => ({
+jest.mock("next/navigation", () => ({
     usePathname() {
         return mockUsePathname();
     },
 }));
 
-jest.mock('../contexts/SessionContext', () => ({
+jest.mock("../contexts/SessionContext", () => ({
     useSessionContext() {
         return mockUseQuestionnaireContext();
     },
 }));
 
-
-describe('Tab', () => {
-    let sessionMock: Session
+describe("Tab", () => {
+    let sessionMock: Session;
 
     beforeEach(() => {
         sessionMock = new Session(
@@ -33,47 +38,52 @@ describe('Tab', () => {
                 name: "Foo",
                 question: {
                     type: "text",
-                    value: "Who?"
+                    value: "Who?",
                 },
                 content: {
                     type: "text",
-                }
+                },
             },
-            "active"
-        )
+            "active",
+        );
     });
 
     afterEach(cleanup);
 
     it("devrait être marqué comme actif", () => {
-        sessionMock.currentItem.id = 42
-        mockUseQuestionnaireContext.mockImplementation(() => ({ session: sessionMock }))
+        sessionMock.currentItem.id = 42;
+        mockUseQuestionnaireContext.mockImplementation(() => ({
+            session: sessionMock,
+        }));
         const mockItem = {
             id: 42,
-            name: "foo"
-        }
+            name: "foo",
+        };
 
         const { container } = render(<Tab item={mockItem} />);
 
-        expect(container.children[0].getAttribute("class")).toContain("bg-")
+        expect(container.children[0].getAttribute("class")).toContain("bg-");
     });
 
     it("devrait être marqué comme inactif", () => {
-        sessionMock.currentItem.id = 42
-        mockUseQuestionnaireContext.mockImplementation(() => ({ session: sessionMock }))
+        sessionMock.currentItem.id = 42;
+        mockUseQuestionnaireContext.mockImplementation(() => ({
+            session: sessionMock,
+        }));
         const mockItem = {
             id: 1,
-            name: "foo"
-        }
+            name: "foo",
+        };
         const { container } = render(<Tab item={mockItem} />);
 
-        expect(container.children[0].getAttribute("class")).not.toContain("bg-")
+        expect(container.children[0].getAttribute("class")).not.toContain(
+            "bg-",
+        );
     });
 });
 
-
-describe('Tabs', () => {
-    let sessionMock: Session
+describe("Tabs", () => {
+    let sessionMock: Session;
 
     beforeEach(() => {
         sessionMock = new Session(
@@ -86,14 +96,14 @@ describe('Tabs', () => {
                 name: "Foo",
                 question: {
                     type: "text",
-                    value: "Who?"
+                    value: "Who?",
                 },
                 content: {
                     type: "text",
-                }
+                },
             },
-            "active"
-        )
+            "active",
+        );
     });
 
     afterEach(cleanup);
@@ -102,19 +112,21 @@ describe('Tabs', () => {
         const mockItems = [
             {
                 id: 1,
-                name: "foo"
+                name: "foo",
             },
             {
                 id: 2,
-                name: "bar"
+                name: "bar",
             },
-        ]
-        sessionMock.items = mockItems
-        mockUseQuestionnaireContext.mockImplementation(() => ({ session: sessionMock }))
+        ];
+        sessionMock.items = mockItems;
+        mockUseQuestionnaireContext.mockImplementation(() => ({
+            session: sessionMock,
+        }));
 
         const { container } = render(<Tabs />);
 
         const wrapper = container.firstChild as HTMLElement;
-        expect(wrapper.children).toHaveLength(2)
+        expect(wrapper.children).toHaveLength(2);
     });
-})
+});

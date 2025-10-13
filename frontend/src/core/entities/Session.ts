@@ -30,8 +30,8 @@ export class Session {
         public items: ItemShort[],
         public answers: Answer[],
         public currentItem: Item,
-        public status: SessionStatus = "active"
-    ) { }
+        public status: SessionStatus = "active",
+    ) {}
 
     addAnswer(answer: Answer): Session {
         // Regarde si la réponse existe
@@ -49,7 +49,13 @@ export class Session {
             this.answers.push(answer);
         }
 
-        return new Session(this.id, this.questionnaireId, this.items, this.answers, this.currentItem)
+        return new Session(
+            this.id,
+            this.questionnaireId,
+            this.items,
+            this.answers,
+            this.currentItem,
+        );
     }
 
     getItemStatus(itemId: number): AnswerStatus | null {

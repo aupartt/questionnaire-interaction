@@ -1,6 +1,13 @@
 "use client";
 
-import { createContext, useContext, ReactNode, useState, useEffect, useCallback } from "react";
+import {
+    createContext,
+    useContext,
+    ReactNode,
+    useState,
+    useEffect,
+    useCallback,
+} from "react";
 import { Session } from "@/core/entities/Session";
 import { Answer, AnswerResponse } from "@/core/entities/Answer";
 
@@ -14,30 +21,35 @@ type ContextType = {
 
 export const SessionContext = createContext<ContextType | undefined>(undefined);
 
-
 type ProviderProps = {
     children: ReactNode;
     apiKey: string;
     questionnaireId: number;
-}
+};
 
-export const SessionProvider = ({ children, apiKey, questionnaireId }: ProviderProps) => {
-    const [session, setSession] = useState<Session | null>(null)
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState<string | null>(null)
+export const SessionProvider = ({
+    children,
+    apiKey,
+    questionnaireId,
+}: ProviderProps) => {
+    const [session, setSession] = useState<Session | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     const initSession = async () => {
         try {
             setLoading(true);
             setError(null);
 
-            const resp = await fetch(`/api/session?apiKey=${apiKey}&questionnaireId=${questionnaireId}`)
+            const resp = await fetch(
+                `/api/session?apiKey=${apiKey}&questionnaireId=${questionnaireId}`,
+            );
 
             if (!resp.ok) {
-                throw new Error("Impossible de récupérer la session.")
+                throw new Error("Impossible de récupérer la session.");
             }
 
-            const data = await resp.json()
+            const data = await resp.json();
 
             if (!data) throw new Error("Session introuvable");
 
@@ -47,8 +59,8 @@ export const SessionProvider = ({ children, apiKey, questionnaireId }: ProviderP
                 data.items,
                 data.answers,
                 data.currentItem,
-                "active"
-            )
+                "active",
+            );
             setSession(newSession);
         } catch (err) {
             const message = err instanceof Error ? err.message : String(err);
@@ -60,9 +72,12 @@ export const SessionProvider = ({ children, apiKey, questionnaireId }: ProviderP
     };
 
     useEffect(() => {
-        console.info("Initialisation de la session pour le questionnaire:", questionnaireId)
-        initSession()
-    }, [apiKey, questionnaireId])
+        console.info(
+            "Initialisation de la session pour le questionnaire:",
+            questionnaireId,
+        );
+        initSession();
+    }, [apiKey, questionnaireId]);
 
     const addAnswer = async (answer: Answer) => {
         if (!session) throw new Error("Aucune session active");
@@ -70,42 +85,47 @@ export const SessionProvider = ({ children, apiKey, questionnaireId }: ProviderP
         setError(null);
 
         try {
-            const res = await fetch(`/api/session/answer?apiKey=${apiKey}&questionnaireId=${questionnaireId}&sessionId=${session.id}`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
+            const res = await fetch(
+                `/api/session/answer?apiKey=${apiKey}&questionnaireId=${questionnaireId}&sessionId=${session.id}`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ answer }),
                 },
-                body: JSON.stringify({ answer })
-            })
+            );
 
             if (!res.ok) {
-                throw new Error("Impossible de récupérer la session.")
+                throw new Error("Impossible de récupérer la session.");
             }
 
-            const data: AnswerResponse = await res.json()
+            const data: AnswerResponse = await res.json();
 
             if (!data) throw new Error("Session introuvable");
 
             // Ajoute la réponse à la session et change l'item s'il existe
             const updatedSession = session.addAnswer(answer);
-            if (data.nextItem) updatedSession.currentItem = data.nextItem
-            updatedSession.status = data.sessionStatus
+            if (data.nextItem) updatedSession.currentItem = data.nextItem;
+            updatedSession.status = data.sessionStatus;
 
             setSession(updatedSession);
         } catch (err) {
-            setError(err instanceof Error ? err.message : String(err))
+            setError(err instanceof Error ? err.message : String(err));
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
-    }
+    };
 
     const clearSession = useCallback(() => {
-        setSession(null)
-        setError(null)
+        setSession(null);
+        setError(null);
     }, []);
 
     return (
-        <SessionContext value={{ session, loading, error, addAnswer, clearSession }}>
+        <SessionContext
+            value={{ session, loading, error, addAnswer, clearSession }}
+        >
             {children}
         </SessionContext>
     );
@@ -114,7 +134,9 @@ export const SessionProvider = ({ children, apiKey, questionnaireId }: ProviderP
 export function useSessionContext() {
     const context = useContext(SessionContext);
     if (!context) {
-        throw new Error("useSessionContext must be used within a SessionContext");
+        throw new Error(
+            "useSessionContext must be used within a SessionContext",
+        );
     }
     return context;
 }

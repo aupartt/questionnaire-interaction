@@ -6,14 +6,14 @@ import { Item } from "@/ui/components/item";
 import { Answer } from "@/core/entities/Answer";
 
 export default function ApiKeyPage() {
-    const { session, addAnswer } = useSessionContext()
+    const { session, addAnswer } = useSessionContext();
 
-    if (!session) return "No session" // For lint
+    if (!session) return "No session"; // For lint
 
     const submitAnswer = (answer: Answer) => {
         if (!answer) return;
         addAnswer(answer);
-    }
+    };
 
     return (
         <div className="flex-1 p-4 overflow-auto">
@@ -24,5 +24,5 @@ export default function ApiKeyPage() {
                 <Item currentItem={session.currentItem} submit={submitAnswer} />
             </div>
         </div>
-    )
+    );
 }

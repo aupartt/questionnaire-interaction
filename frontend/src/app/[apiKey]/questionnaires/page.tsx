@@ -1,20 +1,19 @@
 "use client";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useQuestionnaireContext } from "@/ui/contexts/QuestionnaireContext";
 import { QuestSteps } from "@/ui/components/questionnaire/QuestSteps";
 import { QuestImages } from "@/ui/components/questionnaire/QuestImages";
 import { useTheme } from "@/ui/contexts/ThemeContext";
 
-
 export default function QuestionnairesPage() {
-    const { loading, error, nextQuestionnaire } = useQuestionnaireContext()
-    const { className } = useTheme()
+    const { loading, error, nextQuestionnaire } = useQuestionnaireContext();
+    const { className } = useTheme();
 
-    if (loading) return <div>Loading...</div>
-    if (error) return <div>Error: {error}</div>
-    if (!nextQuestionnaire) return <div>Aucun questionnaire suivant</div>
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error}</div>;
+    if (!nextQuestionnaire) return <div>Aucun questionnaire suivant</div>;
 
     return (
         <div className="grid place-items-center h-screen">
@@ -22,10 +21,16 @@ export default function QuestionnairesPage() {
                 <QuestSteps />
                 <QuestImages />
                 <div>
-                    <h2 className={`text-2xl text-center font-black ${className.textPrimary}`}>{nextQuestionnaire.name}</h2>
+                    <h2
+                        className={`text-2xl text-center font-black ${className.textPrimary}`}
+                    >
+                        {nextQuestionnaire.name}
+                    </h2>
                 </div>
                 <div>
-                    <p className="text-center text-gray-500">{nextQuestionnaire.description}</p>
+                    <p className="text-center text-gray-500">
+                        {nextQuestionnaire.description}
+                    </p>
                 </div>
                 <Link href={`questionnaires/${nextQuestionnaire.id}/items`}>
                     <Button
@@ -35,10 +40,17 @@ export default function QuestionnairesPage() {
                     </Button>
                 </Link>
                 <div className="w-full flex flex-col items-center">
-                    <p className="pb-3 text-gray-500 text-sm" >Je m'arrête là pour aujourd'hui</p>
-                    <Link className="font-bold text-gray-500 underline" href="#">Voir mes résultats</Link>
+                    <p className="pb-3 text-gray-500 text-sm">
+                        Je m'arrête là pour aujourd'hui
+                    </p>
+                    <Link
+                        className="font-bold text-gray-500 underline"
+                        href="#"
+                    >
+                        Voir mes résultats
+                    </Link>
                 </div>
             </div>
         </div>
-    )
+    );
 }

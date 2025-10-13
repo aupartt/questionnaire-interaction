@@ -5,24 +5,22 @@ const VerifyApiKey = getVerifyKeyUseCase();
 
 export default async function ApiKeyLayout({
     children,
-    params
+    params,
 }: {
     children: React.ReactNode;
-    params: Promise<{ apiKey: string }>
+    params: Promise<{ apiKey: string }>;
 }) {
-    const { apiKey } = await params
+    const { apiKey } = await params;
 
-    const keyStatus = await VerifyApiKey.execute(apiKey)
+    const keyStatus = await VerifyApiKey.execute(apiKey);
 
     if (!keyStatus) {
-        return <div>Clé API non valide.</div>
+        return <div>Clé API non valide.</div>;
     }
 
     return (
         <main>
-            <ThemeProvider>
-                {children}
-            </ThemeProvider>
+            <ThemeProvider>{children}</ThemeProvider>
         </main>
     );
 }

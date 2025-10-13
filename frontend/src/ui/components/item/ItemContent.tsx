@@ -7,7 +7,11 @@ type ItemContentProps = {
     handleChange: (x: string) => void;
 };
 
-export function ItemContent({ content, value, handleChange }: ItemContentProps) {
+export function ItemContent({
+    content,
+    value,
+    handleChange,
+}: ItemContentProps) {
     switch (content.type) {
         case "text":
             return <TextContent handleChange={handleChange} value={value} />;

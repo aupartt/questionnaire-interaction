@@ -1,8 +1,14 @@
-
-import { renderHook, act, render, screen, cleanup, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom';
-import { SessionProvider, useSessionContext } from './SessionContext';
-import { ReactNode, useEffect } from 'react';
+import {
+    renderHook,
+    act,
+    render,
+    screen,
+    cleanup,
+    waitFor,
+} from "@testing-library/react";
+import "@testing-library/jest-dom";
+import { SessionProvider, useSessionContext } from "./SessionContext";
+import { ReactNode, useEffect } from "react";
 
 const createMockSession = () => ({
     id: 1,
@@ -14,19 +20,25 @@ const createMockSession = () => ({
         name: "Foo",
         question: {
             type: "text",
-            value: "Who?"
+            value: "Who?",
         },
         content: {
             type: "text",
-        }
+        },
     },
-    status: "active"
-})
+    status: "active",
+});
 
-describe('SessionContext', () => {
-    let spyFetch: jest.SpyInstance
+describe("SessionContext", () => {
+    let spyFetch: jest.SpyInstance;
 
-    const TestComponent = ({ children, onRender }: { children?: ReactNode, onRender: (context: any) => void }) => {
+    const TestComponent = ({
+        children,
+        onRender,
+    }: {
+        children?: ReactNode;
+        onRender: (context: any) => void;
+    }) => {
         const context = useSessionContext();
         useEffect(() => {
             onRender(context);
@@ -35,8 +47,8 @@ describe('SessionContext', () => {
     };
 
     beforeEach(() => {
-        spyFetch = jest.spyOn(global, "fetch")
-    })
+        spyFetch = jest.spyOn(global, "fetch");
+    });
 
     afterEach(() => {
         cleanup();
@@ -48,14 +60,15 @@ describe('SessionContext', () => {
             Promise.resolve({
                 ok: true,
                 json: () => Promise.resolve(createMockSession()),
-            } as Response
-            ),
-        )
+            } as Response),
+        );
         await waitFor(() => {
             expect(() => {
-                render(<TestComponent onRender={() => null} />)
-            }).toThrow(Error('useSessionContext must be used within a SessionContext'))
-        })
+                render(<TestComponent onRender={() => null} />);
+            }).toThrow(
+                Error("useSessionContext must be used within a SessionContext"),
+            );
+        });
     });
 
     it("devrait avoir appelé l'api pour récupérer la session", async () => {
@@ -63,9 +76,8 @@ describe('SessionContext', () => {
             Promise.resolve({
                 ok: true,
                 json: () => Promise.resolve(createMockSession()),
-            } as Response
-            ),
-        )
+            } as Response),
+        );
 
         let capturedContext: any;
         const onRender = (context: any) => {
@@ -75,7 +87,7 @@ describe('SessionContext', () => {
         render(
             <SessionProvider apiKey="foo" questionnaireId={1}>
                 <TestComponent onRender={onRender} />
-            </SessionProvider>
+            </SessionProvider>,
         );
 
         await waitFor(() => {
@@ -83,7 +95,7 @@ describe('SessionContext', () => {
         });
 
         expect(spyFetch).toHaveBeenCalledWith(
-            expect.stringContaining(`/session?apiKey=foo&questionnaireId=1`)
+            expect.stringContaining(`/session?apiKey=foo&questionnaireId=1`),
         );
         expect(capturedContext.session.id).toBe(1);
         expect(capturedContext.session.questionnaireId).toBe(1);
@@ -93,12 +105,15 @@ describe('SessionContext', () => {
 
     it("devrait réinitialiser la session si le questionnaireId change", async () => {
         spyFetch.mockImplementation((url: string) => {
-            const params = new URLSearchParams(new URL(url, 'http://localhost').search);
+            const params = new URLSearchParams(
+                new URL(url, "http://localhost").search,
+            );
             const questionnaireId = params.get("questionnaireId");
             if (questionnaireId) {
                 const mockSession = createMockSession();
                 mockSession.questionnaireId = parseInt(questionnaireId);
-                mockSession.currentItem.name = questionnaireId === "1" ? "Foo" : "Bar";
+                mockSession.currentItem.name =
+                    questionnaireId === "1" ? "Foo" : "Bar";
                 return Promise.resolve({
                     ok: true,
                     json: () => Promise.resolve(mockSession),
@@ -115,7 +130,7 @@ describe('SessionContext', () => {
         const { rerender } = render(
             <SessionProvider apiKey="foo" questionnaireId={1}>
                 <TestComponent onRender={onRender} />
-            </SessionProvider>
+            </SessionProvider>,
         );
 
         expect(capturedContext.loading).toBe(true);
@@ -133,9 +148,8 @@ describe('SessionContext', () => {
         rerender(
             <SessionProvider apiKey="foo" questionnaireId={2}>
                 <TestComponent onRender={onRender} />
-            </SessionProvider>
+            </SessionProvider>,
         );
-
 
         await waitFor(() => {
             expect(capturedContext.loading).toBe(false);
@@ -143,31 +157,32 @@ describe('SessionContext', () => {
 
         expect(spyFetch).toHaveBeenCalledTimes(2);
         expect(capturedContext.session?.id).toBe(1);
-        expect(capturedContext.session?.questionnaireId).toBe(2);  // Received: 1 
+        expect(capturedContext.session?.questionnaireId).toBe(2); // Received: 1
         expect(capturedContext.session?.currentItem.name).toBe("Bar");
-    })
+    });
 
     it("devrait correctement ajouter une réponse", async () => {
-        spyFetch.mockImplementationOnce(() => // Initialisation
+        spyFetch.mockImplementationOnce(() =>
+            // Initialisation
             Promise.resolve({
                 ok: true,
                 json: () => Promise.resolve(createMockSession()),
-            } as Response
-            ),
-        )
-        const mockNextItem = createMockSession().currentItem
-        mockNextItem.id = 2
-        mockNextItem.name = "Bar"
-        spyFetch.mockImplementationOnce(() => // addAnswer
+            } as Response),
+        );
+        const mockNextItem = createMockSession().currentItem;
+        mockNextItem.id = 2;
+        mockNextItem.name = "Bar";
+        spyFetch.mockImplementationOnce(() =>
+            // addAnswer
             Promise.resolve({
                 ok: true,
-                json: () => Promise.resolve({
-                    nextItem: mockNextItem,
-                    sessionStatus: "active"
-                }),
-            } as Response
-            ),
-        )
+                json: () =>
+                    Promise.resolve({
+                        nextItem: mockNextItem,
+                        sessionStatus: "active",
+                    }),
+            } as Response),
+        );
 
         let capturedContext: any;
         const onRender = (context: any) => {
@@ -177,32 +192,34 @@ describe('SessionContext', () => {
         render(
             <SessionProvider apiKey="foo" questionnaireId={1}>
                 <TestComponent onRender={onRender} />
-            </SessionProvider>
+            </SessionProvider>,
         );
 
         await waitFor(() => {
             expect(capturedContext.loading).toBe(false);
             expect(spyFetch).toHaveBeenCalledTimes(1);
-        })
+        });
 
         const mockAnswer = {
             itemId: 1,
             value: "Gneugneu",
-            status: "completed"
-        }
+            status: "completed",
+        };
 
         act(() => {
-            capturedContext.addAnswer(mockAnswer)
-        })
+            capturedContext.addAnswer(mockAnswer);
+        });
 
         await waitFor(() => {
             expect(capturedContext.loading).toBe(false);
-        })
+        });
 
         expect(spyFetch).toHaveBeenCalledTimes(2);
         const [url, options] = spyFetch.mock.calls[1];
-        expect(url).toBe('/api/session/answer?apiKey=foo&questionnaireId=1&sessionId=1');
-        expect(options.method).toBe('POST');
+        expect(url).toBe(
+            "/api/session/answer?apiKey=foo&questionnaireId=1&sessionId=1",
+        );
+        expect(options.method).toBe("POST");
         expect(options.body).toBe(JSON.stringify({ answer: mockAnswer }));
 
         expect(capturedContext.session.id).toBe(1);
@@ -212,15 +229,14 @@ describe('SessionContext', () => {
         expect(capturedContext.session.currentItem.name).toBe("Bar");
     });
 
-
     it("devrait correctement supprimer la session", async () => {
-        spyFetch.mockImplementationOnce(() => // Initialisation
+        spyFetch.mockImplementationOnce(() =>
+            // Initialisation
             Promise.resolve({
                 ok: true,
                 json: () => Promise.resolve(createMockSession()),
-            } as Response
-            ),
-        )
+            } as Response),
+        );
 
         let capturedContext: any;
         const onRender = (context: any) => {
@@ -230,22 +246,22 @@ describe('SessionContext', () => {
         render(
             <SessionProvider apiKey="foo" questionnaireId={1}>
                 <TestComponent onRender={onRender} />
-            </SessionProvider>
+            </SessionProvider>,
         );
 
         await waitFor(() => {
             expect(capturedContext.loading).toBe(false);
             expect(spyFetch).toHaveBeenCalledTimes(1);
-        })
+        });
 
-        expect(capturedContext.session).toBeTruthy()
+        expect(capturedContext.session).toBeTruthy();
 
         act(() => {
-            capturedContext.clearSession()
-        })
+            capturedContext.clearSession();
+        });
 
         await waitFor(() => {
             expect(capturedContext.session).toBe(null);
-        })
-    })
+        });
+    });
 });

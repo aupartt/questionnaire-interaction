@@ -1,9 +1,9 @@
-import '@testing-library/jest-dom';
-import { VerifyApiKey } from './VerifyApiKey';
+import "@testing-library/jest-dom";
+import { VerifyApiKey } from "./VerifyApiKey";
 import type { ApiKeyStatus } from "@/core/entities/ApiKeyStatus";
 import type { IAuthRepository } from "@/core/ports/IAuthRepository";
 
-describe('VerifyApiKey', () => {
+describe("VerifyApiKey", () => {
     it("devrait correctement renvoyer la valeur de isValid", async () => {
         const mockValidStatus: ApiKeyStatus = { isValid: true };
         const mockAuthRepository: IAuthRepository = {
@@ -12,7 +12,7 @@ describe('VerifyApiKey', () => {
 
         const usecase = new VerifyApiKey(mockAuthRepository);
 
-        const res = await usecase.execute("foo")
-        expect(res).toBeTruthy()
+        const res = await usecase.execute("foo");
+        expect(res).toBeTruthy();
     });
-})
+});

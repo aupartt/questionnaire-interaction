@@ -17,5 +17,5 @@ export function QuestionnaireResults({ results }: { results: Results }) {
                 questionnaires
             </p>
         </div>
-    )
+    );
 }

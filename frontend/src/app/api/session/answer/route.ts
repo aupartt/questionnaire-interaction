@@ -11,7 +11,12 @@ export async function POST(request: NextRequest) {
     const { answer } = body;
 
     if (!apiKey || !questionnaireId || !sessionId || !answer) {
-        console.error("Paramètres non valide:", { apiKey, questionnaireId, sessionId, answer })
+        console.error("Paramètres non valide:", {
+            apiKey,
+            questionnaireId,
+            sessionId,
+            answer,
+        });
         return NextResponse.json(
             { error: "Paramètres non valide." },
             { status: 400 },
