@@ -4,11 +4,20 @@ import type { Answer } from "@/core/entities/Answer";
 import { ItemSection } from "@/ui/components/item/Item";
 import { ItemStepper } from "@/ui/components/item/ItemStepper";
 import { useSessionContext } from "@/ui/contexts/SessionContext";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function ApiKeyPage() {
     const { session, addAnswer } = useSessionContext();
+    const router = useRouter()
 
     if (!session) return "No session"; // For lint
+
+    useEffect(() => {
+        if (session.status === "completed") {
+            router.push(`results`)
+        }
+    }, [session])
 
     const submitAnswer = (answer: Answer) => {
         if (!answer) return;
